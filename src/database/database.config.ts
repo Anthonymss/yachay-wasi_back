@@ -1,0 +1,35 @@
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { ConfigService } from '@nestjs/config';
+import * as path from 'path';
+import { DataSource } from 'typeorm';
+
+export const databaseConfig = {
+  useFactory: async (
+    configService: ConfigService,
+  ): Promise<TypeOrmModuleOptions> => ({
+    type: 'mysql',
+    host: configService.get<string>('DB_HOST', 'localhost'),
+    port: configService.get<number>('DB_PORT', 3306),
+    username: configService.get<string>('DB_USERNAME', 'root'),
+    password: configService.get<string>('DB_PASSWORD', ''),
+    database: configService.get<string>('DB_DATABASE', 'yw_db'),
+    entities: [path.join(__dirname, '../**/*.entity{.ts,.js}')],
+    synchronize: true,
+    migrations: ['src/migrations/*.ts'],
+    logging: process.env.DB_LOGGING === 'true',
+  }),
+  inject: [ConfigService],
+};
+
+export const AppDataSource = new DataSource({
+  type: 'mysql',
+  host: process.env.DB_HOST || 'localhost',
+  port: Number(process.env.DB_PORT) || 3306,
+  username: process.env.DB_USERNAME || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_DATABASE || 'yw_db',
+  entities: [path.join(__dirname, '../**/*.entity{.ts,.js}')],
+  synchronize: true,
+  migrations: ['src/migrations/*.ts'],
+  logging: process.env.DB_LOGGING === 'true',
+});

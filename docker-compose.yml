@@ -1,0 +1,25 @@
+services:
+  mysql:
+    image: mysql:8
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+    networks:
+      - network-yw
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - ${PORT}:${PORT}
+    networks:
+      - network-yw
+volumes:
+  mysql_data:
+    
+networks:
+  network-yw: {}
