@@ -4,6 +4,9 @@ import { UserModule } from './modules/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { databaseConfig } from './database/database.config';
+import { CloudinaryModule } from './shared/cloudinary/cloudinary.module';
+import { VolunteerModule } from './modules/volunteer/volunteer.module';
+import { AreaStaffModule } from './modules/area-staff/area-staff.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -12,6 +15,9 @@ import { databaseConfig } from './database/database.config';
     TypeOrmModule.forRootAsync(databaseConfig),
     AuthModule,
     UserModule,
+    CloudinaryModule,
+    VolunteerModule,
+    AreaStaffModule,
   ],
   controllers: [],
   providers: [],
