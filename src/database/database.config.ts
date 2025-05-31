@@ -6,7 +6,16 @@ import { DataSource } from 'typeorm';
 export const databaseConfig = {
   useFactory: async (
     configService: ConfigService,
-  ): Promise<TypeOrmModuleOptions> => ({
+  ): Promise<TypeOrmModuleOptions> => (
+      console.log('Database config loaded'),
+    console.log(`DB_HOST: ${configService.get<string>('DB_HOST')}`),
+    console.log(`DB_PORT: ${configService.get<number>('DB_PORT')}`),
+    console.log(`DB_USERNAME: ${configService.get<string>('DB_USERNAME')}`),
+    console.log(`DB_PASSWORD: ${configService.get<string>('DB_PASSWORD')}`),
+    console.log(`DB_DATABASE: ${configService.get<string>('DB_DATABASE')}`),
+    console.log(`DB_SYNC: ${configService.get<boolean>('DB_SYNC')}`),
+    console.log(`DB_LOGGING: ${process.env.DB_LOGGING}`),
+    {
     type: 'mysql',
     host: configService.get<string>('DB_HOST', 'localhost'),
     port: configService.get<number>('DB_PORT', 3306),

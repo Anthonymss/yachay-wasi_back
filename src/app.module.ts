@@ -7,6 +7,7 @@ import { databaseConfig } from './database/database.config';
 import { CloudinaryModule } from './shared/cloudinary/cloudinary.module';
 import { VolunteerModule } from './modules/volunteer/volunteer.module';
 import { AreaStaffModule } from './modules/area-staff/area-staff.module';
+import { BeneficiaryModule } from './modules/beneficiary/beneficiary.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -18,6 +19,7 @@ import { AreaStaffModule } from './modules/area-staff/area-staff.module';
     CloudinaryModule,
     VolunteerModule,
     AreaStaffModule,
+    BeneficiaryModule,
   ],
   controllers: [],
   providers: [],
