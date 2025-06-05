@@ -6,8 +6,9 @@ import { ConfigModule } from '@nestjs/config';
 import { databaseConfig } from './database/database.config';
 import { CloudinaryModule } from './shared/cloudinary/cloudinary.module';
 import { VolunteerModule } from './modules/volunteer/volunteer.module';
-import { AreaStaffModule } from './modules/area-staff/area-staff.module';
 import { BeneficiaryModule } from './modules/beneficiary/beneficiary.module';
+import { AreaModule } from './modules/area/area.module';
+import { DonationModule } from './modules/donation/donation.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -18,8 +19,9 @@ import { BeneficiaryModule } from './modules/beneficiary/beneficiary.module';
     UserModule,
     CloudinaryModule,
     VolunteerModule,
-    AreaStaffModule,
     BeneficiaryModule,
+    AreaModule,
+    DonationModule,
   ],
   controllers: [],
   providers: [],

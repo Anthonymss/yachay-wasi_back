@@ -29,3 +29,8 @@ $ npm run migration:run
 # Revertir migración
 $ npm run migration:revert
 ```
+## Seeders
+```bash
+# Correr Seeders
+$ npm run seed
+```

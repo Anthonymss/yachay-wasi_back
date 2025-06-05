@@ -3,9 +3,20 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { BeneficiaryLanguage } from './beneficiary-languaje.entity';
+import { Schedule } from './schedule.entity';
+import { ResponseBeneficiary } from '../../area/entities/area-beneficiary/response-beneficiary.entity';
+import { Grade } from './grade.entity';
+import { EnrollmentStatus } from './enrollment-status.entity';
+import { LearningLevel } from './learning-level.entity';
+import { User } from 'src/modules/user/entities/user.entity';
 export enum Sex {
   MALE = 'male',
   FEMALE = 'female',
@@ -115,4 +126,36 @@ export class Beneficiary {
   updatedAt: Date;
   @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
   deletedAt: Date;
+
+  //others relations
+  @OneToMany(
+    () => BeneficiaryLanguage,
+    (beneficiaryLanguage) => beneficiaryLanguage.beneficiary,
+  )
+  beneficiaryLanguage: BeneficiaryLanguage[];
+  @OneToMany(() => Schedule, (schedule) => schedule.beneficiary)
+  schedules: Schedule[];
+  @OneToMany(
+    () => ResponseBeneficiary,
+    (responseBeneficiary) => responseBeneficiary.beneficiary,
+  )
+  responseBeneficiary: ResponseBeneficiary[];
+  @ManyToOne(() => Grade, (grade) => grade.beneficiaries)
+  @JoinColumn({ name: 'grade_id' })
+  grade: Grade;
+  @ManyToOne(
+    () => EnrollmentStatus,
+    (enrollmentStatus) => enrollmentStatus.beneficiaries,
+  )
+  @JoinColumn({ name: 'enrollment_status_id' })
+  enrollmentStatus: EnrollmentStatus;
+  @ManyToOne(
+    () => LearningLevel,
+    (learningLevel) => learningLevel.beneficiaries,
+  )
+  @JoinColumn({ name: 'learning_level_id' })
+  learningLevel: LearningLevel;
+  @ManyToOne(() => User, (user) => user.beneficiaries)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 }

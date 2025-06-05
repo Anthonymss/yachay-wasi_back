@@ -6,11 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { VolunteerService } from './volunteer.service';
 import { CreateVolunteerDto } from './dto/create-volunteer.dto';
 import { UpdateVolunteerDto } from './dto/update-volunteer.dto';
-
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth() //candadito
+@ApiTags('Volunteer')
 @Controller('volunteer')
 export class VolunteerController {
   constructor(private readonly volunteerService: VolunteerService) {}

@@ -6,11 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { BeneficiaryService } from './beneficiary.service';
 import { CreateBeneficiaryDto } from './dto/create-beneficiary.dto';
 import { UpdateBeneficiaryDto } from './dto/update-beneficiary.dto';
-
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth() //candadito
+@ApiTags('Beneficiary')
 @Controller('beneficiary')
 export class BeneficiaryController {
   constructor(private readonly beneficiaryService: BeneficiaryService) {}
