@@ -15,7 +15,7 @@ export class RolSeeder {
   async seed() {
     const roles = [
       { name: 'Admin', description: '1' },
-      { name: 'Yakus_asesores', description: '2' },
+      { name: 'Yakus_asesores', description: '2' }, //adviser
       { name: 'Yakus_staff', description: '3' },
     ];
 

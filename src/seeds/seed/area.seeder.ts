@@ -16,18 +16,66 @@ export class AreaSeeder {
 
   async seed() {
     const area1 = this.areaStaffRepository.create({
-      name: 'Asesoria',
+      name: 'Talento & Desarrollo Organizacional',
       description: '1',
       isActive: true,
     });
     const area2 = this.areaStaffRepository.create({
-      name: 'Staff',
+      name: 'Cultura & Comunicación Interna',
+      description: '2',
+      isActive: true,
+    });
+    const area3 = this.areaStaffRepository.create({
+      name: 'Imagen Institucional & Relaciones Públicas',
+      description: '2',
+      isActive: true,
+    });
+    const area4 = this.areaStaffRepository.create({
+      name: 'Alianzas Organizacionales',
+      description: '2',
+      isActive: true,
+    });
+    const area5 = this.areaStaffRepository.create({
+      name: 'Convenios & Patrocinios Estratégicos',
+      description: '2',
+      isActive: true,
+    });
+    const area6 = this.areaStaffRepository.create({
+      name: 'Marketing & Contenidos',
       description: '2',
       isActive: true,
     });
 
-    await this.areaStaffRepository.save([area1, area2]);
-
+    /*AREA
+    Talento & Desarrollo Organizacional
+    Cultura & Comunicación Interna
+    Imagen Institucional & Relaciones Públicas
+    Alianzas Organizacionales
+    Convenios & Patrocinios Estratégicos
+    Marketing & Contenidos   -
+    Arte & Cultura
+    Asesoría a Colegios Nacionales
+    Bienestar Psicológico
+    Gestión de Comunidades
+    Innovación & Calidad
+    */
+    await this.areaStaffRepository.save([
+      area1,
+      area2,
+      area3,
+      area4,
+      area5,
+      area6,
+    ]);
+    /*Sub-area=>Inovacion & Calidad
+    Líder de Desarrollo de Productos
+    Desarrollador/a API
+    Desarrollador/a Backend
+    Desarrollador/a Frontend
+    Ingeniero/a de Infraestructura Cloud
+    Analista de Gobierno de Datos
+    Líder de Mejora Continua   
+   */
     const subArea1 = this.subAreaRepository.create({
       name: 'sub_Asesoria',
       description: '1',

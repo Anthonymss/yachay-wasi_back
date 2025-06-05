@@ -5,10 +5,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
-export enum CloudinaryFolder {
-  FOLDER_USER = 'folder_user',
-  FOLDER_SPACES = 'folder_spaces',
-}
+
 @Injectable()
 export class CloudinaryService {
   constructor(private readonly configService: ConfigService) {
@@ -18,43 +15,70 @@ export class CloudinaryService {
       api_secret: this.configService.get<string>('CLOUDINARY_API_SECRET'),
     });
   }
-  async uploadImageToUserFolder(file: Express.Multer.File): Promise<string> {
-    return this.uploadImage(file, CloudinaryFolder.FOLDER_USER);
-  }
-  async uploadImageToSpacesFolder(file: Express.Multer.File): Promise<string> {
-    return this.uploadImage(file, CloudinaryFolder.FOLDER_SPACES);
-  }
 
-  private async uploadImage(
-    file: Express.Multer.File,
-    folderPath: string,
-  ): Promise<string> {
-    const allowedFormats = [
+  async uploadFile(file: Express.Multer.File): Promise<string> {
+    const allowedMimeTypes = [
       'image/jpeg',
       'image/png',
       'image/jpg',
       'image/webp',
+      'video/mp4',
+      'video/mpeg',
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     ];
-    if (!allowedFormats.includes(file.mimetype))
-      throw new BadRequestException('Invalid file format');
-    //if (file.size > 5 * 1024 * 1024) throw new BadRequestException('File size exceeds 5MB');restriccion
+
+    if (!allowedMimeTypes.includes(file.mimetype)) {
+      throw new BadRequestException('Formato de archivo no permitido');
+    }
+
+    const resourceType = this.getResourceType(file.mimetype);
+    const folderPath = this.getFolderPath(resourceType);
+
     try {
       const result: UploadApiResponse = await new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
-          { resource_type: 'auto', folder: folderPath },
+          {
+            resource_type: resourceType,
+            folder: folderPath,
+          },
           (error, result) => {
-            if (error || !result)
+            if (error || !result) {
               return reject(
-                new InternalServerErrorException('Cloudinary upload failed'),
+                new InternalServerErrorException(
+                  'Fallo la subida a Cloudinary',
+                ),
               );
+            }
             resolve(result);
           },
         );
         uploadStream.end(file.buffer);
       });
+
       return result.secure_url;
     } catch (error) {
-      throw new InternalServerErrorException('Cloudinary upload failed');
+      throw new InternalServerErrorException('Fallo la subida a Cloudinary');
+    }
+  }
+
+  private getResourceType(mimetype: string): 'image' | 'video' | 'raw' {
+    if (mimetype.startsWith('image/')) return 'image';
+    if (mimetype.startsWith('video/')) return 'video';
+    return 'raw';
+  }
+
+  private getFolderPath(resourceType: string): string {
+    switch (resourceType) {
+      case 'image':
+        return 'yw/images';
+      case 'video':
+        return 'yw/videos';
+      case 'raw':
+        return 'yw/documents';
+      default:
+        return 'yw/others';
     }
   }
 }

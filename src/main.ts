@@ -9,13 +9,13 @@ import { AppModule } from './app.module';
 import { corsConfig } from './config/cors.config';
 import cors from '@fastify/cors';
 import { setupSwagger } from './config/swagger/swagger.config';
-import fastifyMultipart from '@fastify/multipart';
+import multipart from '@fastify/multipart';
 import fastifyHelmet from '@fastify/helmet';
 async function bootstrap() {
   const PORT = process.env.PORT || 3000;
   const fastifyAdapter = new FastifyAdapter();
   await fastifyAdapter.register(cors, corsConfig);
-  await fastifyAdapter.register(fastifyMultipart);
+  await fastifyAdapter.register(multipart);
   await fastifyAdapter.register(fastifyHelmet);
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
