@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
+import toStream = require('buffer-to-stream');
 
 @Injectable()
 export class CloudinaryService {
@@ -37,28 +38,33 @@ export class CloudinaryService {
     const folderPath = this.getFolderPath(resourceType);
 
     try {
+      console.log(`[Cloudinary] Starting upload to ${folderPath} as ${resourceType}...`);
+
       const result: UploadApiResponse = await new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           {
             resource_type: resourceType,
             folder: folderPath,
+            public_id: file.originalname.split('.')[0],
           },
           (error, result) => {
             if (error || !result) {
+              console.error('[Cloudinary] Upload error:', error);
               return reject(
-                new InternalServerErrorException(
-                  'Fallo la subida a Cloudinary',
-                ),
+                new InternalServerErrorException('Fallo la subida a Cloudinary'),
               );
             }
+            console.log('[Cloudinary] Upload successful:', result.secure_url);
             resolve(result);
           },
         );
-        uploadStream.end(file.buffer);
+
+        toStream(file.buffer).pipe(uploadStream);
       });
 
       return result.secure_url;
     } catch (error) {
+      console.error('[Cloudinary] Exception during upload:', error);
       throw new InternalServerErrorException('Fallo la subida a Cloudinary');
     }
   }

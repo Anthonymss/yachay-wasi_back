@@ -19,6 +19,18 @@ export enum TYPE_VOLUNTEER {
   STAFF = 'STAFF',
   ADVISER = 'ADVISER',
 }
+export enum InfoSource {
+  FACEBOOK = 'Facebook',
+  INSTAGRAM = 'Instagram',
+  LINKEDIN = 'LinkedIn',
+  TIKTOK = 'TikTok',
+  EMAIL = 'Correo electrónico',
+  UTEC_NEWSLETTER = 'Boletín UTEC',
+  PROA = 'Proa',
+  PRONABEC = 'Pronabec',
+  REFERRAL = 'Referencia de un amigo/familia',
+}
+
 
 @Entity('volunteers')
 export class Volunteer {
@@ -104,7 +116,12 @@ export class Volunteer {
     name: 'type_volunteer',
   })
   typeVolunteer: TYPE_VOLUNTEER;
-
+  @Column({
+    type: 'enum',
+    enum: InfoSource,
+    nullable: false,
+  })
+  howDidYouFindUs: InfoSource;
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
 
@@ -113,7 +130,9 @@ export class Volunteer {
 
   @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
   deletedAt: Date;
-
+  //
+  @Column({name:'name_postulation_area'})
+  namePostulationArea:string;
   // Relaciones
   @OneToMany(
     () => ResponseVolunteer,

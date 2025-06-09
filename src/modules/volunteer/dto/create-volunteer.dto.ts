@@ -8,6 +8,7 @@ import {
   IsDateString,
 } from 'class-validator';
 import {
+  InfoSource,
   TYPE_IDENTIFICATION,
   TYPE_VOLUNTEER,
 } from '../entities/volunteer.entity';
@@ -40,9 +41,12 @@ export class CreateVolunteerDto {
   wasVoluntary?: boolean;
   @IsString()
   volunteerMotivation: string;
-  //@IsNotEmpty()
-  //@IsDateString()
-  //datePostulation: Date;
+  @IsEnum(InfoSource, { message: 'source of information' })
+  howDidYouFindUs: InfoSource;
   @IsEnum(TYPE_VOLUNTEER)
   typeVolunteer: TYPE_VOLUNTEER;
+  //que subarea va a postular
+  @IsNotEmpty()
+  namePostulationArea:string;
+  
 }
