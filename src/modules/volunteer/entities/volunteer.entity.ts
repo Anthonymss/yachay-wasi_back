@@ -68,7 +68,7 @@ export class Volunteer {
     default: false,
     name: 'is_active',
   })
-  isActive: boolean;
+  isVoluntary: boolean;
 
   @Column({
     type: 'boolean',
