@@ -11,26 +11,40 @@ import cors from '@fastify/cors';
 import { setupSwagger } from './config/swagger/swagger.config';
 import multipart from '@fastify/multipart';
 import fastifyHelmet from '@fastify/helmet';
+
 async function bootstrap() {
   const PORT = process.env.PORT || 3000;
   const fastifyAdapter = new FastifyAdapter();
+
   await fastifyAdapter.register(cors, corsConfig);
-  await fastifyAdapter.register(multipart);
   await fastifyAdapter.register(fastifyHelmet);
+
+  await fastifyAdapter.register(multipart, {
+    limits: {
+      fileSize: 10 * 1024 * 1024,
+      files: 1,
+      fields: 20,
+    },
+  });
+
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     fastifyAdapter,
   );
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
+
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true,
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transformOptions: {
+      enableImplicitConversion: true,
+    },
+  }));
+
   app.use(morgan('dev'));
   app.setGlobalPrefix('api');
   await setupSwagger(app);
+
   await app.listen(PORT, '0.0.0.0');
   const logger = new Logger('Bootstrap');
   logger.log(`Server is running on port: ${PORT} 🚀`);

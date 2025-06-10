@@ -1,15 +1,11 @@
-import { BadRequestException, Controller, Post, Req } from '@nestjs/common';
-import { ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { VolunteerService, UploadedFile } from '../service/volunteer.service';
-import { Volunteer } from '../entities/volunteer.entity';
+import { BadRequestException, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FastifyRequest } from 'fastify';
-import { MultipartFile } from '@fastify/multipart';
-import { plainToInstance } from 'class-transformer';
-import { validate } from 'class-validator';
-import { CreateVolunteerDto } from '../dto/create-volunteer.dto';
-
+import { VolunteerService } from '../service/volunteer.service';
+import { Volunteer } from '../entities/volunteer.entity';
+import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 //@UseGuards(JwtAuthGuard)
-//@ApiBearerAuth()
+//@ApiBearerAuth()//candado
 @ApiTags('Volunteer')
 @Controller('volunteer')
 export class VolunteerController {
@@ -17,31 +13,9 @@ export class VolunteerController {
 
   @Post()
   @ApiConsumes('multipart/form-data')
-  async createVolunteer(@Req() req: FastifyRequest): Promise<Volunteer> {
-    const file = (await (req as any).file()) as MultipartFile;
-    if (!file) {
-      throw new BadRequestException('CV file is required');
-    }
-
-    const body = (await (req as any).body) as Record<string, any>;
-
-    const dto = plainToInstance(CreateVolunteerDto, body);
-    const errors = await validate(dto);
-
-    if (errors.length > 0) {
-      throw new BadRequestException(errors);
-    }
-
-    const buffer = await file.toBuffer();
-    const adaptedFile: UploadedFile = {
-      buffer,
-      mimetype: file.mimetype,
-      originalname: file.filename,
-      fieldname: file.fieldname,
-      size: buffer.length,
-      encoding: file.encoding || '',
-    };
-
-    return this.volunteerService.create(dto, adaptedFile);
+  async createVolunteer(@Req() req: FastifyRequest) {
+    const parts = await (req as any).parts();
+    return this.volunteerService.handleMultipartAndCreate(parts);
   }
+
 }

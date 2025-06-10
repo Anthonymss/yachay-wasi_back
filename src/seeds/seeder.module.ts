@@ -9,12 +9,13 @@ import { AreaStaff } from 'src/modules/area/entities/area-volunteer/area-staff.e
 import { SubArea } from 'src/modules/area/entities/area-volunteer/sub-area.entity';
 import { databaseConfig } from 'src/database/database.config';
 import { AreaSeeder } from './seed/area.seeder';
+import { AreaAsesory } from 'src/modules/area/entities/area-beneficiary/area-asesory.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync(databaseConfig),
-    TypeOrmModule.forFeature([Rol, AreaStaff, SubArea]),
+    TypeOrmModule.forFeature([Rol, AreaStaff, SubArea,AreaAsesory]),
   ],
   providers: [SeederService, RolSeeder, AreaSeeder],
 })

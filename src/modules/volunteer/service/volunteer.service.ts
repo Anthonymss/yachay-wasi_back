@@ -4,15 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Volunteer } from '../entities/volunteer.entity';
 import { Repository } from 'typeorm';
 import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
-
-export interface UploadedFile {
-  buffer: Buffer;
-  mimetype: string;
-  originalname: string;
-  fieldname: string;
-  size: number;
-  encoding?: string;
-}
+import { MultipartFile } from '@fastify/multipart';
+import { parseMultipart, UploadedFile } from 'src/shared/others/multipart';
 
 @Injectable()
 export class VolunteerService {
@@ -22,28 +15,26 @@ export class VolunteerService {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  async create(
-    createVolunteerDto: CreateVolunteerDto,
-    file: UploadedFile,
-  ): Promise<Volunteer> {
+  async handleMultipartAndCreate(parts: AsyncIterableIterator<MultipartFile | any>) {
+    const { dto, file } = await parseMultipart(parts);
+    this.create(dto, file)
+    return 'Volunter is created'
+  }
+
+  async create(dto: CreateVolunteerDto, file: UploadedFile): Promise<Volunteer> {
     const multerFile: Express.Multer.File = {
       ...file,
-      fieldname: file.fieldname,
-      originalname: file.originalname,
-      encoding: file.encoding ?? '',
-      mimetype: file.mimetype,
-      size: file.size,
-      buffer: file.buffer,
       destination: '',
       filename: file.originalname,
       path: '',
       stream: undefined as any,
+      encoding: file.encoding ?? '', 
     };
 
     const url = await this.cloudinaryService.uploadFile(multerFile);
 
     const volunteer = this.volunteerRepository.create({
-      ...createVolunteerDto,
+      ...dto,
       cvUrl: url,
       datePostulation: new Date(),
     });
