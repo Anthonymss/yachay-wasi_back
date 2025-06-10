@@ -13,35 +13,23 @@ import { CreateAreaDto } from './dto/create-area.dto';
 import { UpdateAreaDto } from './dto/update-area.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth() //candadito
+//@UseGuards(JwtAuthGuard)
+//@ApiBearerAuth() //candadito
 @ApiTags('Area')
-@Controller('area')
+@Controller('areas')
 export class AreaController {
-  constructor(private readonly areaService: AreaService) {}
-
-  @Post()
-  create(@Body() createAreaDto: CreateAreaDto) {
-    return this.areaService.create(createAreaDto);
-  }
+  constructor(
+    private readonly areaService: AreaService,
+  ) {}
 
   @Get()
-  findAll() {
+  async findAllAreas(){
     return this.areaService.findAll();
   }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.areaService.findOne(+id);
+  @Get('/subareas/:id')
+  async findAllSubAreas(@Param('id')idArea:number){
+    console.log('..')
+    return this.areaService.findAllSubAreas(+idArea);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAreaDto: UpdateAreaDto) {
-    return this.areaService.update(+id, updateAreaDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.areaService.remove(+id);
-  }
 }

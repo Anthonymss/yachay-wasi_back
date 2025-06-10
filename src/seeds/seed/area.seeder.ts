@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AreaStaff } from 'src/modules/area/entities/area-volunteer/area-staff.entity';
 import { SubArea } from 'src/modules/area/entities/area-volunteer/sub-area.entity';
+import { AreaAsesory } from 'src/modules/area/entities/area-beneficiary/area-asesory.entity';
 @Injectable()
 export class AreaSeeder {
   private readonly log = new Logger('Seeder');
@@ -12,239 +13,132 @@ export class AreaSeeder {
     private readonly areaStaffRepository: Repository<AreaStaff>,
     @InjectRepository(SubArea)
     private readonly subAreaRepository: Repository<SubArea>,
+    @InjectRepository(AreaAsesory)
+    private readonly areaAsesoryRepository: Repository<AreaAsesory>,
   ) {}
 
   async seed() {
-    const area1 = this.areaStaffRepository.create({
-      name: 'Talento & Desarrollo Organizacional',
-      description: '1',
-      isActive: true,
-    });
-    const area2 = this.areaStaffRepository.create({
-      name: 'Cultura & Comunicación Interna',
-      description: '2',
-      isActive: true,
-    });
-    const area3 = this.areaStaffRepository.create({
-      name: 'Imagen Institucional & Relaciones Públicas',
-      description: '2',
-      isActive: true,
-    });
-    const area4 = this.areaStaffRepository.create({
-      name: 'Alianzas Organizacionales',
-      description: '2',
-      isActive: true,
-    });
-    const area5 = this.areaStaffRepository.create({
-      name: 'Convenios & Patrocinios Estratégicos',
-      description: '2',
-      isActive: true,
-    });
-    const area6 = this.areaStaffRepository.create({
-      name: 'Marketing & Contenidos',
-      description: '2',
-      isActive: true,
-    });
-    const area7 = this.areaStaffRepository.create({
-      name: 'Arte & Cultura',
-      description: '2',
-      isActive: true,
-    });
-    const area8 = this.areaStaffRepository.create({
-      name: 'Asesoría a Colegios Nacionales',
-      description: '2',
-      isActive: true,
-    });
-    const area9 = this.areaStaffRepository.create({
-      name: 'Bienestar Psicológicos',
-      description: '2',
-      isActive: true,
-    });
-    const area10 = this.areaStaffRepository.create({
-      name: 'Gestión de Comunidades',
-      description: '2',
-      isActive: true,
-    });
-    const area11 = this.areaStaffRepository.create({
-      name: 'Innovación & Calidad',
-      description: '2',
-      isActive: true,
-    });
+  const areasData = [
+      { key: 'area1', name: 'Talento & Desarrollo Organizacional', 
+        description: '1' },
+      { key: 'area2', name: 'Cultura & Comunicación Interna', description: '2' },
+      { key: 'area3', name: 'Imagen Institucional & Relaciones Públicas', description: '2' },
+      { key: 'area4', name: 'Alianzas Organizacionales', description: '2' },
+      { key: 'area5', name: 'Convenios & Patrocinios Estratégicos', description: '2' },
+      { key: 'area6', name: 'Marketing & Contenidos', description: '2' },
+      { key: 'area7', name: 'Arte & Cultura', description: '2' },
+      { key: 'area8', name: 'Asesoría a Colegios Nacionales', description: '2' },
+      { key: 'area9', name: 'Bienestar Psicológicos', description: '2' },
+      { key: 'area10', name: 'Gestión de Comunidades', description: '2' },
+      { key: 'area11', name: 'Innovación & Calidad', description: '2' },
+    ];
 
-    /*AREA
-    Talento & Desarrollo Organizacional
-    Cultura & Comunicación Interna
-    Imagen Institucional & Relaciones Públicas
-    Alianzas Organizacionales
-    Convenios & Patrocinios Estratégicos
-    Marketing & Contenidos   -
-    Arte & Cultura
-    Asesoría a Colegios Nacionales
-    Bienestar Psicológico
-    Gestión de Comunidades
-    Innovación & Calidad
-    */
-    await this.areaStaffRepository.save([
-      area1,
-      area2,
-      area3,
-      area4,
-      area5,
-      area6,
-      area7,
-      area8,
-      area9,
-      area10,
-      area11
-    ]);
-    /*talento
-   Subcoordinador/a de Talento & Desarrollo Organizacional
-Líder de Atracción de Talento
-Analista/Asistente de Atracción de Talento
-Líder de Formación & Competencias
-Analista/Asistente de Formación & Competencias
-Analista/Asistente de Talento & Desempeño 
-   */
-/*cultura y comunicacion
-Subcoordinador/a de Cultura & Comunicación Interna
-Líder de Bienestar
-Analista/Asistente de Bienestar
-Líder de Comunicación Interna
-Analista/Asistente de Comunicación Interna
+    const areaMap: Record<string, AreaStaff> = {};
 
-*/
-/**Imagen Institucional & Relaciones Públicas
-Analista de Imagen y RR.PP.
- */
+    for (const { key, name, description } of areasData) {
+      let area = await this.areaStaffRepository.findOne({ where: { name } });
 
-/*
-Alianzas organizacionales
-Líder de Concursos & Fondos
-Analista/Asistente de Concursos & Fondos
-Líder de Proyectos de Alianzas
-*/
+      if (area) {
+        area.description = description;
+        area.isActive = true;
+      } else {
+        area = this.areaStaffRepository.create({ name, description, isActive: true });
+      }
 
-/*
-Convenios & Patrocinios Estratégicos
-Líder de Convenios
-Analista/Asistente de Convenios
-Líder de Donaciones Individuales
-Analista/Asistente de Donaciones Individuales
-*/
-/*
-Marketing & Contenidos
-Community Manager
-Diseñador/a Gráfico/a
-Editor/a de Contenidos Audiovisuales
-*/
+      areaMap[key] = await this.areaStaffRepository.save(area);
+    }
 
-/*
-Arte & Cultura
-Integrante de Clima Interno & Pedagogía
-*/
+  const subAreasData = [
+      { name: 'Subcoordinador/a de Talento & Desarrollo Organizacional', areaKey: 'area1' },
+      { name: 'Líder de Atracción de Talento', areaKey: 'area1' },
+      { name: 'Analista/Asistente de Atracción de Talento', areaKey: 'area1' },
+      { name: 'Líder de Formación & Competencias', areaKey: 'area1' },
+      { name: 'Analista/Asistente de Formación & Competencias', areaKey: 'area1' },
+      { name: 'Analista/Asistente de Talento & Desempeño ', areaKey: 'area1' },
+      { name: 'Subcoordinador/a de Cultura & Comunicación Interna', areaKey: 'area2' },
+      { name: 'Líder de Bienestar', areaKey: 'area2' },
+      { name: 'Analista/Asistente de Bienestar', areaKey: 'area2' },
+      { name: 'Líder de Comunicación Interna', areaKey: 'area2' },
+      { name: 'Analista/Asistente de Comunicación Interna', areaKey: 'area2' },
+      { name: 'Analista de Imagen y RR.PP.', areaKey: 'area3' },
+      { name: 'Líder de Concursos & Fondos', areaKey: 'area4' },
+      { name: 'Analista/Asistente de Concursos & Fondos', areaKey: 'area4' },
+      { name: 'Líder de Proyectos de Alianzas', areaKey: 'area4' },
+      { name: 'Líder de Convenios', areaKey: 'area5' },
+      { name: 'Analista/Asistente de Convenios', areaKey: 'area5' },
+      { name: 'Líder de Donaciones Individuales', areaKey: 'area5' },
+      { name: 'Analista/Asistente de Donaciones Individuales', areaKey: 'area5' },
+      { name: 'Community Manager', areaKey: 'area6' },
+      { name: 'Diseñador/a Gráfico/a', areaKey: 'area6' },
+      { name: 'Editor/a de Contenidos Audiovisuales', areaKey: 'area6' },
+      { name: 'Integrante de Clima Interno & Pedagogía', areaKey: 'area7' },
+      { name: 'Subcoordinador/a de Asesoría a Colegios Nacionales', areaKey: 'area8' },
+      { name: 'Integrante de Análisis de Datos', areaKey: 'area8' },
+      { name: 'Líder de Clima Interno & Pedagogía', areaKey: 'area8' },
+      { name: 'Integrante de Clima Interno & Pedagogía', areaKey: 'area8' },
+      { name: 'Yaku Guía', areaKey: 'area8' },
+      { name: 'Líder de Análisis de Datos', areaKey: 'area9' },
+      { name: 'Líder de Acompañamiento Continuo', areaKey: 'area9' },
+      { name: 'Co-líder de Acompañamiento Continuo', areaKey: 'area9' },
+      { name: 'Gestor/a de Casos-Rurus', areaKey: 'area9' },
+      { name: 'Líder de Asesorías Psicoeducativas', areaKey: 'area9' },
+      { name: 'Co-líder de Asesorías Psicoeducativas', areaKey: 'area9' },
+      { name: 'Co-líder de Gestión del Ruru', areaKey: 'area9' },
+      { name: 'Facilitador/a Psicoeducativo/a', areaKey: 'area9' },
+      { name: 'Yaku Guía-Bienestar', areaKey: 'area9' },
+      { name: 'Líder de Escuela a Padres', areaKey: 'area9' },
+      { name: 'Co-líder de Escuela a Padres', areaKey: 'area9' },
+      { name: 'Facilitador/a de Talleres', areaKey: 'area9' },
+      { name: 'Líder de Análisis e Informes', areaKey: 'area10' },
+      { name: 'Analista/Asistente de Informes', areaKey: 'area10' },
+      { name: 'Líder de Estrategias Comunitarias', areaKey: 'area10' },
+      { name: 'Líder de Desarrollo de Productos',description:'agregar descripcion', areaKey: 'area11' },
+      { name: 'Desarrollador/a API',description:'agregar descripcion', areaKey: 'area11' },
+      { name: 'Desarrollador/a Backend',description:'agregar descripcion', areaKey: 'area11' },
+      { name: 'Desarrollador/a Frontend',description:'agregar descripcion', areaKey: 'area11' },
+      { name: 'Ingeniero/a de Infraestructura Cloud',description:'agregar descripcion', areaKey: 'area11' },
+      { name: 'Analista de Gobierno de Datos',description:'agregar descripcion', areaKey: 'area11' },
+      { name: 'Líder de Mejora Continua',description:'agregar descripcion', areaKey: 'area11' },
+    ];
 
-/*
-Asesoría a Colegios Nacionales
-Subcoordinador/a de Asesoría a Colegios Nacionales
-Integrante de Análisis de Datos
-Líder de Clima Interno & Pedagogía
-Integrante de Clima Interno & Pedagogía
-Yaku Guía
-*/
+    for (const { name,description, areaKey } of subAreasData) {
+      let subArea = await this.subAreaRepository.findOne({ where: { name } });
 
-/*
-Bienestar Psicológico
-Líder de Análisis de Datos
-Líder de Acompañamiento Continuo
-Co-líder de Acompañamiento Continuo
-Gestor/a de Casos-Rurus
-Líder de Asesorías Psicoeducativas
-Co-líder de Asesorías Psicoeducativas
-Co-líder de Gestión del Ruru
-Facilitador/a Psicoeducativo/a
-Yaku Guía-Bienestar
-Líder de Escuela a Padres
-Co-líder de Escuela a Padres
-Facilitador/a de Talleres
- */
+      if (subArea) {
+        subArea.areaStaff = areaMap[areaKey];
+        subArea.isActive = true;
+        subArea.description = description ?? '';
+      } else {
+        subArea = this.subAreaRepository.create({
+          name,
+          description: description,
+          isActive: true,
+          areaStaff: areaMap[areaKey],
+        });
+      }
 
-/*
-Gestión de Comunidades
-Líder de Análisis e Informes
-Analista/Asistente de Informes
-Líder de Estrategias Comunitarias
- */
-    const subArea1 = this.subAreaRepository.create({
-      name: 'Subcoordinador/a de Talento & Desarrollo Organizacional',
-      description: '1',
-      isActive: true,
-      areaStaff: area1,
-    });
+      await this.subAreaRepository.save(subArea);
+    }
 
-    const subArea2 = this.subAreaRepository.create({
-      name: 'sub2_Asesoria',
-      description: '1',
-      isActive: true,
-      areaStaff: area1,
-    });
-    //inovacion
-    const subArea100 = this.subAreaRepository.create({
-      name: 'Líder de Desarrollo de Productos',
-      description: '1',
-      isActive: true,
-      areaStaff: area11,
-    });
-    const subArea101 = this.subAreaRepository.create({
-      name: 'Desarrollador/a API',
-      description: '1',
-      isActive: true,
-      areaStaff: area11,
-    });
-    const subArea102 = this.subAreaRepository.create({
-      name: 'Desarrollador/a Backend',
-      description: '1',
-      isActive: true,
-      areaStaff: area11,
-    });
-    const subArea103 = this.subAreaRepository.create({
-      name: 'Desarrollador/a Frontend',
-      description: '1',
-      isActive: true,
-      areaStaff: area11,
-    });
-    const subArea104 = this.subAreaRepository.create({
-      name: 'Ingeniero/a de Infraestructura Cloud',
-      description: '1',
-      isActive: true,
-      areaStaff: area11,
-    });
-    const subArea105 = this.subAreaRepository.create({
-      name: 'Analista de Gobierno de Datos',
-      description: '1',
-      isActive: true,
-      areaStaff: area11,
-    });
-    const subArea106 = this.subAreaRepository.create({
-      name: 'Líder de Mejora Continua  ',
-      description: '1',
-      isActive: true,
-      areaStaff: area11,
-    });
-    await this.subAreaRepository.save([
-      subArea1, 
-      subArea2
-      ,subArea100,
-      subArea101,
-      subArea102,
-      subArea103,
-      subArea103,
-      subArea104,
-      subArea105,
-      subArea106,
-    ]
 
-    );
+    const areaAsesory = [
+      { name: "Asesorías en Arte y Cultura", isActive: true, description: 'Promover la creatividad, expresión personal, sensibilidad artística y pensamiento crítico.' },
+      { name: "Asesorías a Colegios Nacionales", isActive: true, description: 'Fortalecer los hábitos de estudio y desarrollo de competencias básicas de ectura, matemáticas e inglés de nuestros beneficiarios.' },
+      { name: "Acompañamiento para el Bienestar Psicológico", isActive: true, description: 'Contribuir con el bienestar psicológico de las/los estudiantes beneficiarios.' },
+    ];
 
-    this.log.log('Seeding completado correctamente');
+    for (const asesory of areaAsesory) {
+      let existing = await this.areaAsesoryRepository.findOne({ where: { name: asesory.name } });
+
+      if (existing) {
+        existing.isActive = true;
+        existing.description = asesory.description;
+      } else {
+        existing = this.areaAsesoryRepository.create(asesory);
+      }
+
+      await this.areaAsesoryRepository.save(existing);
+    }
+
   }
 }
