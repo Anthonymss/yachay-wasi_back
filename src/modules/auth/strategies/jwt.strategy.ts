@@ -17,3 +17,20 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     return { userId: payload.sub, email: payload.email, role: payload.role };
   }
 }
+
+
+/* SUGERENCIAS
+RECOMENDACION DE MEJORA 
+// jwt.strategy.ts
+constructor(private configService: ConfigService) {
+  const secret = configService.get<string>('JWT_SECRET');
+  if (!secret) {
+    throw new Error('JWT_SECRET must be defined');
+  }
+  super({
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    ignoreExpiration: false,
+    secretOrKey: secret,
+  });
+}
+*/

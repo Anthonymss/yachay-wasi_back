@@ -6,15 +6,21 @@ import {
   IsEnum,
   IsBoolean,
   IsDateString,
+  MinLength,
+  MaxLength,
+  IsPhoneNumber
 } from 'class-validator';
 import {
   InfoSource,
   TYPE_IDENTIFICATION,
   TYPE_VOLUNTEER,
 } from '../entities/volunteer.entity';
-
+ 
+// VALIDACIONES
 export class CreateVolunteerDto {
   @IsString()
+  @MinLength(3)
+  @MaxLength(50)
   name: string;
 
   @IsString()
@@ -25,6 +31,7 @@ export class CreateVolunteerDto {
 
   @IsNotEmpty()
   @IsString()
+  @IsPhoneNumber()
   phoneNumber: string;
 
   @IsEmail()
@@ -39,12 +46,16 @@ export class CreateVolunteerDto {
   @IsOptional()
   @IsBoolean()
   wasVoluntary?: boolean;
+
   @IsString()
   volunteerMotivation: string;
+
   @IsEnum(InfoSource, { message: 'source of information' })
   howDidYouFindUs: InfoSource;
+
   @IsEnum(TYPE_VOLUNTEER)
   typeVolunteer: TYPE_VOLUNTEER;
+
   //que subarea va a postular
   @IsNotEmpty()
   namePostulationArea:string;

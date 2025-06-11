@@ -20,8 +20,8 @@ export const databaseConfig = {
       host: configService.get<string>('DB_HOST', 'localhost'),
       port: configService.get<number>('DB_PORT', 3306),
       username: configService.get<string>('DB_USERNAME', 'root'),
-      password: configService.get<string>('DB_PASSWORD', ''),
-      database: configService.get<string>('DB_DATABASE', 'yw_db'),
+      password: configService.get<string>('DB_PASSWORD', 'risesandfalls'),
+      database: configService.get<string>('DB_DATABASE', 'yachaywasidb'),
       entities: [path.join(__dirname, '../**/*.entity{.ts,.js}')],
       synchronize: configService.get<boolean>('DB_SYNC', false),
       migrations: [path.resolve(__dirname, 'migrations', '*{.ts,.js}')],
@@ -30,14 +30,15 @@ export const databaseConfig = {
   ),
   inject: [ConfigService],
 };
+
 //seeding and migrations
 export const AppDataSource = new DataSource({
   type: 'mysql',
   host: process.env.DB_HOST || 'localhost',
   port: Number(process.env.DB_PORT) || 3306,
   username: process.env.DB_USERNAME || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_DATABASE || 'yw_db',
+  password: process.env.DB_PASSWORD || 'risesandfalls',
+  database: process.env.DB_DATABASE || 'yachaywasidb',
   entities: [path.join(__dirname, '../**/*.entity{.ts,.js}')],
   synchronize: false,
   migrations: [path.resolve(__dirname, 'migrations', '*{.ts,.js}')],

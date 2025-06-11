@@ -5,7 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Volunteer } from './volunteer.entity';
+
+import { Volunteers } from './volunteers.entity';
 export enum DAY {
   MONDAY = 'Monday',
   TUESDAY = 'Tuesday',
@@ -15,20 +16,25 @@ export enum DAY {
   SATURDAY = 'Saturday',
   SUNDAY = 'Sunday',
 }
+
 @Entity('schedules_volunteers')
 export class Schedule {
   @PrimaryGeneratedColumn()
   id: number;
+
   @Column({ type: 'enum', enum: DAY, name: 'day_of_week' })
   dayOfWeek: DAY;
-  @ManyToOne(() => Volunteer, (volunteer) => volunteer.schedules)
+
+  @ManyToOne(() => Volunteers, (volunteer) => volunteer.schedules)
   @JoinColumn({ name: 'volunteer_id' })
-  volunteer: Volunteer;
-  //
+  volunteer: Volunteers;
+
   @Column()
   period_time: string;
+
   @Column()
   period_time2: string;
+
   @Column()
   period_time3: string;
 }
