@@ -20,6 +20,9 @@ services:
       - network-yw
     env_file:
       - .env
+    depends_on:
+      - mysql
+
 
 volumes:
   mysql_data:
