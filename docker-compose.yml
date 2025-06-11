@@ -18,8 +18,9 @@ services:
       - ${PORT}:${PORT}
     networks:
       - network-yw
-    environment:
+    env_file:
       - .env
+
 volumes:
   mysql_data:
     

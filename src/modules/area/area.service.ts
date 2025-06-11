@@ -21,14 +21,19 @@ export class AreaService {
   )
   {}
 
-  findAll() {
-    return this.areaStaffRepository.find();//agregar area Asesory
+  async findAll() {
+    const areaStaff = await this.areaStaffRepository.find();
+    const areaAsesory = await this.areaAsesoryRepository.find();
+    return {
+      areaStaff: areaStaff,
+      areaAsesory: areaAsesory
+    } 
   }
-async findAllSubAreas(idArea: number) {
-  return this.subAreaRepository.find({
-    where: { areaStaff: { id: idArea } },
-  });
-}
+  async findAllSubAreas(idArea: number) {
+    return this.subAreaRepository.find({
+      where: { areaStaff: { id: idArea } },
+    });
+  }
 
   create(createAreaDto: CreateAreaDto) {
     return 'This action adds a new area';
