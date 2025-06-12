@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ResponseVolunteer } from './response-volunteer.entity';
+import { ResponsesVolunteers } from './responses-volunteers.entity';
 import { Schedule } from './schedule.entity';
 
 export enum TYPE_IDENTIFICATION {
@@ -29,6 +29,31 @@ export enum InfoSource {
   PROA = 'Proa',
   PRONABEC = 'Pronabec',
   REFERRAL = 'Referencia de un amigo/familia',
+}
+export enum SchoolGrades {
+  PRIMARIA34 = 'Primaria (3° y 4° grado)',
+  PRIMARIA56 = 'Primaria (5° y 6° grado)',
+  SECUNDARIA123 = 'Secundaria (1°, 2° y 3° grado)'
+}
+export enum Occupation {
+  ESTUDIO = 'Solo estudio',
+  TRABAJO = 'Solo trabajo',
+  AMBOS = 'Ambos'
+}
+
+export enum QuechuaLevel {
+  NULO = 'No lo hablo',
+  BASICO = 'Nivel básico',
+  INTERMEDIO = 'Nivel intermedio',
+  AVANZADO = 'Nivel avanzado',
+  NATIVO = 'Nativo',
+}
+export enum ProgramsUniversity {
+  PRONABEC = 'Becario Pronabec',
+  UNIVAS = 'UNIVAS - UDEP',
+  UTEC = 'UTEC',
+  UCV = 'UCV',
+  NINGUNO = 'Ninguno',
 }
 
 
@@ -135,10 +160,10 @@ export class Volunteer {
   namePostulationArea:string;
   // Relaciones
   @OneToMany(
-    () => ResponseVolunteer,
-    (responseVolunteer) => responseVolunteer.volunteer,
+    () => ResponsesVolunteers,
+    (responsesVolunteers) => responsesVolunteers.volunteer,
   )
-  responseVolunteer: ResponseVolunteer[];
+  responseVolunteer: ResponsesVolunteers[];
 
   @OneToMany(() => Schedule, (schedule) => schedule.volunteer)
   schedules: Schedule[];
