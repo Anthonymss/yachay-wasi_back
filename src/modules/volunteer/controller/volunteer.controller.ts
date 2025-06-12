@@ -1,9 +1,14 @@
-import { BadRequestException, Controller, Post, Req, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { FastifyRequest } from 'fastify';
+import {
+  Controller,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+  Body,
+} from '@nestjs/common';
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { VolunteerService } from '../service/volunteer.service';
-import { Volunteer } from '../entities/volunteer.entity';
-import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
+import { CreateVolunteerDto } from '../dto/create-volunteer.dto';
 //@UseGuards(JwtAuthGuard)
 //@ApiBearerAuth()//candado
 @ApiTags('Volunteer')
@@ -13,9 +18,11 @@ export class VolunteerController {
 
   @Post()
   @ApiConsumes('multipart/form-data')
-  async createVolunteer(@Req() req: FastifyRequest) {
-    const parts = await (req as any).parts();
-    return this.volunteerService.handleMultipartAndCreate(parts);
+  @UseInterceptors(FileInterceptor('file'))
+  async createVolunteer(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() dto: CreateVolunteerDto,
+  ) {
+    return this.volunteerService.create(dto, file);
   }
-
 }
