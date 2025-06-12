@@ -9,25 +9,22 @@ import { SubArea } from './entities/area-volunteer/sub-area.entity';
 
 @Injectable()
 export class AreaService {
-  
-  constructor
-  (
+  constructor(
     @InjectRepository(AreaStaff)
-    private readonly areaStaffRepository:Repository<AreaStaff>,
+    private readonly areaStaffRepository: Repository<AreaStaff>,
     @InjectRepository(AreaAsesory)
-    private readonly areaAsesoryRepository:Repository<AreaAsesory>,
+    private readonly areaAsesoryRepository: Repository<AreaAsesory>,
     @InjectRepository(SubArea)
-    private readonly subAreaRepository:Repository<SubArea>,
-  )
-  {}
+    private readonly subAreaRepository: Repository<SubArea>,
+  ) {}
 
   async findAll() {
     const areaStaff = await this.areaStaffRepository.find();
     const areaAsesory = await this.areaAsesoryRepository.find();
     return {
       areaStaff: areaStaff,
-      areaAsesory: areaAsesory
-    } 
+      areaAsesory: areaAsesory,
+    };
   }
   async findAllSubAreas(idArea: number) {
     return this.subAreaRepository.find({
@@ -38,8 +35,6 @@ export class AreaService {
   create(createAreaDto: CreateAreaDto) {
     return 'This action adds a new area';
   }
-
-
 
   findOne(id: number) {
     return `This action returns a #${id} area`;

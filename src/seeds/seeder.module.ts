@@ -15,7 +15,7 @@ import { AreaAsesory } from 'src/modules/area/entities/area-beneficiary/area-ase
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync(databaseConfig),
-    TypeOrmModule.forFeature([Rol, AreaStaff, SubArea,AreaAsesory]),
+    TypeOrmModule.forFeature([Rol, AreaStaff, SubArea, AreaAsesory]),
   ],
   providers: [SeederService, RolSeeder, AreaSeeder],
 })

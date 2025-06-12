@@ -7,9 +7,7 @@ import { AreaAsesory } from './entities/area-beneficiary/area-asesory.entity';
 import { SubArea } from './entities/area-volunteer/sub-area.entity';
 
 @Module({
-  imports:[
-    TypeOrmModule.forFeature([AreaStaff,AreaAsesory,SubArea]),
-  ],
+  imports: [TypeOrmModule.forFeature([AreaStaff, AreaAsesory, SubArea])],
   controllers: [AreaController],
   providers: [AreaService],
 })

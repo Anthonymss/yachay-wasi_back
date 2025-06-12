@@ -6,14 +6,16 @@ import {
   IsEnum,
   IsBoolean,
   IsDateString,
+  IsNumber,
+  isNotEmpty,
+  ValidateNested,
+  ArrayMinSize,
+  IsArray,
 } from 'class-validator';
-import {
-  InfoSource,
-  TYPE_IDENTIFICATION,
-  TYPE_VOLUNTEER,
-} from '../entities/volunteer.entity';
-
-export class CreateVolunteerDto {
+import { InfoSource, TYPE_IDENTIFICATION } from '../entities/volunteer.entity';
+import { Transform, Type } from 'class-transformer';
+import { CreateScheduleDto } from './create-schedule.dto';
+export class CreateVolunteerADdviserDto {
   @IsString()
   name: string;
 
@@ -36,17 +38,20 @@ export class CreateVolunteerDto {
   @IsString()
   numIdentification: string;
 
-  @IsOptional()
   @IsBoolean()
-  wasVoluntary?: boolean;
+  @Transform(({ value }) => value === 'true' || value === true)
+  wasVoluntary: boolean;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateScheduleDto)
+  schedule: CreateScheduleDto[];
+
   @IsString()
   volunteerMotivation: string;
   @IsEnum(InfoSource, { message: 'source of information' })
   howDidYouFindUs: InfoSource;
-  @IsEnum(TYPE_VOLUNTEER)
-  typeVolunteer: TYPE_VOLUNTEER;
   //que subarea va a postular
   @IsNotEmpty()
-  namePostulationArea:string;
-  
+  namePostulationArea: string;
 }

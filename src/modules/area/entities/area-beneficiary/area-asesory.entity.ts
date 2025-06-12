@@ -9,7 +9,7 @@ export class AreaAsesory {
   @Column({ type: 'boolean', name: 'is_active', nullable: true })
   isActive: boolean;
   @Column()
-  description:string
+  description: string;
   //other relations
   @OneToMany(() => Question, (question) => question.areaAsesory)
   question: Question[];

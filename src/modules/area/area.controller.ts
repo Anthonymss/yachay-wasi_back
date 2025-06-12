@@ -18,18 +18,15 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 @ApiTags('Area')
 @Controller('areas')
 export class AreaController {
-  constructor(
-    private readonly areaService: AreaService,
-  ) {}
+  constructor(private readonly areaService: AreaService) {}
 
   @Get()
-  async findAllAreas(){
+  async findAllAreas() {
     return this.areaService.findAll();
   }
   @Get('/subareas/:id')
-  async findAllSubAreas(@Param('id')idArea:number){
-    console.log('..')
+  async findAllSubAreas(@Param('id') idArea: number) {
+    console.log('..');
     return this.areaService.findAllSubAreas(+idArea);
   }
-
 }

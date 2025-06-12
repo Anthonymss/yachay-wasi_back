@@ -31,7 +31,6 @@ export enum InfoSource {
   REFERRAL = 'Referencia de un amigo/familia',
 }
 
-
 @Entity('volunteers')
 export class Volunteer {
   @PrimaryGeneratedColumn()
@@ -77,21 +76,23 @@ export class Volunteer {
   @Column({
     type: 'boolean',
     nullable: false,
-    default: false,
     name: 'is_active',
+    default: false,
   })
   isActive: boolean;
 
   @Column({
     type: 'boolean',
     nullable: false,
-    default: true,
     name: 'was_voluntary',
   })
   wasVoluntary: boolean;
 
   @Column({ type: 'varchar', nullable: false, name: 'cv_url' })
   cvUrl: string;
+
+  @Column({ type: 'varchar', nullable: true, name: 'video_url' })
+  videoUrl?: string;
 
   @Column({
     type: 'date',
@@ -122,6 +123,11 @@ export class Volunteer {
     nullable: false,
   })
   howDidYouFindUs: InfoSource;
+
+  //ASESORY
+  @Column({ name: 'advisory_capacity', nullable: true })
+  advisoryCapacity?: number;
+
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
 
@@ -131,8 +137,8 @@ export class Volunteer {
   @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
   deletedAt: Date;
   //
-  @Column({name:'name_postulation_area'})
-  namePostulationArea:string;
+  @Column({ name: 'name_postulation_area' })
+  namePostulationArea: string;
   // Relaciones
   @OneToMany(
     () => ResponseVolunteer,

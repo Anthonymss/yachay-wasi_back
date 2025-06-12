@@ -7,13 +7,13 @@ import {
 } from 'typeorm';
 import { Volunteer } from './volunteer.entity';
 export enum DAY {
-  MONDAY = 'Monday',
-  TUESDAY = 'Tuesday',
-  WEDNESDAY = 'Wednesday',
-  THURSDAY = 'Thursday',
-  FRIDAY = 'Friday',
-  SATURDAY = 'Saturday',
-  SUNDAY = 'Sunday',
+  MONDAY = 'MONDAY',
+  TUESDAY = 'TUESDAY',
+  WEDNESDAY = 'WEDNESDAY',
+  THURSDAY = 'THURSDAY',
+  FRIDAY = 'FRIDAY',
+  SATURDAY = 'SATURDAY',
+  SUNDAY = 'SUNDAY',
 }
 @Entity('schedules_volunteers')
 export class Schedule {

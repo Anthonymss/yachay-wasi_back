@@ -38,7 +38,9 @@ export class CloudinaryService {
     const folderPath = this.getFolderPath(resourceType);
 
     try {
-      console.log(`[Cloudinary] Starting upload to ${folderPath} as ${resourceType}...`);
+      console.log(
+        `[Cloudinary] Starting upload to ${folderPath} as ${resourceType}...`,
+      );
 
       const result: UploadApiResponse = await new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
@@ -51,7 +53,9 @@ export class CloudinaryService {
             if (error || !result) {
               console.error('[Cloudinary] Upload error:', error);
               return reject(
-                new InternalServerErrorException('Fallo la subida a Cloudinary'),
+                new InternalServerErrorException(
+                  'Fallo la subida a Cloudinary',
+                ),
               );
             }
             console.log('[Cloudinary] Upload successful:', result.secure_url);
