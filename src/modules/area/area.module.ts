@@ -2,13 +2,14 @@ import { Module } from '@nestjs/common';
 import { AreaService } from './area.service';
 import { AreaController } from './area.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AreaStaff } from './entities/area-volunteer/area-staff.entity';
-import { AreaAsesory } from './entities/area-beneficiary/area-asesory.entity';
-import { SubArea } from './entities/area-volunteer/sub-area.entity';
+import { AreasStaff } from './entities/area-volunteer/areas-staff.entity';
+import { AreasAsesories } from './entities/area-beneficiary/areas-asesories.entity';
+import { SubAreas } from './entities/area-volunteer/sub-areas.entity';
+import { QuestionsVolunteers } from './entities/area-volunteer/questions-volunteers.entity';
 
 @Module({
   imports:[
-    TypeOrmModule.forFeature([AreaStaff,AreaAsesory,SubArea]),
+    TypeOrmModule.forFeature([AreasStaff,AreasAsesories,SubAreas, QuestionsVolunteers]),
   ],
   controllers: [AreaController],
   providers: [AreaService],

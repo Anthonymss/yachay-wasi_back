@@ -1,20 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AreaStaff } from 'src/modules/area/entities/area-volunteer/area-staff.entity';
-import { SubArea } from 'src/modules/area/entities/area-volunteer/sub-area.entity';
-import { AreaAsesory } from 'src/modules/area/entities/area-beneficiary/area-asesory.entity';
+import { AreasStaff } from 'src/modules/area/entities/area-volunteer/areas-staff.entity';
+import { SubAreas } from 'src/modules/area/entities/area-volunteer/sub-areas.entity';
+import { AreasAsesories } from 'src/modules/area/entities/area-beneficiary/areas-asesories.entity';
 @Injectable()
 export class AreaSeeder {
   private readonly log = new Logger('Seeder');
 
   constructor(
-    @InjectRepository(AreaStaff)
-    private readonly areaStaffRepository: Repository<AreaStaff>,
-    @InjectRepository(SubArea)
-    private readonly subAreaRepository: Repository<SubArea>,
-    @InjectRepository(AreaAsesory)
-    private readonly areaAsesoryRepository: Repository<AreaAsesory>,
+    @InjectRepository(AreasStaff)
+    private readonly areaStaffRepository: Repository<AreasStaff>,
+    @InjectRepository(SubAreas)
+    private readonly subAreaRepository: Repository<SubAreas>,
+    @InjectRepository(AreasAsesories)
+    private readonly areaAsesoryRepository: Repository<AreasAsesories>,
   ) {}
 
   async seed() {
@@ -33,7 +33,7 @@ export class AreaSeeder {
       { key: 'area11', name: 'Innovación & Calidad', description: '2' },
     ];
 
-    const areaMap: Record<string, AreaStaff> = {};
+    const areaMap: Record<string, AreasStaff> = {};
 
     for (const { key, name, description } of areasData) {
       let area = await this.areaStaffRepository.findOne({ where: { name } });

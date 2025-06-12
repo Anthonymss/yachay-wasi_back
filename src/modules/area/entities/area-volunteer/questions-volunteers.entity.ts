@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { SubAreas } from './sub-areas.entity';
-import { ResponseVolunteer } from 'src/modules/volunteer/entities/response-volunteer.entity';
+import { ResponsesVolunteers } from 'src/modules/volunteer/entities/responses-volunteers.entity';
 
 @Entity('questions_volunteers')
 export class QuestionsVolunteers {
@@ -27,8 +27,8 @@ export class QuestionsVolunteers {
 
   //other realtions
   @OneToMany(
-    () => ResponseVolunteer,
+    () => ResponsesVolunteers,
     (responseVolunteer) => responseVolunteer.question,
   )
-  responseVolunteer: ResponseVolunteer[];
+  responseVolunteer: ResponsesVolunteers[];
 }

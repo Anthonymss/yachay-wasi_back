@@ -13,19 +13,27 @@ import { CreateAreaDto } from './dto/create-area.dto';
 import { UpdateAreaDto } from './dto/update-area.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+// ENDPOINTS CONSUMIBLES
 //@UseGuards(JwtAuthGuard)
 //@ApiBearerAuth() //candadito
 @ApiTags('Area')
+
 @Controller('areas')
 export class AreaController {
-  constructor(
-    private readonly areaService: AreaService,
-  ) {}
+  constructor(private readonly areaService: AreaService) {}
 
   @Get()
   async findAllAreas(){
     return this.areaService.findAll();
   }
+
+  // endpoint para obtener preguntas por área
+  @Get('questions/:areaId')
+  async getQuestionsByArea(@Param('areaId') areaId: string){
+    const id = areaId.split(',').map(id => parseInt(id));
+    return this.areaService.getQuestionsByArea(id);
+  }
+
   @Get('/subareas/:id')
   async findAllSubAreas(@Param('id')idArea:number){
     console.log('..')

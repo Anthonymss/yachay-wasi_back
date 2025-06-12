@@ -19,7 +19,7 @@ import {
   SchoolGrades,
   TYPE_IDENTIFICATION,
   TYPE_VOLUNTEER,
-} from '../entities/volunteer.entity';
+} from '../entities/volunteers.entity';
 
 // VALIDACIONES
 export class CreateVolunteerDto {

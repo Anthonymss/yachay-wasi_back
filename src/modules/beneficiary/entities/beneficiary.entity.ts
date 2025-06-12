@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 import { BeneficiaryLanguage } from './beneficiary-languaje.entity';
 import { Schedule } from './schedule.entity';
-import { ResponseBeneficiary } from '../../area/entities/area-beneficiary/response-beneficiary.entity';
+import { ResponsesBeneficiaries } from '../../area/entities/area-beneficiary/responses-beneficiaries.entity';
 import { Grade } from './grade.entity';
 import { EnrollmentStatus } from './enrollment-status.entity';
 import { LearningLevel } from './learning-level.entity';
@@ -136,10 +136,10 @@ export class Beneficiary {
   @OneToMany(() => Schedule, (schedule) => schedule.beneficiary)
   schedules: Schedule[];
   @OneToMany(
-    () => ResponseBeneficiary,
+    () => ResponsesBeneficiaries,
     (responseBeneficiary) => responseBeneficiary.beneficiary,
   )
-  responseBeneficiary: ResponseBeneficiary[];
+  responseBeneficiary: ResponsesBeneficiaries[];
   @ManyToOne(() => Grade, (grade) => grade.beneficiaries)
   @JoinColumn({ name: 'grade_id' })
   grade: Grade;

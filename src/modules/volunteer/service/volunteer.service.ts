@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CreateVolunteerDto } from '../dto/create-volunteer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Volunteer } from '../entities/volunteer.entity';
+import { Volunteers } from '../entities/volunteers.entity';
 import { Repository } from 'typeorm';
 import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
 import { MultipartFile } from '@fastify/multipart';
 import { parseMultipart, UploadedFile } from 'src/shared/others/multipart';
-
+// IMPLEMENTACION
 @Injectable()
 export class VolunteerService {
   constructor(
-    @InjectRepository(Volunteer)
-    private readonly volunteerRepository: Repository<Volunteer>,
+    @InjectRepository(Volunteers)
+    private readonly volunteerRepository: Repository<Volunteers>,
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
@@ -21,7 +21,7 @@ export class VolunteerService {
     return 'Volunter is created'
   }
 
-  async create(dto: CreateVolunteerDto, file: UploadedFile): Promise<Volunteer> {
+  async create(dto: CreateVolunteerDto, file: UploadedFile): Promise<Volunteers> {
     const multerFile: Express.Multer.File = {
       ...file,
       destination: '',
@@ -35,8 +35,8 @@ export class VolunteerService {
 
     const volunteer = this.volunteerRepository.create({
       ...dto,
-      cvUrl: url,
-      datePostulation: new Date(),
+      cv_url: url,
+      date_postulation: new Date(),
     });
 
     return this.volunteerRepository.save(volunteer);
