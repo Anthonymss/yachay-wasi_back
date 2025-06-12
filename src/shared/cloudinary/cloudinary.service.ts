@@ -36,29 +36,29 @@ export class CloudinaryService {
 
     const resourceType = this.getResourceType(file.mimetype);
     const folderPath = this.getFolderPath(resourceType);
+    const uploadPreset = this.configService.get<string>('CLOUDINARY_UPLOAD_PRESET') || 'public_raw_upload';
 
     try {
-      console.log(
-        `[Cloudinary] Starting upload to ${folderPath} as ${resourceType}...`,
-      );
+      console.log(`[Cloudinary] Subiendo a ${folderPath} como ${resourceType}...`);
 
       const result: UploadApiResponse = await new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           {
             resource_type: resourceType,
             folder: folderPath,
-            public_id: file.originalname.split('.')[0],
+            public_id: file.originalname.replace(/\.[^/.]+$/, ''),
+            format: this.getFileExtension(file.originalname),
+            upload_preset: uploadPreset,
+            use_filename: true,
+            unique_filename: false,
+            overwrite: true,
           },
           (error, result) => {
             if (error || !result) {
-              console.error('[Cloudinary] Upload error:', error);
-              return reject(
-                new InternalServerErrorException(
-                  'Fallo la subida a Cloudinary',
-                ),
-              );
+              console.error('[Cloudinary] Error de subida:', error);
+              return reject(new InternalServerErrorException('Fallo la subida a Cloudinary'));
             }
-            console.log('[Cloudinary] Upload successful:', result.secure_url);
+            console.log('[Cloudinary] Subida exitosa:', result.secure_url);
             resolve(result);
           },
         );
@@ -68,7 +68,7 @@ export class CloudinaryService {
 
       return result.secure_url;
     } catch (error) {
-      console.error('[Cloudinary] Exception during upload:', error);
+      console.error('[Cloudinary] Excepción durante la subida:', error);
       throw new InternalServerErrorException('Fallo la subida a Cloudinary');
     }
   }
@@ -90,5 +90,10 @@ export class CloudinaryService {
       default:
         return 'yw/others';
     }
+  }
+
+  private getFileExtension(filename: string): string {
+    const parts = filename.split('.');
+    return parts.length > 1 ? (parts.pop() || '') : '';
   }
 }
