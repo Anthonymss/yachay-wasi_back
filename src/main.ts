@@ -11,6 +11,8 @@ import cors from '@fastify/cors';
 import { setupSwagger } from './config/swagger/swagger.config';
 import multipart from '@fastify/multipart';
 import fastifyHelmet from '@fastify/helmet';
+import fastifyStatic from '@fastify/static';
+import { join } from 'path';
 
 async function bootstrap() {
   const PORT = process.env.PORT || 3000;
@@ -25,6 +27,10 @@ async function bootstrap() {
       files: 1,
       fields: 20,
     },
+  });
+
+  await fastifyAdapter.register(fastifyStatic, {
+    root: join(__dirname, '..'),
   });
 
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -43,6 +49,7 @@ async function bootstrap() {
 
   app.use(morgan('dev'));
   app.setGlobalPrefix('api');
+
   await setupSwagger(app);
 
   await app.listen(PORT, '0.0.0.0');
