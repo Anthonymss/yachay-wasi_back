@@ -15,12 +15,14 @@ export class AreaSeeder {
     private readonly subAreaRepository: Repository<SubAreas>,
     @InjectRepository(AreasAsesories)
     private readonly areaAsesoryRepository: Repository<AreasAsesories>,
-  ) {}
+  ) { }
 
   async seed() {
-  const areasData = [
-      { key: 'area1', name: 'Talento & Desarrollo Organizacional', 
-        description: '1' },
+    const areasData = [
+      {
+        key: 'area1', name: 'Talento & Desarrollo Organizacional',
+        description: '1'
+      },
       { key: 'area2', name: 'Cultura & Comunicación Interna', description: '2' },
       { key: 'area3', name: 'Imagen Institucional & Relaciones Públicas', description: '2' },
       { key: 'area4', name: 'Alianzas Organizacionales', description: '2' },
@@ -48,7 +50,7 @@ export class AreaSeeder {
       areaMap[key] = await this.areaStaffRepository.save(area);
     }
 
-  const subAreasData = [
+    const subAreasData = [
       { name: 'Subcoordinador/a de Talento & Desarrollo Organizacional', areaKey: 'area1' },
       { name: 'Líder de Atracción de Talento', areaKey: 'area1' },
       { name: 'Analista/Asistente de Atracción de Talento', areaKey: 'area1' },
@@ -92,16 +94,29 @@ export class AreaSeeder {
       { name: 'Líder de Análisis e Informes', areaKey: 'area10' },
       { name: 'Analista/Asistente de Informes', areaKey: 'area10' },
       { name: 'Líder de Estrategias Comunitarias', areaKey: 'area10' },
-      { name: 'Líder de Desarrollo de Productos',description:'agregar descripcion', areaKey: 'area11' },
-      { name: 'Desarrollador/a API',description:'agregar descripcion', areaKey: 'area11' },
-      { name: 'Desarrollador/a Backend',description:'agregar descripcion', areaKey: 'area11' },
-      { name: 'Desarrollador/a Frontend',description:'agregar descripcion', areaKey: 'area11' },
-      { name: 'Ingeniero/a de Infraestructura Cloud',description:'agregar descripcion', areaKey: 'area11' },
-      { name: 'Analista de Gobierno de Datos',description:'agregar descripcion', areaKey: 'area11' },
-      { name: 'Líder de Mejora Continua',description:'agregar descripcion', areaKey: 'area11' },
+      { name: 'Líder de Desarrollo de Productos', description: 'agregar descripcion', areaKey: 'area11' },
+      { name: 'Desarrollador/a API', description: 'agregar descripcion', areaKey: 'area11' },
+      { name: 'Desarrollador/a Backend', description: 'agregar descripcion', areaKey: 'area11' },
+      { name: 'Desarrollador/a Frontend', description: 'agregar descripcion', areaKey: 'area11' },
+      { name: 'Ingeniero/a de Infraestructura Cloud', description: 'agregar descripcion', areaKey: 'area11' },
+      { name: 'Analista de Gobierno de Datos', description: 'agregar descripcion', areaKey: 'area11' },
+      { name: 'Líder de Mejora Continua', description: 'agregar descripcion', areaKey: 'area11' },
+      // NUEVAS SUBÁREAS PARA ARTE & CULTURA
+      { name: 'Cuenta cuentos', areaKey: 'area7' },
+      { name: 'Dibujo y Pintura', areaKey: 'area7' },
+      { name: 'Música', areaKey: 'area7' },
+      { name: 'Oratoria', areaKey: 'area7' },
+      { name: 'Teatro', areaKey: 'area7' },
+      { name: 'Danza', areaKey: 'area7' },
+      // NUEVAS SUBÁREAS PARA ASESORÍA A COLEGIOS NACIONALES
+      { name: 'Comunicación', areaKey: 'area8' },
+      { name: 'Inglés', areaKey: 'area8' },
+      { name: 'Matemática', areaKey: 'area8' },
+      // NUEVAS SUBÁREAS PARA BIENESTAR PSICOLÓGICOS
+      { name: '"Yaku bienestar": Facilitador psicoeducativo', areaKey: 'area9' },
     ];
 
-    for (const { name,description, areaKey } of subAreasData) {
+    for (const { name, description, areaKey } of subAreasData) {
       let subArea = await this.subAreaRepository.findOne({ where: { name } });
 
       if (subArea) {

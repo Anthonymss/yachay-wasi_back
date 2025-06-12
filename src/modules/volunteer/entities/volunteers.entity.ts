@@ -109,11 +109,15 @@ export class Volunteers {
   @Column({ type: 'varchar', nullable: false, name: 'cv_url' })
   cv_url: string;
 
+  @Column({ type: 'varchar', length: 500, nullable: true, name: 'video_url' })
+  video_url: string;
+
   // DISPONIBILIDAD
+  // Estos campos ahora son nullable: true para STAFF
   @Column({
     type: 'enum',
     enum: SchoolGrades,
-    nullable: false,
+    nullable: true, // Cambiado a true
     name: 'school_grades'
   })
   school_grades: SchoolGrades;
@@ -141,10 +145,11 @@ export class Volunteers {
   })
   occupation: Occupation;
 
+  // Estos campos ahora son nullable: true para STAFF
   @Column({
     type: 'varchar',
     length: 500,
-    nullable: false,
+    nullable: true, // Cambiado a true
     name: 'volunteer_motivation',
   })
   volunteer_motivation: string;
@@ -152,7 +157,7 @@ export class Volunteers {
   @Column({
     type: 'varchar',
     length: 500,
-    nullable: true,
+    nullable: true, // Cambiado a true
     name: 'why_asesor'
   })
   why_asesor: string;
@@ -160,7 +165,7 @@ export class Volunteers {
   @Column({
     type: 'enum',
     enum: QuechuaLevel,
-    nullable: true,
+    nullable: true, // Cambiado a true
     name: 'quechua_level'
   })
   quechua_level: QuechuaLevel;
