@@ -5,14 +5,18 @@ import {
   UseInterceptors,
   Body,
   UploadedFiles,
+  Get,
+  Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   FileFieldsInterceptor,
   FileInterceptor,
 } from '@nestjs/platform-express';
 import { VolunteerService } from '../service/volunteer.service';
 import { CreateVolunteerStaffDto } from '../dto/create-volunteer-staff.dto';
+import { TYPE_VOLUNTEER } from '../entities/volunteer.entity';
+import { VolunteerResponseDto } from '../dto/volunteer-response.dto';
 //@UseGuards(JwtAuthGuard)
 @ApiBearerAuth() //candado
 @ApiTags('Volunteer')
@@ -53,5 +57,21 @@ export class VolunteerController {
       file?.[0],
       video?.[0],
     );
+  }
+  @Get()
+ @ApiQuery({ name: 'type', enum: TYPE_VOLUNTEER, required: false })  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de voluntarios',
+    type: VolunteerResponseDto,
+    isArray: true,
+  })
+  async findAll(
+    @Query('type') type: TYPE_VOLUNTEER,
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+  ) {
+    return this.volunteerService.findAll(type, page, limit);
   }
 }
