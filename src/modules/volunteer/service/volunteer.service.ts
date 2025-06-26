@@ -23,7 +23,6 @@ export class VolunteerService {
     file: Express.Multer.File,
   ): Promise<Volunteer> {
     await this.validateData(dto.email, TYPE_VOLUNTEER.STAFF, file);
-    console.log('wasVoluntary? ' + dto.wasVoluntary);
     const urlCv = await this.cloudinaryService.uploadFile(file);
     const volunteer = this.volunteerRepository.create({
       ...dto,
@@ -44,7 +43,6 @@ export class VolunteerService {
       );
     }
     await this.validateData(dto.email, TYPE_VOLUNTEER.ADVISER, file);
-    console.log('wasVoluntary? ' + dto.schedule);
     const urlCv = await this.cloudinaryService.uploadFile(file);
     const urlVideo = await this.cloudinaryService.uploadFile(video);
     const volunteer = this.volunteerRepository.create({

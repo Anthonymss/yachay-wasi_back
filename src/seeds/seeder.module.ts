@@ -14,6 +14,7 @@ import { AdminSeeder } from './seed/admin.seeder';
 import { User } from 'src/modules/user/entities/user.entity';
 import { Volunteer } from 'src/modules/volunteer/entities/volunteer.entity';
 import { VolunteerSeeder } from './seed/volunteer.seeder';
+import { Schedule } from 'src/modules/volunteer/entities/schedule.entity';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { VolunteerSeeder } from './seed/volunteer.seeder';
        AreaAsesory,
        User,
        Volunteer,
+       Schedule,
       ]),
   ],
   providers: [SeederService, RolSeeder, AreaSeeder, AdminSeeder,VolunteerSeeder],

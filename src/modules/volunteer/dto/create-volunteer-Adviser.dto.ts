@@ -2,17 +2,14 @@ import {
   IsString,
   IsNotEmpty,
   IsEmail,
-  IsOptional,
   IsEnum,
   IsBoolean,
-  IsDateString,
-  IsNumber,
-  isNotEmpty,
   ValidateNested,
-  ArrayMinSize,
   IsArray,
+  IsNumber,
+  IsOptional,
 } from 'class-validator';
-import { InfoSource, TYPE_IDENTIFICATION } from '../entities/volunteer.entity';
+import { InfoSource, ProgramsUniversity, QuechuaLevel, SchoolGrades, TYPE_IDENTIFICATION } from '../entities/volunteer.entity';
 import { Transform, Type } from 'class-transformer';
 import { CreateScheduleDto } from './create-schedule.dto';
 export class CreateVolunteerADdviserDto {
@@ -51,7 +48,21 @@ export class CreateVolunteerADdviserDto {
   volunteerMotivation: string;
   @IsEnum(InfoSource, { message: 'source of information' })
   howDidYouFindUs: InfoSource;
-  //que subarea va a postular
+  //que subarea va a postular, se guarda el name porque no hay referencia directa 
   @IsNotEmpty()
   namePostulationArea: string;
+
+  //others
+  @Transform(({ value }) => value !== undefined ? Number(value) : undefined)
+  @IsNumber()
+  advisoryCapacity: number;
+  
+  @IsEnum(SchoolGrades)
+  schoolGrades?: SchoolGrades;
+
+  @IsEnum(QuechuaLevel)
+  quechuaLevel?: QuechuaLevel;
+
+  @IsEnum(ProgramsUniversity)
+  programsUniversity?: ProgramsUniversity;
 }

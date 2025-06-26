@@ -41,10 +41,6 @@ export class CloudinaryService {
       'public_raw_upload';
 
     try {
-      console.log(
-        `[Cloudinary] Subiendo a ${folderPath} como ${resourceType}...`,
-      );
-
       const result: UploadApiResponse = await new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           {
@@ -66,7 +62,6 @@ export class CloudinaryService {
                 ),
               );
             }
-            console.log('[Cloudinary] Subida exitosa:', result.secure_url);
             resolve(result);
           },
         );

@@ -150,6 +150,7 @@ export class Volunteer {
   howDidYouFindUs: InfoSource;
 
   //ASESORY
+  //numero de rurus max
   @Column({ name: 'advisory_capacity', nullable: true })
   advisoryCapacity?: number;
 
@@ -200,6 +201,7 @@ export class Volunteer {
   )
   responseVolunteer: ResponseVolunteer[];
 
-  @OneToMany(() => Schedule, (schedule) => schedule.volunteer)
+  @OneToMany(() => Schedule, schedule => schedule.volunteer, { cascade: true, eager: true })
   schedules: Schedule[];
+  
 }
