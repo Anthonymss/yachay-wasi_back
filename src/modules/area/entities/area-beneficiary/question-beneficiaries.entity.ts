@@ -6,7 +6,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { AreaAsesory } from './area-asesory.entity';
+import { AreaAdviser } from './area-adviser.entity';
 import { ResponseBeneficiary } from './response-beneficiary.entity';
 
 @Entity('questions_beneficiaries')
@@ -20,11 +20,11 @@ export class QuestionBeneficiaries {
 
   //other realtions
   @ManyToOne(
-    () => AreaAsesory,
-    (areaAsesory) => areaAsesory.questionBeneficiaries,
+    () => AreaAdviser,
+    (areaAdviser) => areaAdviser.questionBeneficiaries,
   )
   @JoinColumn({ name: 'area_asesory_id' })
-  areaAsesory: AreaAsesory;
+  areaAdviser: AreaAdviser;
   @OneToMany(
     () => ResponseBeneficiary,
     (responseBeneficiary) => responseBeneficiary.questionBeneficiaries,

@@ -1,5 +1,8 @@
 import {
   InfoSource,
+  SchoolGrades,
+  QuechuaLevel,
+  ProgramsUniversity,
   TYPE_IDENTIFICATION,
   TYPE_VOLUNTEER,
 } from '../entities/volunteer.entity';
@@ -23,5 +26,10 @@ export class VolunteerResponseDto {
   howDidYouFindUs: InfoSource;
   schedules?: Schedule[];
   advisoryCapacity?: number;
-  namePostulationArea: string;
+  idPostulationArea: number;
+  schoolGrades?: SchoolGrades;
+  callingPlan?: boolean;
+  quechuaLevel?: QuechuaLevel;
+  programsUniversity?: ProgramsUniversity;
+
 }

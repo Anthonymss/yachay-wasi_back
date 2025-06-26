@@ -100,12 +100,12 @@ export class VolunteerSeeder {
       volunteer.howDidYouFindUs = faker.helpers.arrayElement(
         Object.values(InfoSource),
       );
-      volunteer.namePostulationArea = faker.helpers.arrayElement([
-        'Desarrollador/a API',
-        'Desarrollador/a Frontend',
-        'Desarrollador/a Backend',
-        'Líder de Desarrollo de Productos',
-        'Ingeniero/a de Infraestructura Cloud',
+      volunteer.idPostulationArea = faker.helpers.arrayElement([
+        1,
+        2,
+        3,
+        4,
+        5,
       ]);
 
       if (type === TYPE_VOLUNTEER.ADVISER) {

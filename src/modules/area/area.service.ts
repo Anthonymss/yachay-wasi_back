@@ -4,7 +4,7 @@ import { UpdateAreaDto } from './dto/update-area.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AreaStaff } from './entities/area-volunteer/area-staff.entity';
 import { Repository } from 'typeorm';
-import { AreaAsesory } from './entities/area-beneficiary/area-asesory.entity';
+import {  AreaAdviser } from './entities/area-beneficiary/area-adviser.entity';
 import { SubArea } from './entities/area-volunteer/sub-area.entity';
 import { QuestionVolunteer } from './entities/area-volunteer/question-volunteer.entity';
 
@@ -13,8 +13,8 @@ export class AreaService {
   constructor(
     @InjectRepository(AreaStaff)
     private readonly areaStaffRepository: Repository<AreaStaff>,
-    @InjectRepository(AreaAsesory)
-    private readonly areaAsesoryRepository: Repository<AreaAsesory>,
+    @InjectRepository(AreaAdviser)
+    private readonly areaAdviserRepository: Repository<AreaAdviser>,
     @InjectRepository(SubArea)
     private readonly subAreaRepository: Repository<SubArea>,
     @InjectRepository(QuestionVolunteer)
@@ -23,10 +23,10 @@ export class AreaService {
 
   async findAll() {
     const areaStaff = await this.areaStaffRepository.find();
-    const areaAsesory = await this.areaAsesoryRepository.find();
+    const areaAdviser = await this.areaAdviserRepository.find();
     return {
       areaStaff: areaStaff,
-      areaAsesory: areaAsesory,
+      areaAdviser: areaAdviser,
     };
   }
   async findAllSubAreas(idArea: number) {

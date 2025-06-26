@@ -9,6 +9,7 @@ import { VolunteerModule } from './modules/volunteer/volunteer.module';
 import { BeneficiaryModule } from './modules/beneficiary/beneficiary.module';
 import { AreaModule } from './modules/area/area.module';
 import { DonationModule } from './modules/donation/donation.module';
+import { StatisticsModule } from './modules/statistics/statistics.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,6 +23,7 @@ import { DonationModule } from './modules/donation/donation.module';
     BeneficiaryModule,
     AreaModule,
     DonationModule,
+    StatisticsModule,
   ],
   controllers: [],
   providers: [],

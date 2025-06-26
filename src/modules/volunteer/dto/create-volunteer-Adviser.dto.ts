@@ -56,11 +56,11 @@ export class CreateVolunteerADdviserDto {
   howDidYouFindUs: InfoSource;
   //que subarea va a postular, se guarda el name porque no hay referencia directa
   @IsNotEmpty()
-  namePostulationArea: string;
+  @Transform(({ value }) => (value !== undefined ? Number(value) : undefined))
+  idPostulationArea: number;
 
   //others
   @Transform(({ value }) => (value !== undefined ? Number(value) : undefined))
-  @IsNumber()
   advisoryCapacity: number;
 
   @IsEnum(SchoolGrades)

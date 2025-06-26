@@ -192,8 +192,8 @@ export class Volunteer {
   @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
   deletedAt: Date;
   //
-  @Column({ name: 'name_postulation_area' })
-  namePostulationArea: string;
+  @Column({ name: 'id_postulation_area' })
+  idPostulationArea: number;
   // Relaciones
   @OneToMany(
     () => ResponseVolunteer,

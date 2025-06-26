@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { QuestionBeneficiaries } from './question-beneficiaries.entity';
 @Entity('areas_asesories')
-export class AreaAsesory {
+export class AreaAdviser {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({ type: 'varchar', length: 100, nullable: false })
@@ -13,7 +13,7 @@ export class AreaAsesory {
   //other relations
   @OneToMany(
     () => QuestionBeneficiaries,
-    (questionBeneficiaries) => questionBeneficiaries.areaAsesory,
+    (questionBeneficiaries) => questionBeneficiaries.areaAdviser,
   )
   questionBeneficiaries: QuestionBeneficiaries[];
 }

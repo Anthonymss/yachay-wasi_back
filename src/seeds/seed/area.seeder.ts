@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AreaStaff } from 'src/modules/area/entities/area-volunteer/area-staff.entity';
 import { SubArea } from 'src/modules/area/entities/area-volunteer/sub-area.entity';
-import { AreaAsesory } from 'src/modules/area/entities/area-beneficiary/area-asesory.entity';
+import { AreaAdviser } from 'src/modules/area/entities/area-beneficiary/area-adviser.entity';
 @Injectable()
 export class AreaSeeder {
   private readonly log = new Logger('Seeder');
@@ -13,8 +13,8 @@ export class AreaSeeder {
     private readonly areaStaffRepository: Repository<AreaStaff>,
     @InjectRepository(SubArea)
     private readonly subAreaRepository: Repository<SubArea>,
-    @InjectRepository(AreaAsesory)
-    private readonly areaAsesoryRepository: Repository<AreaAsesory>,
+    @InjectRepository(AreaAdviser)
+    private readonly areaAdviserRepository: Repository<AreaAdviser>,
   ) {}
 
   async seed() {
@@ -255,7 +255,7 @@ export class AreaSeeder {
     ];
 
     for (const asesory of areaAsesory) {
-      let existing = await this.areaAsesoryRepository.findOne({
+      let existing = await this.areaAdviserRepository.findOne({
         where: { name: asesory.name },
       });
 
@@ -263,10 +263,10 @@ export class AreaSeeder {
         existing.isActive = true;
         existing.description = asesory.description;
       } else {
-        existing = this.areaAsesoryRepository.create(asesory);
+        existing = this.areaAdviserRepository.create(asesory);
       }
 
-      await this.areaAsesoryRepository.save(existing);
+      await this.areaAdviserRepository.save(existing);
     }
   }
 }

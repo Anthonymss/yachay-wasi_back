@@ -93,7 +93,11 @@ export class VolunteerService {
         howDidYouFindUs: volunteer.howDidYouFindUs,
         schedules: volunteer.schedules?.length ? volunteer.schedules : [],
         advisoryCapacity: volunteer.advisoryCapacity ?? undefined,
-        namePostulationArea: volunteer.namePostulationArea ?? '',
+        idPostulationArea: volunteer.idPostulationArea,
+        schoolGrades: volunteer.schoolGrades,
+        callingPlan: volunteer.callingPlan,
+        quechuaLevel: volunteer.quechuaLevel,
+        programsUniversity: volunteer.programsUniversity,
       };
     });
 

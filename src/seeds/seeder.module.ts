@@ -9,7 +9,7 @@ import { AreaStaff } from 'src/modules/area/entities/area-volunteer/area-staff.e
 import { SubArea } from 'src/modules/area/entities/area-volunteer/sub-area.entity';
 import { databaseConfig } from 'src/database/database.config';
 import { AreaSeeder } from './seed/area.seeder';
-import { AreaAsesory } from 'src/modules/area/entities/area-beneficiary/area-asesory.entity';
+import { AreaAdviser } from 'src/modules/area/entities/area-beneficiary/area-adviser.entity';
 import { AdminSeeder } from './seed/admin.seeder';
 import { User } from 'src/modules/user/entities/user.entity';
 import { Volunteer } from 'src/modules/volunteer/entities/volunteer.entity';
@@ -24,7 +24,7 @@ import { Schedule } from 'src/modules/volunteer/entities/schedule.entity';
       Rol,
       AreaStaff,
       SubArea,
-      AreaAsesory,
+      AreaAdviser,
       User,
       Volunteer,
       Schedule,
