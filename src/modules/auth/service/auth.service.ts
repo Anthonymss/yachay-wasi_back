@@ -40,8 +40,15 @@ export class AuthService {
   async login(dto: LoginDto) {
     const user = await this.validateUser(dto.email, dto.password);
     if (!user) throw new UnauthorizedException('Invalid credentials');
-    const response = this.generateTokens(user);
-    return response;
+    const response =await this.generateTokens(user);
+    return {
+      ...response,
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.rol?.name,
+      },
+    };
   }
 
   async refresh(refreshToken: string) {

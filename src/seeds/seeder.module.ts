@@ -12,13 +12,22 @@ import { AreaSeeder } from './seed/area.seeder';
 import { AreaAsesory } from 'src/modules/area/entities/area-beneficiary/area-asesory.entity';
 import { AdminSeeder } from './seed/admin.seeder';
 import { User } from 'src/modules/user/entities/user.entity';
+import { Volunteer } from 'src/modules/volunteer/entities/volunteer.entity';
+import { VolunteerSeeder } from './seed/volunteer.seeder';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync(databaseConfig),
-    TypeOrmModule.forFeature([Rol, AreaStaff, SubArea, AreaAsesory, User]),
+    TypeOrmModule.forFeature(
+      [Rol,
+       AreaStaff,
+       SubArea,
+       AreaAsesory,
+       User,
+       Volunteer,
+      ]),
   ],
-  providers: [SeederService, RolSeeder, AreaSeeder, AdminSeeder],
+  providers: [SeederService, RolSeeder, AreaSeeder, AdminSeeder,VolunteerSeeder],
 })
 export class SeederModule {}
