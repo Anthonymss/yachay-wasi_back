@@ -12,7 +12,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
-import { RolesGuard } from './guards/roles.guard';
+import { RolesGuard } from 'src/shared/guards/roles.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RefreshToken } from '../user/entities/refresh-token.entity';
 

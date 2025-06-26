@@ -29,7 +29,7 @@ import { Roles } from '../../../shared/decorators/roles.decorator';
 import { ROLE } from '../../../shared/enum/role.enum';
 @UseGuards(RolesGuard)
 @Roles(ROLE.ADMIN)
-//@UseGuards(JwtAuthGuard)
+//@UseGuards(JwtAuthGuard)// verificador de token
 @ApiBearerAuth() //candado
 @ApiTags('Volunteer')
 @Controller('volunteer')  
