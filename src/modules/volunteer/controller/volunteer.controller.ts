@@ -8,6 +8,7 @@ import {
   Get,
   Query,
   UseGuards,
+  Param,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -70,6 +71,7 @@ export class VolunteerController {
       video?.[0],
     );
   }
+
   @Get()
   @ApiQuery({ name: 'type', enum: TYPE_VOLUNTEER, required: false })
   @ApiQuery({ name: 'page', required: false })
@@ -86,5 +88,14 @@ export class VolunteerController {
     @Query('limit') limit?: number,
   ) {
     return this.volunteerService.findAll(type, page, limit);
+  }
+  
+  @Post(':id/approve')
+  @ApiResponse({
+    status: 200,
+    description: 'Voluntario aprobado y usuario creado',
+  })
+  async approveVolunteer(@Param('id') id: number) {
+    return this.volunteerService.approveVolunteer(id);
   }
 }

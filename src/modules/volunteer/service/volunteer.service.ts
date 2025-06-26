@@ -9,13 +9,17 @@ import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { VolunteerResponseDto } from '../dto/volunteer-response.dto';
 import { Schedule } from '../entities/schedule.entity';
-
+import { User } from 'src/modules/user/entities/user.entity';
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class VolunteerService {
   constructor(
     @InjectRepository(Volunteer)
     private readonly volunteerRepository: Repository<Volunteer>,
     private readonly cloudinaryService: CloudinaryService,
+
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async createVolunteerStaff(
@@ -158,5 +162,29 @@ export class VolunteerService {
     }
 
     return dto;
+  }
+
+  //crear user
+  async approveVolunteer(id: number) {
+    const volunteer = await this.volunteerRepository.findOne({
+      where: { id },
+    });
+
+    if (!volunteer) {
+      throw new BadRequestException('Voluntario no encontrado');
+    }
+    let role;
+    (volunteer.typeVolunteer==TYPE_VOLUNTEER.STAFF)?role=1:role=2;
+    const user = this.userRepository.create({
+      name: volunteer.name,
+      lastName: volunteer.lastName,
+      email: volunteer.email,
+      password: await bcrypt.hash('default123', 10),
+      rol: { id: role },
+      phoneNumber:volunteer.phoneNumber,
+    });
+
+    const userId = `user-${id}`;
+
   }
 }
