@@ -30,7 +30,32 @@ export enum InfoSource {
   PRONABEC = 'Pronabec',
   REFERRAL = 'Referencia de un amigo/familia',
 }
+//others
+export enum SchoolGrades {
+  PRIMARIA34 = 'Primaria (3° y 4° grado)',
+  PRIMARIA56 = 'Primaria (5° y 6° grado)',
+  SECUNDARIA123 = 'Secundaria (1°, 2° y 3° grado)',
+}
+export enum Occupation {
+  ESTUDIO = 'Solo estudio',
+  TRABAJO = 'Solo trabajo',
+  AMBOS = 'Ambos',
+}
 
+export enum QuechuaLevel {
+  NULO = 'No lo hablo',
+  BASICO = 'Nivel básico',
+  INTERMEDIO = 'Nivel intermedio',
+  AVANZADO = 'Nivel avanzado',
+  NATIVO = 'Nativo',
+}
+export enum ProgramsUniversity {
+  PRONABEC = 'Becario Pronabec',
+  UNIVAS = 'UNIVAS - UDEP',
+  UTEC = 'UTEC',
+  UCV = 'UCV',
+  NINGUNO = 'Ninguno',
+}
 @Entity('volunteers')
 export class Volunteer {
   @PrimaryGeneratedColumn()
@@ -76,10 +101,10 @@ export class Volunteer {
   @Column({
     type: 'boolean',
     nullable: false,
-    name: 'is_active',
+    name: 'is_voluntary',
     default: false,
   })
-  isActive: boolean;
+  isVoluntary: boolean;
 
   @Column({
     type: 'boolean',
@@ -128,6 +153,35 @@ export class Volunteer {
   @Column({ name: 'advisory_capacity', nullable: true })
   advisoryCapacity?: number;
 
+  // DISPONIBILIDAD
+  @Column({
+    type: 'enum',
+    enum: SchoolGrades,
+    nullable: false,
+    name: 'school_grades',
+  })
+  schoolGrades?: SchoolGrades;
+
+  @Column({
+    type: 'boolean',
+    nullable: true,
+    name: 'calling_plan',
+  })
+  callingPlan?: boolean;
+  @Column({
+    type: 'enum',
+    enum: QuechuaLevel,
+    nullable: true,
+    name: 'quechua_level',
+  })
+  quechuaLevel?: QuechuaLevel;
+  @Column({
+    type: 'enum',
+    enum: ProgramsUniversity,
+    nullable: false,
+    name: 'programs_university',
+  })
+  programsUniversity: ProgramsUniversity;
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
 

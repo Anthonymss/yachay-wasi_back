@@ -50,4 +50,4 @@ export class AdminSeeder {
     await this.userRepository.save(adminUser);
     this.log.log('Usuario administrador creado exitosamente');
   }
-} 
+}

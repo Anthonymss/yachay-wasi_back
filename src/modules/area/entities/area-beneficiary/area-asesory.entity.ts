@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Question } from './question.entity';
+import { QuestionBeneficiaries } from './question-beneficiaries.entity';
 @Entity('areas_asesories')
 export class AreaAsesory {
   @PrimaryGeneratedColumn()
@@ -11,6 +11,9 @@ export class AreaAsesory {
   @Column()
   description: string;
   //other relations
-  @OneToMany(() => Question, (question) => question.areaAsesory)
-  question: Question[];
+  @OneToMany(
+    () => QuestionBeneficiaries,
+    (questionBeneficiaries) => questionBeneficiaries.areaAsesory,
+  )
+  questionBeneficiaries: QuestionBeneficiaries[];
 }

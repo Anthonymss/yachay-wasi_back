@@ -6,6 +6,7 @@ import { AreaStaff } from './entities/area-volunteer/area-staff.entity';
 import { Repository } from 'typeorm';
 import { AreaAsesory } from './entities/area-beneficiary/area-asesory.entity';
 import { SubArea } from './entities/area-volunteer/sub-area.entity';
+import { QuestionVolunteer } from './entities/area-volunteer/question-volunteer.entity';
 
 @Injectable()
 export class AreaService {
@@ -16,6 +17,8 @@ export class AreaService {
     private readonly areaAsesoryRepository: Repository<AreaAsesory>,
     @InjectRepository(SubArea)
     private readonly subAreaRepository: Repository<SubArea>,
+    @InjectRepository(QuestionVolunteer)
+    private readonly questionVolunteerRepository: Repository<QuestionVolunteer>,
   ) {}
 
   async findAll() {
@@ -31,7 +34,16 @@ export class AreaService {
       where: { areaStaff: { id: idArea } },
     });
   }
-
+  async getQuestionsByArea(areaId: number[]) {
+    const questions = await this.questionVolunteerRepository
+      .createQueryBuilder('question')
+      .leftJoinAndSelect('question.Subarea', 'subArea')
+      .leftJoinAndSelect('subArea.areaStaff', 'areaStaff')
+      .where('areaStaff.id IN (:...areaId)', { areaId })
+      .getMany();
+    return questions;
+  }
+  //no se usa aun
   create(createAreaDto: CreateAreaDto) {
     return 'This action adds a new area';
   }

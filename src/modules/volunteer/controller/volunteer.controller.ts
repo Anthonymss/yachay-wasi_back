@@ -7,8 +7,15 @@ import {
   UploadedFiles,
   Get,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiConsumes, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   FileFieldsInterceptor,
   FileInterceptor,
@@ -17,10 +24,15 @@ import { VolunteerService } from '../service/volunteer.service';
 import { CreateVolunteerStaffDto } from '../dto/create-volunteer-staff.dto';
 import { TYPE_VOLUNTEER } from '../entities/volunteer.entity';
 import { VolunteerResponseDto } from '../dto/volunteer-response.dto';
+import { RolesGuard } from '../../../shared/guards/roles.guard';
+import { Roles } from '../../../shared/decorators/roles.decorator';
+import { ROLE } from '../../../shared/enum/role.enum';
+@UseGuards(RolesGuard)
+@Roles(ROLE.ADMIN)
 //@UseGuards(JwtAuthGuard)
 @ApiBearerAuth() //candado
 @ApiTags('Volunteer')
-@Controller('volunteer')
+@Controller('volunteer')  
 export class VolunteerController {
   constructor(private readonly volunteerService: VolunteerService) {}
 
@@ -59,7 +71,8 @@ export class VolunteerController {
     );
   }
   @Get()
- @ApiQuery({ name: 'type', enum: TYPE_VOLUNTEER, required: false })  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'type', enum: TYPE_VOLUNTEER, required: false })
+  @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'limit', required: false })
   @ApiResponse({
     status: 200,

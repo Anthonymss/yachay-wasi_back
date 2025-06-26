@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AreaStaff } from './area-staff.entity';
-import { Question } from './question.entity';
+import { QuestionVolunteer } from './question-volunteer.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 
 @Entity('sub_areas')
@@ -29,8 +29,11 @@ export class SubArea {
   areaStaff: AreaStaff;
 
   //others
-  @OneToMany(() => Question, (question) => question.SubArea)
-  question: Question[];
+  @OneToMany(
+    () => QuestionVolunteer,
+    (questionVolunteer) => questionVolunteer.SubArea,
+  )
+  questionVolunteer: QuestionVolunteer[];
   @OneToMany(() => User, (user) => user.subArea)
   user: User[];
 }

@@ -48,62 +48,64 @@ export class VolunteerService {
     const urlCv = await this.cloudinaryService.uploadFile(file);
     const urlVideo = await this.cloudinaryService.uploadFile(video);
     const volunteer = this.volunteerRepository.create({
-    ...dto,
-    cvUrl: urlCv,
-    videoUrl: urlVideo,
-    typeVolunteer: TYPE_VOLUNTEER.ADVISER,
-    datePostulation: new Date(),
-    schedules: [],
-  });
-  const savedVolunteer = await this.volunteerRepository.save(volunteer);
-  const scheduleEntities = dto.schedule.map((s) => ({
+      ...dto,
+      cvUrl: urlCv,
+      videoUrl: urlVideo,
+      typeVolunteer: TYPE_VOLUNTEER.ADVISER,
+      datePostulation: new Date(),
+      schedules: [],
+    });
+    const savedVolunteer = await this.volunteerRepository.save(volunteer);
+    const scheduleEntities = dto.schedule.map((s) => ({
       ...s,
       volunteer: savedVolunteer,
     }));
 
-    await this.volunteerRepository.manager.getRepository(Schedule).save(scheduleEntities);
+    await this.volunteerRepository.manager
+      .getRepository(Schedule)
+      .save(scheduleEntities);
     return savedVolunteer;
   }
 
   async findAll(type: TYPE_VOLUNTEER, page = 1, limit = 10) {
-  const [volunteers, total] = await this.volunteerRepository.findAndCount({
-    where: { typeVolunteer: type },
-    relations: ['schedules'],
-    skip: (page - 1) * limit,
-    take: limit,
-    order: { createdAt: 'DESC' },
-  });
+    const [volunteers, total] = await this.volunteerRepository.findAndCount({
+      where: { typeVolunteer: type },
+      relations: ['schedules'],
+      skip: (page - 1) * limit,
+      take: limit,
+      order: { createdAt: 'DESC' },
+    });
 
-  const data: VolunteerResponseDto[] = volunteers.map((volunteer) => {
+    const data: VolunteerResponseDto[] = volunteers.map((volunteer) => {
+      return {
+        id: volunteer.id,
+        name: volunteer.name,
+        lastName: volunteer.lastName,
+        email: volunteer.email,
+        birthDate: volunteer.birthDate,
+        phoneNumber: volunteer.phoneNumber,
+        typeVolunteer: volunteer.typeVolunteer,
+        typeIdentification: volunteer.typeIdentification,
+        numIdentification: volunteer.numIdentification,
+        wasVoluntary: volunteer.wasVoluntary,
+        cvUrl: volunteer.cvUrl,
+        videoUrl: volunteer.videoUrl ?? undefined,
+        datePostulation: volunteer.datePostulation,
+        volunteerMotivation: volunteer.volunteerMotivation,
+        howDidYouFindUs: volunteer.howDidYouFindUs,
+        schedules: volunteer.schedules?.length ? volunteer.schedules : [],
+        advisoryCapacity: volunteer.advisoryCapacity ?? undefined,
+        namePostulationArea: volunteer.namePostulationArea ?? '',
+      };
+    });
+
     return {
-      id: volunteer.id,
-      name: volunteer.name,
-      lastName: volunteer.lastName,
-      email: volunteer.email,
-      birthDate: volunteer.birthDate,
-      phoneNumber: volunteer.phoneNumber,
-      typeVolunteer: volunteer.typeVolunteer,
-      typeIdentification: volunteer.typeIdentification,
-      numIdentification: volunteer.numIdentification,
-      wasVoluntary: volunteer.wasVoluntary,
-      cvUrl: volunteer.cvUrl,
-      videoUrl: volunteer.videoUrl ?? undefined,
-      datePostulation: volunteer.datePostulation,
-      volunteerMotivation: volunteer.volunteerMotivation,
-      howDidYouFindUs: volunteer.howDidYouFindUs,
-      schedules: volunteer.schedules?.length ? volunteer.schedules : [],
-      advisoryCapacity: volunteer.advisoryCapacity ?? undefined,
-      namePostulationArea: volunteer.namePostulationArea ?? '',
+      data,
+      total,
+      page,
+      lastPage: Math.ceil(total / limit),
     };
-  });
-
-  return {
-    data,
-    total,
-    page,
-    lastPage: Math.ceil(total / limit),
-  };
-}
+  }
 
   //privates
   async validateData(

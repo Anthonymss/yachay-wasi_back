@@ -1,4 +1,4 @@
-import { Question } from 'src/modules/area/entities/area-volunteer/question.entity';
+import { QuestionVolunteer } from 'src/modules/area/entities/area-volunteer/question-volunteer.entity';
 import {
   Column,
   Entity,
@@ -12,9 +12,12 @@ import { Volunteer } from './volunteer.entity';
 export class ResponseVolunteer {
   @PrimaryGeneratedColumn()
   id: number;
-  @ManyToOne(() => Question, (question) => question.responseVolunteer)
+  @ManyToOne(
+    () => QuestionVolunteer,
+    (questionVolunteer) => questionVolunteer.responseVolunteer,
+  )
   @JoinColumn({ name: 'question_id' })
-  question: Question;
+  questionVolunteer: QuestionVolunteer;
   @ManyToOne(() => Volunteer, (volunteer) => volunteer.responseVolunteer)
   @JoinColumn({ name: 'volunteer_id' })
   volunteer: Volunteer;

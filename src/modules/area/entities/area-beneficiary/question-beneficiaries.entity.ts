@@ -7,11 +7,10 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AreaAsesory } from './area-asesory.entity';
-import { Res } from '@nestjs/common';
 import { ResponseBeneficiary } from './response-beneficiary.entity';
 
 @Entity('questions_beneficiaries')
-export class Question {
+export class QuestionBeneficiaries {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({ type: 'varchar', nullable: false, name: 'question_text' })
@@ -20,12 +19,15 @@ export class Question {
   type: string; //que tipos??
 
   //other realtions
-  @ManyToOne(() => AreaAsesory, (areaAsesory) => areaAsesory.question)
+  @ManyToOne(
+    () => AreaAsesory,
+    (areaAsesory) => areaAsesory.questionBeneficiaries,
+  )
   @JoinColumn({ name: 'area_asesory_id' })
   areaAsesory: AreaAsesory;
   @OneToMany(
     () => ResponseBeneficiary,
-    (responseBeneficiary) => responseBeneficiary.question,
+    (responseBeneficiary) => responseBeneficiary.questionBeneficiaries,
   )
   responseBeneficiary: ResponseBeneficiary[];
 }

@@ -1,4 +1,8 @@
-import { InfoSource, TYPE_IDENTIFICATION, TYPE_VOLUNTEER } from "../entities/volunteer.entity";
+import {
+  InfoSource,
+  TYPE_IDENTIFICATION,
+  TYPE_VOLUNTEER,
+} from '../entities/volunteer.entity';
 import { Schedule } from '../entities/schedule.entity';
 
 export class VolunteerResponseDto {
@@ -20,5 +24,4 @@ export class VolunteerResponseDto {
   schedules?: Schedule[];
   advisoryCapacity?: number;
   namePostulationArea: string;
-
 }

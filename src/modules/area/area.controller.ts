@@ -29,4 +29,9 @@ export class AreaController {
     console.log('..');
     return this.areaService.findAllSubAreas(+idArea);
   }
+  @Get('questions/:areaId')
+  async getQuestionsByArea(@Param('areaId') areaId: string) {
+    const id = areaId.split(',').map((id) => parseInt(id));
+    return this.areaService.getQuestionsByArea(id);
+  }
 }

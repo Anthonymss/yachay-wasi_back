@@ -36,10 +36,14 @@ export class CloudinaryService {
 
     const resourceType = this.getResourceType(file.mimetype);
     const folderPath = this.getFolderPath(resourceType);
-    const uploadPreset = this.configService.get<string>('CLOUDINARY_UPLOAD_PRESET') || 'public_raw_upload';
+    const uploadPreset =
+      this.configService.get<string>('CLOUDINARY_UPLOAD_PRESET') ||
+      'public_raw_upload';
 
     try {
-      console.log(`[Cloudinary] Subiendo a ${folderPath} como ${resourceType}...`);
+      console.log(
+        `[Cloudinary] Subiendo a ${folderPath} como ${resourceType}...`,
+      );
 
       const result: UploadApiResponse = await new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
@@ -56,7 +60,11 @@ export class CloudinaryService {
           (error, result) => {
             if (error || !result) {
               console.error('[Cloudinary] Error de subida:', error);
-              return reject(new InternalServerErrorException('Fallo la subida a Cloudinary'));
+              return reject(
+                new InternalServerErrorException(
+                  'Fallo la subida a Cloudinary',
+                ),
+              );
             }
             console.log('[Cloudinary] Subida exitosa:', result.secure_url);
             resolve(result);
@@ -94,6 +102,6 @@ export class CloudinaryService {
 
   private getFileExtension(filename: string): string {
     const parts = filename.split('.');
-    return parts.length > 1 ? (parts.pop() || '') : '';
+    return parts.length > 1 ? parts.pop() || '' : '';
   }
 }

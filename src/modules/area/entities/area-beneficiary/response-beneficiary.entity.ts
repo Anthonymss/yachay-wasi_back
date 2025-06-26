@@ -6,14 +6,17 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Beneficiary } from '../../../beneficiary/entities/beneficiary.entity';
-import { Question } from './question.entity';
+import { QuestionBeneficiaries } from './question-beneficiaries.entity';
 @Entity('response_beneficiaries')
 export class ResponseBeneficiary {
   @PrimaryGeneratedColumn()
   id: number;
-  @ManyToOne(() => Question, (question) => question.responseBeneficiary)
+  @ManyToOne(
+    () => QuestionBeneficiaries,
+    (questionBeneficiaries) => questionBeneficiaries.responseBeneficiary,
+  )
   @JoinColumn({ name: 'question_id' })
-  question: Question;
+  questionBeneficiaries: QuestionBeneficiaries;
   @ManyToOne(
     () => Beneficiary,
     (beneficiary) => beneficiary.responseBeneficiary,
