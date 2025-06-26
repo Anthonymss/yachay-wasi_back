@@ -8,21 +8,36 @@ import {
 } from 'typeorm';
 import { AreasAsesories } from './areas-asesories.entity';
 import { ResponsesBeneficiaries } from './responses-beneficiaries.entity';
+import { ResponsesVolunteers } from '../../../volunteer/entities/responses-volunteers.entity';
+
+export enum QuestionType {
+  TEXT = 'TEXT',
+  TEXTAREA = 'TEXTAREA',
+  SELECT = 'SELECT',
+  RADIO = 'RADIO',
+  CHECKBOX = 'CHECKBOX',
+  FILE_UPLOAD = 'FILE_UPLOAD',
+  NUMBER = 'NUMBER'
+}
 
 @Entity('questions_beneficiaries')
-
 export class QuestionsBeneficiaries {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', nullable: false, name: 'question_text' })
+  @Column({ type: 'varchar', length: 500 })
   questionText: string;
 
-  @Column()
-  type: string; //que tipos?? no recuerdo pero por algo lo puse 
+  @Column({
+    type: 'enum',
+    enum: QuestionType,
+    default: QuestionType.TEXT
+  })
+  type: QuestionType;
+
 
   //other realtions
-  @ManyToOne(() => AreasAsesories, (areasAsesories) => areasAsesories.question)
+  @ManyToOne(() => AreasAsesories, (areasAsesories) => areasAsesories.questions)
   @JoinColumn({ name: 'area_asesory_id' })
   areaAsesory: AreasAsesories;
   
@@ -31,4 +46,9 @@ export class QuestionsBeneficiaries {
     (responseBeneficiary) => responseBeneficiary.question,
   )
   responseBeneficiary: ResponsesBeneficiaries[];
+
+  @OneToMany(() => ResponsesVolunteers, (responseVolunteer) => responseVolunteer.question)
+  responseVolunteer: ResponsesVolunteers[];
+
+  
 }

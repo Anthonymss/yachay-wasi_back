@@ -135,25 +135,39 @@ export class AreaSeeder {
       await this.subAreaRepository.save(subArea);
     }
 
+    this.log.log('Seeding areas...');
 
-    const areaAsesory = [
-      { name: "Asesorías en Arte y Cultura", isActive: true, description: 'Promover la creatividad, expresión personal, sensibilidad artística y pensamiento crítico.' },
-      { name: "Asesorías a Colegios Nacionales", isActive: true, description: 'Fortalecer los hábitos de estudio y desarrollo de competencias básicas de ectura, matemáticas e inglés de nuestros beneficiarios.' },
-      { name: "Acompañamiento para el Bienestar Psicológico", isActive: true, description: 'Contribuir con el bienestar psicológico de las/los estudiantes beneficiarios.' },
+    const areas = [
+      {
+        name: 'Acompañamiento para el Bienestar Psicológico',
+        description: 'Área dedicada al apoyo emocional y psicológico de los beneficiarios'
+      },
+      {
+        name: 'Asesorías a Colegios Nacionales',
+        description: 'Área enfocada en brindar apoyo académico a estudiantes de colegios nacionales'
+      },
+      {
+        name: 'Asesorías en Arte y Cultura',
+        description: 'Área dedicada a promover el desarrollo artístico y cultural'
+      }
     ];
 
-    for (const asesory of areaAsesory) {
-      let existing = await this.areaAsesoryRepository.findOne({ where: { name: asesory.name } });
+    for (const areaData of areas) {
+      let existing = await this.areaAsesoryRepository.findOne({
+        where: { name: areaData.name }
+      });
 
-      if (existing) {
-        existing.isActive = true;
-        existing.description = asesory.description;
+      if (!existing) {
+        existing = this.areaAsesoryRepository.create(areaData);
+        await this.areaAsesoryRepository.save(existing);
+        this.log.log(`Area "${areaData.name}" created.`);
       } else {
-        existing = this.areaAsesoryRepository.create(asesory);
+        existing.description = areaData.description;
+        await this.areaAsesoryRepository.save(existing);
+        this.log.log(`Area "${areaData.name}" updated.`);
       }
-
-      await this.areaAsesoryRepository.save(existing);
     }
 
+    this.log.log('Areas seeding finished.');
   }
 }

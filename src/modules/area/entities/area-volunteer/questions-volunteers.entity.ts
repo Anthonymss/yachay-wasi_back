@@ -9,6 +9,16 @@ import {
 import { SubAreas } from './sub-areas.entity';
 import { ResponsesVolunteers } from 'src/modules/volunteer/entities/responses-volunteers.entity';
 
+export enum QuestionType {
+  TEXT = 'TEXT',
+  TEXTAREA = 'TEXTAREA',
+  SELECT = 'SELECT',
+  RADIO = 'RADIO',
+  CHECKBOX = 'CHECKBOX',
+  FILE_UPLOAD = 'FILE_UPLOAD',
+  NUMBER = 'NUMBER'
+}
+
 @Entity('questions_volunteers')
 export class QuestionsVolunteers {
   @PrimaryGeneratedColumn()
@@ -17,8 +27,12 @@ export class QuestionsVolunteers {
   @Column({ type: 'varchar', nullable: false, name: 'question_text' })
   questionText: string;
 
-  @Column()
-  type: string;
+  @Column({
+    type: 'enum',
+    enum: QuestionType,
+    default: QuestionType.TEXT
+  })
+  type: QuestionType;
 
   @ManyToOne(() => SubAreas, (subarea) => subarea.question)
   

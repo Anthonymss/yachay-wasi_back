@@ -1,21 +1,38 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 import { QuestionsBeneficiaries } from './questions-beneficiaries.entity';
+import { ResponsesBeneficiaries } from './responses-beneficiaries.entity';
+
 @Entity('areas_asesories')
-
 export class AreasAsesories {
-  @PrimaryGeneratedColumn()
-  id: number;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-  @Column({ type: 'varchar', length: 100, nullable: false })
-  name: string;
+    @Column({ type: 'varchar', length: 100 })
+    name: string;
 
-  @Column()
-  description: string
+    @Column({ type: 'text', nullable: true })
+    description: string;
 
-  //other relations
-  @Column({ type: 'boolean', name: 'is_active', nullable: true })
-  isActive: boolean;
+    @OneToMany(() => QuestionsBeneficiaries, (question) => question.areaAsesory)
+    questions: QuestionsBeneficiaries[];
 
-  @OneToMany(() => QuestionsBeneficiaries, (questions_beneficiaries) => questions_beneficiaries.areaAsesory)
-  question: QuestionsBeneficiaries[];
+    @OneToMany(() => ResponsesBeneficiaries, (responseBeneficiary) => responseBeneficiary.areaAsesory)
+    responseBeneficiary: ResponsesBeneficiaries[];
+
+    @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+    updatedAt: Date;
+
+    @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
+    deletedAt: Date;
 }
