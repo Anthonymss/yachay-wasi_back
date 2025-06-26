@@ -48,10 +48,10 @@ export class CloudinaryService {
             folder: folderPath,
             public_id: file.originalname.replace(/\.[^/.]+$/, ''),
             format: this.getFileExtension(file.originalname),
-            upload_preset: uploadPreset,
             use_filename: true,
-            unique_filename: false,
-            overwrite: true,
+            unique_filename: true,  
+            overwrite: false,
+            upload_preset: uploadPreset,
           },
           (error, result) => {
             if (error || !result) {

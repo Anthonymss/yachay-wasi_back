@@ -22,39 +22,44 @@ export class AreaSeeder {
       {
         key: 'area1',
         name: 'Talento & Desarrollo Organizacional',
+        imageUrl:'https://res.cloudinary.com/dnupey6af/image/upload/v1750955835/talento-humano-exito-organizacional-min_a5tf4m.jpg',
         description: '1',
       },
       {
         key: 'area2',
         name: 'Cultura & Comunicación Interna',
+        imageUrl:'https://res.cloudinary.com/dnupey6af/image/upload/v1750955920/post-ayrton-1024x512_k0melf.png',
         description: '2',
       },
       {
         key: 'area3',
         name: 'Imagen Institucional & Relaciones Públicas',
+        imageUrl:'https://res.cloudinary.com/dnupey6af/image/upload/v1750955465/2e7c148c-cecc-4c60-8ca2-91107ea2d572.png',
         description: '2',
       },
-      { key: 'area4', name: 'Alianzas Organizacionales', description: '2' },
+      { key: 'area4', name: 'Alianzas Organizacionales',imageUrl:'https://res.cloudinary.com/dnupey6af/image/upload/v1750955333/ff7ce3f6-d375-4e9f-9aee-5fc018ff71aa.png', description: '2' },
       {
         key: 'area5',
         name: 'Convenios & Patrocinios Estratégicos',
+        imageUrl:'https://res.cloudinary.com/dnupey6af/image/upload/v1750955384/4c521674-b5fe-4a04-b55a-a0bdbbc92478.png',
         description: '2',
       },
-      { key: 'area6', name: 'Marketing & Contenidos', description: '2' },
-      { key: 'area7', name: 'Arte & Cultura', description: '2' },
+      { key: 'area6', name: 'Marketing & Contenidos',imageUrl:'https://res.cloudinary.com/dnupey6af/image/upload/v1750955432/28e147cb-86b2-4181-85ce-15f82ac6a144.png', description: '2' },
+      { key: 'area7', name: 'Arte & Cultura',imageUrl:'https://res.cloudinary.com/dnupey6af/image/upload/v1750955345/529d6cd7-69fd-49b4-ba77-bff8431ea233.png', description: '2' },
       {
         key: 'area8',
         name: 'Asesoría a Colegios Nacionales',
+        imageUrl:'https://res.cloudinary.com/dnupey6af/image/upload/v1750955339/d669e3dd-7d80-4ea0-89b2-7771dbe0bbd6.png',
         description: '2',
       },
-      { key: 'area9', name: 'Bienestar Psicológicos', description: '2' },
-      { key: 'area10', name: 'Gestión de Comunidades', description: '2' },
-      { key: 'area11', name: 'Innovación & Calidad', description: '2' },
+      { key: 'area9', name: 'Bienestar Psicológicos', imageUrl:'https://res.cloudinary.com/dnupey6af/image/upload/v1750955379/7a59f593-ef46-4ea4-b942-58a8afb5948b.png', description: '2' },
+      { key: 'area10', name: 'Gestión de Comunidades', imageUrl:'https://res.cloudinary.com/dnupey6af/image/upload/v1750955418/39528eb3-211a-4bdd-b69f-07d177d00d68.png', description: '2' },
+      { key: 'area11', name: 'Innovación & Calidad', imageUrl:'https://res.cloudinary.com/dnupey6af/image/upload/v1750955350/0cee7a1e-267a-47a6-9beb-bf807d65c5e1.png', description: '2' },
     ];
 
     const areaMap: Record<string, AreaStaff> = {};
 
-    for (const { key, name, description } of areasData) {
+    for (const { key, name,description,imageUrl } of areasData) {
       let area = await this.areaStaffRepository.findOne({ where: { name } });
 
       if (area) {
@@ -65,6 +70,7 @@ export class AreaSeeder {
           name,
           description,
           isActive: true,
+          imageUrl,
         });
       }
 

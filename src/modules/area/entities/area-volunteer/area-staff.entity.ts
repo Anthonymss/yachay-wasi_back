@@ -10,4 +10,7 @@ export class AreaStaff {
   description: string;
   @Column({ type: 'boolean', name: 'is_active', default: true })
   isActive: boolean;
+  @Column({ type: 'varchar', nullable: true })
+  imageUrl: string;
 }
+ 
