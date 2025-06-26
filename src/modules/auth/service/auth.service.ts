@@ -40,7 +40,7 @@ export class AuthService {
   async login(dto: LoginDto) {
     const user = await this.validateUser(dto.email, dto.password);
     if (!user) throw new UnauthorizedException('Invalid credentials');
-    const response =await this.generateTokens(user);
+    const response = await this.generateTokens(user);
     return {
       ...response,
       user: {

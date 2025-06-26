@@ -201,7 +201,9 @@ export class Volunteer {
   )
   responseVolunteer: ResponseVolunteer[];
 
-  @OneToMany(() => Schedule, schedule => schedule.volunteer, { cascade: true, eager: true })
+  @OneToMany(() => Schedule, (schedule) => schedule.volunteer, {
+    cascade: true,
+    eager: true,
+  })
   schedules: Schedule[];
-  
 }

@@ -13,4 +13,3 @@ export class AreaStaff {
   @Column({ type: 'varchar', nullable: true })
   imageUrl: string;
 }
- 

@@ -49,7 +49,7 @@ export class CloudinaryService {
             public_id: file.originalname.replace(/\.[^/.]+$/, ''),
             format: this.getFileExtension(file.originalname),
             use_filename: true,
-            unique_filename: true,  
+            unique_filename: true,
             overwrite: false,
             upload_preset: uploadPreset,
           },

@@ -41,7 +41,7 @@ export class CreateVolunteerStaffDto {
   @IsEnum(InfoSource, { message: 'source of information' })
   howDidYouFindUs: InfoSource;
 
-  //que subarea va a postular, se guarda el name porque no hay referencia directa 
+  //que subarea va a postular, se guarda el name porque no hay referencia directa
   @IsNotEmpty()
   namePostulationArea: string;
 }

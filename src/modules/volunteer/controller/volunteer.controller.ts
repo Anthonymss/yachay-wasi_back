@@ -32,7 +32,7 @@ import { ROLE } from '../../../shared/enum/role.enum';
 //@UseGuards(JwtAuthGuard)// verificador de token
 @ApiBearerAuth() //candado
 @ApiTags('Volunteer')
-@Controller('volunteer')  
+@Controller('volunteer')
 export class VolunteerController {
   constructor(private readonly volunteerService: VolunteerService) {}
 

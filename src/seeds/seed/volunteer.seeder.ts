@@ -27,18 +27,29 @@ export class VolunteerSeeder {
   ) {}
 
   /**
-   * @param quantityStaff 
+   * @param quantityStaff
    * @param quantityAdviser
    */
-  async seedDynamic(quantityStaff: number, quantityAdviser: number): Promise<Volunteer[]> {
+  async seedDynamic(
+    quantityStaff: number,
+    quantityAdviser: number,
+  ): Promise<Volunteer[]> {
     try {
-      const staff = await this.createVolunteers(quantityStaff, TYPE_VOLUNTEER.STAFF);
-      const advisers = await this.createVolunteers(quantityAdviser, TYPE_VOLUNTEER.ADVISER);
+      const staff = await this.createVolunteers(
+        quantityStaff,
+        TYPE_VOLUNTEER.STAFF,
+      );
+      const advisers = await this.createVolunteers(
+        quantityAdviser,
+        TYPE_VOLUNTEER.ADVISER,
+      );
 
       const allVolunteers = [...staff, ...advisers];
 
       await this.volunteerRepository.save(allVolunteers);
-      this.log.log(`Se han creado ${staff.length} STAFF y ${advisers.length} ADVISER`);
+      this.log.log(
+        `Se han creado ${staff.length} STAFF y ${advisers.length} ADVISER`,
+      );
 
       return allVolunteers;
     } catch (error) {
@@ -47,14 +58,19 @@ export class VolunteerSeeder {
     }
   }
 
-  private async createVolunteers(count: number, type: TYPE_VOLUNTEER): Promise<Volunteer[]> {
+  private async createVolunteers(
+    count: number,
+    type: TYPE_VOLUNTEER,
+  ): Promise<Volunteer[]> {
     const volunteers: Volunteer[] = [];
 
     for (let i = 0; i < count; i++) {
       const volunteer = new Volunteer();
       volunteer.name = faker.person.firstName();
       volunteer.lastName = faker.person.lastName();
-      volunteer.birthDate = new Date(faker.date.past({ years: 40 })).toISOString();
+      volunteer.birthDate = new Date(
+        faker.date.past({ years: 40 }),
+      ).toISOString();
       volunteer.phoneNumber = faker.phone.number();
       volunteer.email = faker.internet.email({
         firstName: volunteer.name,
@@ -62,21 +78,28 @@ export class VolunteerSeeder {
         provider: 'gmail.com',
         allowSpecialCharacters: true,
       });
-      volunteer.typeIdentification = faker.helpers.arrayElement(Object.values(TYPE_IDENTIFICATION));
-      volunteer.numIdentification = volunteer.typeIdentification === TYPE_IDENTIFICATION.DNI
-        ? faker.string.numeric(8)
-        : faker.string.numeric(10);
+      volunteer.typeIdentification = faker.helpers.arrayElement(
+        Object.values(TYPE_IDENTIFICATION),
+      );
+      volunteer.numIdentification =
+        volunteer.typeIdentification === TYPE_IDENTIFICATION.DNI
+          ? faker.string.numeric(8)
+          : faker.string.numeric(10);
       volunteer.isVoluntary = false;
       volunteer.wasVoluntary = false;
 
-      volunteer.cvUrl = 'https://res.cloudinary.com/dnupey6af/raw/upload/v1750921256/yw/documents/Formulario%20de%20Postulaci%C3%B3n.pdf';
-      volunteer.videoUrl = 'https://res.cloudinary.com/dnupey6af/video/upload/v1750925681/yw/videos/pr1.mp4';
+      volunteer.cvUrl =
+        'https://res.cloudinary.com/dnupey6af/raw/upload/v1750921256/yw/documents/Formulario%20de%20Postulaci%C3%B3n.pdf';
+      volunteer.videoUrl =
+        'https://res.cloudinary.com/dnupey6af/video/upload/v1750925681/yw/videos/pr1.mp4';
 
       volunteer.datePostulation = new Date();
       volunteer.volunteerMotivation = faker.lorem.paragraph();
       volunteer.typeVolunteer = type;
 
-      volunteer.howDidYouFindUs = faker.helpers.arrayElement(Object.values(InfoSource));
+      volunteer.howDidYouFindUs = faker.helpers.arrayElement(
+        Object.values(InfoSource),
+      );
       volunteer.namePostulationArea = faker.helpers.arrayElement([
         'Desarrollador/a API',
         'Desarrollador/a Frontend',
@@ -87,10 +110,16 @@ export class VolunteerSeeder {
 
       if (type === TYPE_VOLUNTEER.ADVISER) {
         volunteer.advisoryCapacity = faker.number.int({ min: 1, max: 10 });
-        volunteer.schoolGrades = faker.helpers.arrayElement(Object.values(SchoolGrades));
+        volunteer.schoolGrades = faker.helpers.arrayElement(
+          Object.values(SchoolGrades),
+        );
         volunteer.callingPlan = faker.datatype.boolean();
-        volunteer.quechuaLevel = faker.helpers.arrayElement(Object.values(QuechuaLevel));
-        volunteer.programsUniversity = faker.helpers.arrayElement(Object.values(ProgramsUniversity));
+        volunteer.quechuaLevel = faker.helpers.arrayElement(
+          Object.values(QuechuaLevel),
+        );
+        volunteer.programsUniversity = faker.helpers.arrayElement(
+          Object.values(ProgramsUniversity),
+        );
 
         volunteer.schedules = this.createSchedules(volunteer, 3);
       }
@@ -100,7 +129,6 @@ export class VolunteerSeeder {
 
     return volunteers;
   }
-
 
   private createSchedules(volunteer: Volunteer, count: number): Schedule[] {
     const schedules: Schedule[] = [];

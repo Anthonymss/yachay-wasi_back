@@ -20,16 +20,22 @@ import { Schedule } from 'src/modules/volunteer/entities/schedule.entity';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync(databaseConfig),
-    TypeOrmModule.forFeature(
-      [Rol,
-       AreaStaff,
-       SubArea,
-       AreaAsesory,
-       User,
-       Volunteer,
-       Schedule,
-      ]),
+    TypeOrmModule.forFeature([
+      Rol,
+      AreaStaff,
+      SubArea,
+      AreaAsesory,
+      User,
+      Volunteer,
+      Schedule,
+    ]),
   ],
-  providers: [SeederService, RolSeeder, AreaSeeder, AdminSeeder,VolunteerSeeder],
+  providers: [
+    SeederService,
+    RolSeeder,
+    AreaSeeder,
+    AdminSeeder,
+    VolunteerSeeder,
+  ],
 })
 export class SeederModule {}
