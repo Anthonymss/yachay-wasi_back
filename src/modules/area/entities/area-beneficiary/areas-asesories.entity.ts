@@ -21,18 +21,12 @@ export class AreasAsesories {
     @Column({ type: 'text', nullable: true })
     description: string;
 
+    @Column({ type: 'boolean', name: 'is_active', default: true })
+    isActive: boolean;
+
     @OneToMany(() => QuestionsBeneficiaries, (question) => question.areaAsesory)
     questions: QuestionsBeneficiaries[];
 
     @OneToMany(() => ResponsesBeneficiaries, (responseBeneficiary) => responseBeneficiary.areaAsesory)
     responseBeneficiary: ResponsesBeneficiaries[];
-
-    @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-    createdAt: Date;
-
-    @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
-    updatedAt: Date;
-
-    @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
-    deletedAt: Date;
 }

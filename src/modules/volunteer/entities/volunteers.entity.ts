@@ -61,11 +61,12 @@ export class Volunteers {
   @PrimaryGeneratedColumn()
   id: number;
 
+  /* datos personales */
   @Column({ type: 'varchar', length: 50 })
   name: string;
 
   @Column({ type: 'varchar', length: 50, name: 'last_name' })
-  lastName: string;
+  lastname: string;
 
   @Column({ type: 'date', name: 'date_birth' })
   date_birth: string;
@@ -109,8 +110,10 @@ export class Volunteers {
   @Column({ type: 'varchar', nullable: false, name: 'cv_url' })
   cv_url: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true, name: 'video_url' })
-  video_url: string;
+  /* fin de datos personales */
+
+  /*@Column({ type: 'varchar', length: 500, nullable: true, name: 'video_url' })
+  video_url: string;*/
 
   // DISPONIBILIDAD
   // Estos campos ahora son nullable: true para STAFF
@@ -149,7 +152,7 @@ export class Volunteers {
   @Column({
     type: 'varchar',
     length: 500,
-    nullable: true, // Cambiado a true
+    nullable: true,
     name: 'volunteer_motivation',
   })
   volunteer_motivation: string;
@@ -157,7 +160,7 @@ export class Volunteers {
   @Column({
     type: 'varchar',
     length: 500,
-    nullable: true, // Cambiado a true
+    nullable: true, 
     name: 'why_asesor'
   })
   why_asesor: string;
@@ -165,7 +168,7 @@ export class Volunteers {
   @Column({
     type: 'enum',
     enum: QuechuaLevel,
-    nullable: true, // Cambiado a true
+    nullable: true,
     name: 'quechua_level'
   })
   quechua_level: QuechuaLevel;
@@ -209,19 +212,6 @@ export class Volunteers {
     name: 'type_volunteer',
   })
   type_volunteer: TYPE_VOLUNTEER;
-
-
-  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
-  updatedAt: Date;
-
-  @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
-  deletedAt: Date;
-
-  @Column({ name: 'name_postulation_area', nullable: true })
-  name_postulation_area: string;
 
   // Relaciones
   @OneToMany(

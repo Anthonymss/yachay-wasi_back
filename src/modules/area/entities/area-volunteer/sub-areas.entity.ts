@@ -24,6 +24,29 @@ export class SubAreas {
   @Column({ type: 'boolean', name: 'is_active', nullable: true, default: true })
   isActive: boolean;
 
+  // descripción de landing
+  @Column({ type: 'varchar', length: 255, nullable: true})
+  volunteerTime: string;
+
+  @Column({ type: 'text', nullable: true})
+  functions: String; // guardaremos lista separada por saltos de línea
+
+  @Column({ type: 'text', nullable: true})
+  knowledgeAndStudies: string;
+
+  @Column({ type: 'text', nullable: true})
+  technologicalSkills: string;
+
+  @Column({ type: 'text', nullable: true})
+  additionalKnowledge: string;
+
+  @Column({ type: 'text', nullable: true})
+  communicationSkills: string;
+
+  @Column({ type: 'text', nullable: true})
+  experience: string;
+// **************************************
+
   @ManyToOne(() => AreasStaff)
   @JoinColumn({ name: 'area_staff_id' })
   areaStaff: AreasStaff;

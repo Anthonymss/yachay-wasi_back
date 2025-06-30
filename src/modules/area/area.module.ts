@@ -7,14 +7,16 @@ import { AreasAsesories } from './entities/area-beneficiary/areas-asesories.enti
 import { SubAreas } from './entities/area-volunteer/sub-areas.entity';
 import { QuestionsVolunteers } from './entities/area-volunteer/questions-volunteers.entity';
 import { QuestionsBeneficiaries } from './entities/area-beneficiary/questions-beneficiaries.entity';
-
+import { SubAreaController } from './subarea.controller';
+import { SubAreaService } from './subarea.service';
+// se implementan los controladores y servicios para nestjs los reconozca
 @Module({
   imports:[
     // Esencial para que los repositorios estén disponibles para inyección.
-    TypeOrmModule.forFeature([AreasStaff,AreasAsesories,SubAreas, QuestionsVolunteers, QuestionsBeneficiaries]),
+    TypeOrmModule.forFeature([AreasStaff,AreasAsesories,SubAreas, QuestionsVolunteers, QuestionsBeneficiaries, SubAreas]),
   ],
   // modulos que necesitan acceder al área service
-  controllers: [AreaController],
-  providers: [AreaService],
+  controllers: [AreaController, SubAreaController],
+  providers: [AreaService, SubAreaService],
 })
 export class AreaModule {}

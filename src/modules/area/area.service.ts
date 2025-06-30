@@ -3,7 +3,7 @@ import { CreateAreaDto } from './dto/create-area.dto';
 import { UpdateAreaDto } from './dto/update-area.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AreasStaff } from './entities/area-volunteer/areas-staff.entity';
-import { Repository } from 'typeorm';
+import { Repository, Not } from 'typeorm';
 import { AreasAsesories } from './entities/area-beneficiary/areas-asesories.entity';
 import { SubAreas } from './entities/area-volunteer/sub-areas.entity';
 import { QuestionsVolunteers } from './entities/area-volunteer/questions-volunteers.entity';
@@ -30,10 +30,27 @@ export class AreaService {
   findAllStaff() {
     return this.areaStaffRepository.find();//agregar area Asesory
   }
+
   // obtener areas de asesorias
   findAllAsesories() {
     return this.areaAsesoryRepository.find();
   }
+
+  /**
+   * Obtiene todas las áreas de STAFF de la BD, excluyendo el área
+   * 'ASESORIES'
+   */
+  findAllStaffAreas(): Promise<AreasStaff[]> {
+    return this.areaStaffRepository.find({
+      where: {
+        name: Not('ASESORIES'), // decimos a TypeORM, donde el nombre no sea ASESORIES
+      }
+    })
+  }
+
+  /**
+   * Obtenemos una lista combinada de áreas Staff (filtradas) y áreas de Asesoria
+   */
 
   /**
    * Obtiene todas las áreas de Staff y Asesoría.
@@ -46,16 +63,26 @@ export class AreaService {
   }
 
   /**
+   * obtiene todas las areas de staff excepto asesories
+   */
+  async findAllAreasStaff(): Promise<{ staffAreas: AreasStaff[]}> {
+    const staffAreas = await this.findAllStaffAreas();
+    return { staffAreas };
+  }
+
+  /**
    * Obtiene una sola área de Staff por ID, incluyendo sus subáreas.
    * Esto es útil si quieres mostrar los detalles de un área específica con sus subáreas.
    */
-  async findOneAreaStaffWithSubAreas(idArea: number): Promise<AreasStaff> {
+  async findOne(id: number): Promise<AreasStaff> {
     const area = await this.areaStaffRepository.findOne({
-      where: { id: idArea },
+      where: { id: id },
       relations: ['subAreas'], // Asegúrate de que 'subAreas' sea el nombre de la relación en AreasStaff
+      // con esto se dice a typeORM, que cuando busque el área tambien traiga en la misma consulta todas las subareas asociadas
+      // el frontend recibida un objeto area que contiene un array de subareas dentro
     });
     if (!area) {
-      throw new NotFoundException(`Area Staff con ID ${idArea} no encontrada.`);
+      throw new NotFoundException(`Area Staff con ID ${id} no encontrada.`);
     }
     return area;
   }
@@ -108,9 +135,6 @@ export class AreaService {
     return 'This action adds a new area';
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} area`;
-  }
 
   /*async getQuestionsByArea(areaId: number[]) {
     const questions = await this.questionRepository

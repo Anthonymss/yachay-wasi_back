@@ -29,12 +29,12 @@ export class Schedule {
   @JoinColumn({ name: 'volunteer_id' })
   volunteer: Volunteers;
 
-  @Column()
+  @Column({ nullable: true })
   period_time: string;
 
-  @Column()
+  @Column({ nullable: true })
   period_time2: string;
 
-  @Column()
+  @Column({ nullable: true })
   period_time3: string;
 }
