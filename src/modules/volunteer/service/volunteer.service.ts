@@ -5,14 +5,14 @@ import {
 } from '@nestjs/common';
 import { CreateVolunteerStaffDto } from '../dto/create-volunteer-staff.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TYPE_VOLUNTEER, Volunteer } from '../entities/volunteer.entity';
+import { InfoSource, ProgramsUniversity, QuechuaLevel, SchoolGrades, TYPE_IDENTIFICATION, TYPE_VOLUNTEER, Volunteer } from '../entities/volunteer.entity';
 import { Repository } from 'typeorm';
 import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
 import { CreateVolunteerADdviserDto } from '../dto/create-volunteer-Adviser.dto';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { VolunteerResponseDto } from '../dto/volunteer-response.dto';
-import { Schedule } from '../entities/schedule.entity';
+import { DAY, Schedule } from '../entities/schedule.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { MailService } from 'src/shared/mail/mail.service';
@@ -47,6 +47,7 @@ export class VolunteerService {
     file: Express.Multer.File,
     video: Express.Multer.File,
   ): Promise<Volunteer> {
+    console.log("schedule: "+dto.schedule);
     if (!video.mimetype.startsWith('video/')) {
       throw new BadRequestException(
         'El archivo de video debe ser un formato de video válido',
@@ -217,4 +218,19 @@ export class VolunteerService {
       throw new Error('Error inesperado al aprobar voluntario');
     }
   }
+
+  //lisatdo de enumns
+  async getVolunteerEnums() {
+    const extractEnum = (e: any) =>
+      Object.values(e).filter((v) => typeof v === 'string');
+  
+    return {
+      typeIdentification: extractEnum(TYPE_IDENTIFICATION),
+      infoSource: extractEnum(InfoSource),
+      quechuaLevel: extractEnum(QuechuaLevel),
+      schoolGrades: extractEnum(SchoolGrades),
+      programsUniversity: extractEnum(ProgramsUniversity),
+      dayOfWeek: extractEnum(DAY),
+    };
+}
 }

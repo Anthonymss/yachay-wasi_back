@@ -48,11 +48,23 @@ export class CreateVolunteerADdviserDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateScheduleDto)
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch {
+        return [];
+      }
+    }
+    return value;
+  })
   schedule: CreateScheduleDto[];
 
   @IsString()
   volunteerMotivation: string;
-  @IsEnum(InfoSource, { message: 'source of information' })
+  @IsEnum(InfoSource, {
+    message: `howDidYouFindUs debe ser uno de: ${Object.values(InfoSource).join(', ')}`,
+  })
   howDidYouFindUs: InfoSource;
   //que subarea va a postular, se guarda el name porque no hay referencia directa
   @IsNotEmpty()
@@ -60,8 +72,14 @@ export class CreateVolunteerADdviserDto {
   idPostulationArea: number;
 
   //others
-  @Transform(({ value }) => (value !== undefined ? Number(value) : undefined))
-  advisoryCapacity: number;
+  @IsOptional()
+  @IsNumber({}, { message: 'advisoryCapacity debe ser un número' })
+  @Transform(({ value }) => {
+    const val = Number(value);
+    return isNaN(val) ? undefined : val;
+  })
+  advisoryCapacity?: number;
+  
 
   @IsEnum(SchoolGrades)
   schoolGrades?: SchoolGrades;

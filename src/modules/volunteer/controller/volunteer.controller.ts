@@ -28,6 +28,7 @@ import { VolunteerResponseDto } from '../dto/volunteer-response.dto';
 import { RolesGuard } from '../../../shared/guards/roles.guard';
 import { Roles } from '../../../shared/decorators/roles.decorator';
 import { ROLE } from '../../../shared/enum/role.enum';
+import { CreateVolunteerADdviserDto } from '../dto/create-volunteer-Adviser.dto';
 @UseGuards(RolesGuard)
 @Roles(ROLE.ADMIN)
 //@UseGuards(JwtAuthGuard)// verificador de token
@@ -48,29 +49,28 @@ export class VolunteerController {
   }
 
   @Post('adviser')
-  @ApiConsumes('multipart/form-data')
-  @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: 'file', maxCount: 1 },
-      { name: 'video', maxCount: 1 },
-    ]),
-  )
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'file', maxCount: 1 },
+    { name: 'video', maxCount: 1 }
+  ]))
   async createVolunteerAdviser(
-    @UploadedFiles()
-    files: {
-      file: Express.Multer.File[];
-      video: Express.Multer.File[];
-    },
+    @UploadedFiles() files: { file: Express.Multer.File[]; video: Express.Multer.File[] },
     @Body() body: any,
   ) {
+    // ✨ Aquí SÍ se aplica el @Transform del DTO, incluido el parseo de schedule
     const dto = await this.volunteerService.prepareAdviserDto(body);
-    const { file, video } = files;
     return this.volunteerService.createVolunteerAdviser(
       dto,
-      file?.[0],
-      video?.[0],
+      files.file?.[0],
+      files.video?.[0]
     );
   }
+  @Get('enums')
+  @ApiResponse({ status: 200, description: 'Listado de enums del formulario' })
+  getVolunteerEnums() {
+    return this.volunteerService.getVolunteerEnums();
+  }  
+  
 
   @Get()
   @ApiQuery({ name: 'type', enum: TYPE_VOLUNTEER, required: false })
