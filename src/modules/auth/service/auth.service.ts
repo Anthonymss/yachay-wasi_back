@@ -47,6 +47,8 @@ export class AuthService {
         id: user.id,
         email: user.email,
         role: user.rol?.name,
+        name: user.name,
+        lastName: user.lastName,
       },
     };
   }
@@ -79,6 +81,9 @@ export class AuthService {
   private async generateTokens(user: User) {
     const payload = {
       sub: user.id,
+      id: user.id,
+      name: user.name,
+      lastName: user.lastName,
       email: user.email,
       role: user.rol?.name,
     };

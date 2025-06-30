@@ -10,6 +10,7 @@ import { BeneficiaryModule } from './modules/beneficiary/beneficiary.module';
 import { AreaModule } from './modules/area/area.module';
 import { DonationModule } from './modules/donation/donation.module';
 import { StatisticsModule } from './modules/statistics/statistics.module';
+import { MailModule } from './shared/mail/mail.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -24,6 +25,7 @@ import { StatisticsModule } from './modules/statistics/statistics.module';
     AreaModule,
     DonationModule,
     StatisticsModule,
+    MailModule,
   ],
   controllers: [],
   providers: [],

@@ -89,7 +89,7 @@ export class VolunteerController {
   ) {
     return this.volunteerService.findAll(type, page, limit);
   }
-  
+
   @Post(':id/approve')
   @ApiResponse({
     status: 200,

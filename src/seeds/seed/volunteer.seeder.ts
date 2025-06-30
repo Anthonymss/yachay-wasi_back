@@ -100,13 +100,7 @@ export class VolunteerSeeder {
       volunteer.howDidYouFindUs = faker.helpers.arrayElement(
         Object.values(InfoSource),
       );
-      volunteer.idPostulationArea = faker.helpers.arrayElement([
-        1,
-        2,
-        3,
-        4,
-        5,
-      ]);
+      volunteer.idPostulationArea = faker.helpers.arrayElement([1, 2, 3, 4, 5]);
 
       if (type === TYPE_VOLUNTEER.ADVISER) {
         volunteer.advisoryCapacity = faker.number.int({ min: 1, max: 10 });

@@ -4,7 +4,7 @@ import { UpdateAreaDto } from './dto/update-area.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AreaStaff } from './entities/area-volunteer/area-staff.entity';
 import { Repository } from 'typeorm';
-import {  AreaAdviser } from './entities/area-beneficiary/area-adviser.entity';
+import { AreaAdviser } from './entities/area-beneficiary/area-adviser.entity';
 import { SubArea } from './entities/area-volunteer/sub-area.entity';
 import { QuestionVolunteer } from './entities/area-volunteer/question-volunteer.entity';
 

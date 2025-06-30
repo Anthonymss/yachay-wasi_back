@@ -5,9 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Rol } from './entities/rol.entity';
 import { RefreshToken } from './entities/refresh-token.entity';
-
+import { MailModule } from 'src/shared/mail/mail.module';
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Rol, RefreshToken])],
+  imports: [TypeOrmModule.forFeature([User, Rol, RefreshToken]), MailModule],
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService],

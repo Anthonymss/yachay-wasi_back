@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateVolunteerStaffDto } from '../dto/create-volunteer-staff.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TYPE_VOLUNTEER, Volunteer } from '../entities/volunteer.entity';
@@ -11,6 +15,7 @@ import { VolunteerResponseDto } from '../dto/volunteer-response.dto';
 import { Schedule } from '../entities/schedule.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { MailService } from 'src/shared/mail/mail.service';
 @Injectable()
 export class VolunteerService {
   constructor(
@@ -20,6 +25,7 @@ export class VolunteerService {
 
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly mailService: MailService,
   ) {}
 
   async createVolunteerStaff(
@@ -164,27 +170,51 @@ export class VolunteerService {
     return dto;
   }
 
-  //crear user
-  async approveVolunteer(id: number) {
+  async approveVolunteer(id: number): Promise<{ message: string }> {
     const volunteer = await this.volunteerRepository.findOne({
       where: { id },
     });
 
-    if (!volunteer) {
-      throw new BadRequestException('Voluntario no encontrado');
+    if (!volunteer) throw new NotFoundException('Voluntario no encontrado');
+    if (volunteer.isVoluntary)
+      throw new BadRequestException('El voluntario ya es un usuario');
+
+    const role = volunteer.typeVolunteer === TYPE_VOLUNTEER.STAFF ? 1 : 2;
+
+    try {
+      await this.userRepository.manager.transaction(
+        async (transactionalEntityManager) => {
+          const newUser = transactionalEntityManager.create(User, {
+            name: volunteer.name,
+            lastName: volunteer.lastName,
+            email: volunteer.email,
+            password: await bcrypt.hash(`${volunteer.numIdentification}`, 10),
+            rol: { id: role },
+            phoneNumber: volunteer.phoneNumber,
+            subArea: { id: volunteer.idPostulationArea },
+          });
+          void this.mailService.sendTemplate(
+            volunteer.email,
+            'welcome',
+            { subject: 'Bienvenido a Yachay Wasi' },
+            {
+              name: volunteer.name,
+              role: volunteer.typeVolunteer,
+            },
+          );
+          await transactionalEntityManager.save(newUser);
+
+          volunteer.isVoluntary = true;
+          await transactionalEntityManager.save(volunteer);
+        },
+      );
+
+      return { message: 'Voluntario aprobado correctamente' };
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Error al aprobar voluntario: ${error.message}`);
+      }
+      throw new Error('Error inesperado al aprobar voluntario');
     }
-    let role;
-    (volunteer.typeVolunteer==TYPE_VOLUNTEER.STAFF)?role=1:role=2;
-    const user = this.userRepository.create({
-      name: volunteer.name,
-      lastName: volunteer.lastName,
-      email: volunteer.email,
-      password: await bcrypt.hash('default123', 10),
-      rol: { id: role },
-      phoneNumber:volunteer.phoneNumber,
-    });
-
-    const userId = `user-${id}`;
-
   }
 }

@@ -31,5 +31,4 @@ export class VolunteerResponseDto {
   callingPlan?: boolean;
   quechuaLevel?: QuechuaLevel;
   programsUniversity?: ProgramsUniversity;
-
 }

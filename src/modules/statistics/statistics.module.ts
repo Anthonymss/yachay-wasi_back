@@ -8,9 +8,11 @@ import { AreaAdviser } from '../area/entities/area-beneficiary/area-adviser.enti
 import { SubArea } from '../area/entities/area-volunteer/sub-area.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Volunteer,AreaStaff,SubArea,AreaAdviser])],
-    providers: [StatisticsService],
-    exports: [StatisticsService],
-    controllers: [StatisticsController]
+  imports: [
+    TypeOrmModule.forFeature([Volunteer, AreaStaff, SubArea, AreaAdviser]),
+  ],
+  providers: [StatisticsService],
+  exports: [StatisticsService],
+  controllers: [StatisticsController],
 })
 export class StatisticsModule {}
