@@ -50,7 +50,7 @@ export class MailService {
         subject: subjectData.subject || 'Notificación',
         template: templateName,
         context,
-      });
+      } as any);
 
       this.logger.log(`Correo enviado a ${to}: ${info.messageId}`);
     } catch (err) {
