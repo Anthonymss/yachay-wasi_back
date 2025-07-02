@@ -199,6 +199,12 @@ export class VolunteerService {
       dayOfWeek: extractEnum(DAY),
     };
   }
+  async getProfileVolunteer(id: number): Promise<VolunteerResponseDto>{
+    const volunteer = await this.volunteerRepository.findOne({
+      where: { id },
+    });
+    return plainToInstance(VolunteerResponseDto, volunteer);
+  } 
 
   //priv
   private async validateData(

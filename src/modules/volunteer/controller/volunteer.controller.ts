@@ -100,4 +100,13 @@ export class VolunteerController {
   async approveVolunteer(@Param('id') id: number) {
     return this.volunteerService.approveVolunteer(id);
   }
+  @Get('profile-volunteer/:id')
+  @ApiResponse({
+    status: 200,
+    description: 'Perfil del voluntario',
+    type: VolunteerResponseDto,
+  })
+  async getProfileVolunteer(@Param('id') id: number): Promise<VolunteerResponseDto> {
+    return this.volunteerService.getProfileVolunteer(id);
+  } 
 }
