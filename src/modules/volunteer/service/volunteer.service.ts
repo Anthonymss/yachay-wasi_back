@@ -10,6 +10,7 @@ import {
   ProgramsUniversity,
   QuechuaLevel,
   SchoolGrades,
+  StatusVolunteer,
   TYPE_IDENTIFICATION,
   TYPE_VOLUNTEER,
   Volunteer,
@@ -116,13 +117,13 @@ export class VolunteerService {
 
   async approveVolunteer(id: number): Promise<{ message: string }> {
     const volunteer = await this.volunteerRepository.findOne({ where: { id } });
-
+console.log(' .1 ');
     if (!volunteer) throw new NotFoundException('Voluntario no encontrado');
-    if (volunteer.isVoluntary)
-      throw new BadRequestException('El voluntario ya es un usuario');
-
-    const roleId = volunteer.typeVolunteer === TYPE_VOLUNTEER.STAFF ? 1 : 2;
-
+    if (volunteer.isVoluntary&&volunteer.statusVolunteer===StatusVolunteer.APPROVED)
+      throw new BadRequestException('El voluntario ya es un usuario, y esta aprobado');
+console.log(' .2 ');
+    const roleId = volunteer.typeVolunteer === TYPE_VOLUNTEER.STAFF ? 4 : 2;
+console.log(' .3 ');
     try {
       await this.userRepository.manager.transaction(async (manager) => {
         const newUser = manager.create(User, {
@@ -134,13 +135,14 @@ export class VolunteerService {
           phoneNumber: volunteer.phoneNumber,
           subArea: { id: volunteer.idPostulationArea },
         });
-
-        await manager.save(newUser);
+        if (volunteer.typeVolunteer === TYPE_VOLUNTEER.STAFF) {
+          await manager.save(newUser);
+        }
 
         volunteer.isVoluntary = true;
-        if (volunteer.typeVolunteer === TYPE_VOLUNTEER.ADVISER) {
-          await manager.save(volunteer);
-        }
+        volunteer.statusVolunteer = StatusVolunteer.APPROVED;
+
+        await manager.save(volunteer);
 
         await this.mailService.sendTemplate(
           volunteer.email,
@@ -155,14 +157,24 @@ export class VolunteerService {
 
       return { message: 'Voluntario aprobado correctamente' };
     } catch (error) {
-      throw new Error(
+      throw new BadRequestException (
         `Error al aprobar voluntario: ${
           error instanceof Error ? error.message : 'desconocido'
         }`,
       );
     }
   }
-
+  async rejectVolunteer(id: number): Promise<{ message: string }> {
+    const volunteer = await this.volunteerRepository.findOne({ where: { id } });
+    if (!volunteer) throw new NotFoundException('Voluntario no encontrado');
+    if(volunteer.statusVolunteer===StatusVolunteer.REJECTED)
+      throw new BadRequestException('El voluntario ya fue rechazado');
+    volunteer.statusVolunteer = StatusVolunteer.REJECTED;
+    volunteer.isVoluntary = false;
+    await this.volunteerRepository.save(volunteer);
+    //se enviara correo??
+    return { message: 'Voluntario rechazado correctamente' };
+  }
   async prepareAdviserDto(body: any): Promise<CreateVolunteerADdviserDto> {
     let parsedSchedule: any;
     try {

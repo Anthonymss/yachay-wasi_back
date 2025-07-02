@@ -60,7 +60,6 @@ export class VolunteerController {
     files: { file: Express.Multer.File[]; video: Express.Multer.File[] },
     @Body() body: any,
   ) {
-    // ✨ Aquí SÍ se aplica el @Transform del DTO, incluido el parseo de schedule
     const dto = await this.volunteerService.prepareAdviserDto(body);
     return this.volunteerService.createVolunteerAdviser(
       dto,
@@ -100,6 +99,15 @@ export class VolunteerController {
   async approveVolunteer(@Param('id') id: number) {
     return this.volunteerService.approveVolunteer(id);
   }
+  @Post(':id/reject')
+  @ApiResponse({
+    status: 200,
+    description: 'Voluntario rechazado',
+  })
+  async rejectVolunteer(@Param('id') id: number) {
+    return this.volunteerService.rejectVolunteer(id);
+  }
+
   @Get('profile-volunteer/:id')
   @ApiResponse({
     status: 200,

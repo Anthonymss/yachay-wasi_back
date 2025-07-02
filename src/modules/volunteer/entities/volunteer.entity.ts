@@ -56,6 +56,11 @@ export enum ProgramsUniversity {
   UCV = 'UCV',
   NINGUNO = 'Ninguno',
 }
+export enum StatusVolunteer {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+}
 @Entity('volunteers')
 export class Volunteer {
   @PrimaryGeneratedColumn()
@@ -194,6 +199,16 @@ export class Volunteer {
   //
   @Column({ name: 'id_postulation_area' })
   idPostulationArea: number;
+
+  @Column({
+    type: 'enum',
+    enum: StatusVolunteer,
+    default: StatusVolunteer.PENDING,
+    nullable: false,
+    name: 'status_volunteer',
+  })
+  statusVolunteer: StatusVolunteer;
+
   // Relaciones
   @OneToMany(
     () => ResponseVolunteer,
