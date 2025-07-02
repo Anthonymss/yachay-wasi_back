@@ -117,13 +117,10 @@ export class VolunteerService {
 
   async approveVolunteer(id: number): Promise<{ message: string }> {
     const volunteer = await this.volunteerRepository.findOne({ where: { id } });
-console.log(' .1 ');
     if (!volunteer) throw new NotFoundException('Voluntario no encontrado');
     if (volunteer.isVoluntary&&volunteer.statusVolunteer===StatusVolunteer.APPROVED)
       throw new BadRequestException('El voluntario ya es un usuario, y esta aprobado');
-console.log(' .2 ');
     const roleId = volunteer.typeVolunteer === TYPE_VOLUNTEER.STAFF ? 4 : 2;
-console.log(' .3 ');
     try {
       await this.userRepository.manager.transaction(async (manager) => {
         const newUser = manager.create(User, {

@@ -4,6 +4,7 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -12,24 +13,70 @@ import {
 } from 'typeorm';
 import { BeneficiaryLanguage } from './beneficiary-languaje.entity';
 import { Schedule } from './schedule.entity';
-import { ResponseBeneficiary } from '../../area/entities/area-beneficiary/response-beneficiary.entity';
-import { Grade } from './grade.entity';
-import { EnrollmentStatus } from './enrollment-status.entity';
-import { LearningLevel } from './learning-level.entity';
 import { User } from 'src/modules/user/entities/user.entity';
+import { BeneficiaryPreferredCourses } from './beneficiary-preferred-courses.entity';
+import { CommunicationPreference } from './communication-preference.entity';
 export enum Sex {
   MALE = 'male',
   FEMALE = 'female',
-  OTHER = 'other',
 }
+
+export enum ModalityStudent {
+  RENOVATION = 'Renovación',
+  NEWSTUDENT = 'Nuevo Estudiante',
+}
+export enum Parentesco {
+ MOTHER = 'Mama',
+ FATHER = 'Papa',
+ GRANDMOTHER = 'Nana',
+ GRANDFATHER = 'Nino',
+ AUNT = 'Tia',
+ UNCLE = 'Tio',
+ BROTHER = 'Hermano',
+ SISTER = 'Hermana',
+}
+export enum LearningLevel {
+ C='No tan bien',
+ B='Mas o menos',
+ A='Bien',
+ D='Muy bien',
+}
+export enum Area {
+ ARTE_CULTURA='Arte & Cultura',
+ BIENESTAR_PSICOLOGICO='Bienestar Psicológico',
+ ASESORIA_COLEGIOS_NACIONALES='Asesoría Colegios Nacionales',
+}
+export enum CoursePriorityReason {
+  DIFFICULTY = 'Son los cursos en los que el estudiante presenta más dificultades',
+  BASIC_REINFORCEMENT = "Son cursos 'prioritarios' o básicos a reforzar",
+  STUDENT_INTEREST = 'Los cursos son de interés para el estudiante',
+}
+export enum CallSignalIssue {
+  EXTERNAL_ISSUES = 'Señal baja debido a situaciones externas: lluvias, cortes de luz repentinos, etc.',
+  FREQUENT_ISSUES = 'Señal baja cotidianamente: regularmente no se escucha las llamadas, a veces se corta, no entra la llamada, etc.',
+  NO_ISSUES = 'No tiene problemas con la señal.',
+}
+//temporal
+export enum WorkshopPreference {
+  STORYTELLING = 'Cuenta cuentos (sin internet)',
+  DRAWING_PAINTING = 'Dibujo y Pintura (con internet)',
+  MUSIC = 'Música (con internet)',
+  ORATORY = 'Oratoria (sin internet)',
+  THEATER = 'Teatro (con internet)',
+  DANCE = 'Danza (con internet)',
+}
+
+export enum Course {
+  MATHEMATICS = 'Matemática',
+  COMMUNICATION = 'Comunicación',
+  ENGLISH = 'Inglés',
+}
+
+
 @Entity('beneficiaries')
 export class Beneficiary {
   @PrimaryGeneratedColumn()
   id: number;
-  //relacion user
-
-  //relacion grade
-
   @Column({ type: 'varchar', length: 50, nullable: true })
   name: string;
   @Column({ type: 'varchar', length: 50, nullable: true, name: 'last_name' })
@@ -38,87 +85,117 @@ export class Beneficiary {
   dni: string;
   @Column({ type: 'varchar', length: 150, nullable: true })
   institution: string;
-  //@Column({type:'varchar',length:150,nullable:true,name:'modality_student'})
-  //modalityStudent: string; ??? string o enum?
+  @Column({ type: 'enum', enum: ModalityStudent, nullable: true })
+  modalityStudent: ModalityStudent;
 
   @Column({ type: 'varchar', length: 100, nullable: true, name: 'birth_date' })
   birthDate: string;
 
   @Column({ type: 'enum', enum: Sex, nullable: true })
-  sex: Sex; //ENUM o String??
-  //@Column()
-  //parentesc:string; ??
-  @Column({ type: 'varchar', length: 50, nullable: true })
-  representativeName: string;
+  sex: Sex; 
+  @Column({ type: 'enum', enum: Parentesco, nullable: true })
+  parentesco: Parentesco;
+
+  @Column({ type: 'varchar', length: 50, nullable: true, name: 'name_representative' })
+  nameRepresentative: string;
 
   @Column({
     type: 'varchar',
     length: 50,
     nullable: true,
-    name: 'representative_last_name',
+    name: 'last_name_representative',
   })
-  representativeLastName: string;
+  lastNameRepresentative: string;
 
-  @Column({ type: 'varchar', length: 15, nullable: true, name: 'phone_number' })
-  phoneNumber: string;
+  @Column({ type: 'boolean', nullable: true, name: 'is_add_group_wspp' })
+  isAddGroupWspp: boolean;
+  //sobre el aprendisaje del estudiante
+  @Column({ type: 'boolean', nullable: true, name: 'is_add_equipment' })
+  isAddEquipment: boolean;
 
-  @Column({
-    type: 'varchar',
-    length: 15,
-    nullable: true,
-    name: 'phone_emergency',
+  @Column({ type: 'enum', enum: LearningLevel, nullable: true })
+  learningLevel: LearningLevel;
+
+  @OneToMany(() => BeneficiaryPreferredCourses, (beneficiaryPreferredCourses) => beneficiaryPreferredCourses.beneficiary)
+  beneficiaryPreferredCourses: BeneficiaryPreferredCourses[];  
+  //Sobre las asesorías al estudiante
+  @Column({ type: 'enum', enum: Area, nullable: true })
+  area: Area;  
+
+  @ManyToMany(() => CommunicationPreference, (communicationPreference) => communicationPreference.beneficiaries)
+  @JoinTable({
+    name: 'beneficiary_communication_preference',
+    joinColumn: { name: 'beneficiary_id' },
+    inverseJoinColumn: { name: 'communication_preference_id' },
   })
-  phoneEmergency: string;
+  communicationPreferences: CommunicationPreference[];      
+  
+  @Column({ type: 'int', nullable: true, name: 'hours_asesoria' })
+  hoursAsesoria: number; 
 
-  @Column({
-    type: 'varchar',
-    length: 100,
-    nullable: true,
-    name: 'add_group_wspp',
-  })
-  addGroupWspp: string; //?? WhatsApp group?
-  //relacion status:enrollment_status
+  @Column({ type: 'enum', enum: CoursePriorityReason, nullable: true, name: 'course_priority_reason' })
+  coursePriorityReason: CoursePriorityReason;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  itEquipment: string; //?? IT equipment?
-  //relacion with learning levels
+  @Column({ type: 'varchar', length: 15, nullable: true, name: 'phone_number_main' })
+  phoneNumberMain: string;
 
-  @Column({
-    type: 'varchar',
-    length: 100,
-    nullable: true,
-    name: 'featured_course',
-  })
-  featuredCourse: string;
+  @Column({ type: 'text', nullable: true, name: 'cellphone_observation' })
+  cellphoneObservation?: string;
 
-  @Column({
-    type: 'varchar',
-    length: 100,
-    nullable: true,
-    name: 'comunication_media',
-  })
-  comunicationMedia: string;
+  @Column({ type: 'boolean', nullable: true, name: 'is_whatsapp' })
+  isWhatsApp: boolean;
 
-  @Column({
-    type: 'varchar',
-    length: 100,
-    nullable: true,
-    name: 'upload_audio_allpa',
-  })
-  uploadAudioAllpa: string; //audio de allpa, su url?
+  @Column({ type: 'enum', enum: CallSignalIssue, nullable: true, name: 'call_signal_issue' })
+  callSignalIssue: CallSignalIssue;
 
-  @Column({
-    type: 'varchar',
-    length: 100,
-    nullable: true,
-    name: 'upload_audio_ruru',
-  })
-  uploadAudioRuru: string; //audio del ruru, su url?
+  @Column({ type: 'varchar', length: 50, nullable: true, name: 'full_name_contact_emergency' })
+  fullNameContactEmergency: string;
 
-  @Column()
-  observations: string;
 
-  //consent asesory ,image y ruru que son?
+  //horarios=> falta
+
+  @Column({ type: 'varchar', length: 15, nullable: true, name: 'phone_number_contact_emergency' })
+  phoneNumberContactEmergency: string;
+
+  @Column({ type: 'varchar', length: 50, nullable: true, name: 'full_name_contact_emergency2' })
+  fullNameContactEmergency2: string;
+
+  @Column({ type: 'varchar', length: 15, nullable: true, name: 'phone_number_contact_emergency2' })
+  phoneNumberContactEmergency2: string;
+
+
+  //Consentimientos
+  @Column({ type: 'boolean', nullable: false, name: 'allpa_advisory_consent' })
+  allpaAdvisoryConsent: boolean;
+  
+  @Column({ type: 'boolean', nullable: false, name: 'allpa_image_consent' })
+  allpaImageConsent: boolean;
+  
+  @Column({ type: 'boolean', nullable: false, name: 'ruru_advisory_consent' })
+  ruruAdvisoryConsent: boolean;
+
+  @Column({ type: 'text', nullable: true, name: 'additional_notes' })
+  additionalNotes?: string;
+
+
+
+  //Respuestas dinamicas en base a areas, por ahora asi
+  //para arte y cultura
+  @Column({ type: 'enum', enum: WorkshopPreference, nullable: true })
+  firstWorkshopChoice?: WorkshopPreference;
+
+  @Column({ type: 'enum', enum: WorkshopPreference, nullable: true })
+  secondWorkshopChoice?: WorkshopPreference;
+
+  @Column({ type: 'enum', enum: WorkshopPreference, nullable: true })
+  thirdWorkshopChoice?: WorkshopPreference;
+
+  // Cursos (si se eligió "Asesoría Académica")
+  @Column({ type: 'enum', enum: Course, nullable: true })
+  firstCourseChoice?: Course;
+
+  @Column({ type: 'enum', enum: Course, nullable: true })
+  secondCourseChoice?: Course;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
@@ -133,28 +210,9 @@ export class Beneficiary {
     (beneficiaryLanguage) => beneficiaryLanguage.beneficiary,
   )
   beneficiaryLanguage: BeneficiaryLanguage[];
+
   @OneToMany(() => Schedule, (schedule) => schedule.beneficiary)
   schedules: Schedule[];
-  @OneToMany(
-    () => ResponseBeneficiary,
-    (responseBeneficiary) => responseBeneficiary.beneficiary,
-  )
-  responseBeneficiary: ResponseBeneficiary[];
-  @ManyToOne(() => Grade, (grade) => grade.beneficiaries)
-  @JoinColumn({ name: 'grade_id' })
-  grade: Grade;
-  @ManyToOne(
-    () => EnrollmentStatus,
-    (enrollmentStatus) => enrollmentStatus.beneficiaries,
-  )
-  @JoinColumn({ name: 'enrollment_status_id' })
-  enrollmentStatus: EnrollmentStatus;
-  @ManyToOne(
-    () => LearningLevel,
-    (learningLevel) => learningLevel.beneficiaries,
-  )
-  @JoinColumn({ name: 'learning_level_id' })
-  learningLevel: LearningLevel;
   @ManyToOne(() => User, (user) => user.beneficiaries)
   @JoinColumn({ name: 'user_id' })
   user: User;
