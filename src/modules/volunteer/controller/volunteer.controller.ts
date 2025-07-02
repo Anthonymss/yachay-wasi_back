@@ -49,12 +49,15 @@ export class VolunteerController {
   }
 
   @Post('adviser')
-  @UseInterceptors(FileFieldsInterceptor([
-    { name: 'file', maxCount: 1 },
-    { name: 'video', maxCount: 1 }
-  ]))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'file', maxCount: 1 },
+      { name: 'video', maxCount: 1 },
+    ]),
+  )
   async createVolunteerAdviser(
-    @UploadedFiles() files: { file: Express.Multer.File[]; video: Express.Multer.File[] },
+    @UploadedFiles()
+    files: { file: Express.Multer.File[]; video: Express.Multer.File[] },
     @Body() body: any,
   ) {
     // ✨ Aquí SÍ se aplica el @Transform del DTO, incluido el parseo de schedule
@@ -62,15 +65,14 @@ export class VolunteerController {
     return this.volunteerService.createVolunteerAdviser(
       dto,
       files.file?.[0],
-      files.video?.[0]
+      files.video?.[0],
     );
   }
   @Get('enums')
   @ApiResponse({ status: 200, description: 'Listado de enums del formulario' })
   getVolunteerEnums() {
     return this.volunteerService.getVolunteerEnums();
-  }  
-  
+  }
 
   @Get()
   @ApiQuery({ name: 'type', enum: TYPE_VOLUNTEER, required: false })

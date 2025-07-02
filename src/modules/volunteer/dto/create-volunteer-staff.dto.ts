@@ -42,7 +42,6 @@ export class CreateVolunteerStaffDto {
     message: `howDidYouFindUs debe ser uno de: ${Object.values(InfoSource).join(', ')}`,
   })
   howDidYouFindUs: InfoSource;
-  
 
   //que subarea va a postular, se guarda el name porque no hay referencia directa
   @IsNotEmpty()

@@ -79,7 +79,6 @@ export class CreateVolunteerADdviserDto {
     return isNaN(val) ? undefined : val;
   })
   advisoryCapacity?: number;
-  
 
   @IsEnum(SchoolGrades)
   schoolGrades?: SchoolGrades;

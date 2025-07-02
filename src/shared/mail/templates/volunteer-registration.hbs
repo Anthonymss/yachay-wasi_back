@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registro de Voluntariado - Yachay Wasi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .content {
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-radius: 0 0 8px 8px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>¡Gracias por tu interés en Yachay Wasi!</h1>
+    </div>
+    <div class="content">
+        <h2>Registro Exitoso</h2>
+        <p>Estimado/a {{name}} {{lastName}},</p>
+        
+        <p>Te confirmamos que hemos recibido tu solicitud de voluntariado. Tus datos han sido registrados exitosamente.</p>
+        
+        <p>Información registrada:</p>
+        <ul>
+            <li><strong>Tipo de Voluntariado:</strong> {{typeVolunteer}}</li>
+            <li><strong>Correo Electrónico:</strong> {{email}}</li>
+            <li><strong>Fecha de Postulación:</strong> {{datePostulation}}</li>
+        </ul>
+        
+        <p>Nuestro equipo revisará tu solicitud y te contactará a la brevedad posible para los siguientes pasos.</p>
+        
+        <p>Si tienes alguna consulta o necesitas más información, no dudes en contactarnos:</p>
+        <a href="mailto:contacto@yachaywasi.org" class="button">Contactar con Yachay Wasi</a>
+    </div>
+    <div class="footer">
+        <p>Yachay Wasi - Organización sin fines de lucro</p>
+        <p>Este es un correo automático, por favor no responder.</p>
+    </div>
+</body>
+</html>

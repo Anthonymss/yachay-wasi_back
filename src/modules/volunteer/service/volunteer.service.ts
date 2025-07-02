@@ -5,7 +5,15 @@ import {
 } from '@nestjs/common';
 import { CreateVolunteerStaffDto } from '../dto/create-volunteer-staff.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { InfoSource, ProgramsUniversity, QuechuaLevel, SchoolGrades, TYPE_IDENTIFICATION, TYPE_VOLUNTEER, Volunteer } from '../entities/volunteer.entity';
+import {
+  InfoSource,
+  ProgramsUniversity,
+  QuechuaLevel,
+  SchoolGrades,
+  TYPE_IDENTIFICATION,
+  TYPE_VOLUNTEER,
+  Volunteer,
+} from '../entities/volunteer.entity';
 import { Repository } from 'typeorm';
 import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
 import { CreateVolunteerADdviserDto } from '../dto/create-volunteer-Adviser.dto';
@@ -21,10 +29,9 @@ export class VolunteerService {
   constructor(
     @InjectRepository(Volunteer)
     private readonly volunteerRepository: Repository<Volunteer>,
-    private readonly cloudinaryService: CloudinaryService,
-
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly cloudinaryService: CloudinaryService,
     private readonly mailService: MailService,
   ) {}
 
@@ -33,47 +40,57 @@ export class VolunteerService {
     file: Express.Multer.File,
   ): Promise<Volunteer> {
     await this.validateData(dto.email, TYPE_VOLUNTEER.STAFF, file);
-    const urlCv = await this.cloudinaryService.uploadFile(file);
+    const cvUrl = await this.cloudinaryService.uploadFile(file);
+
     const volunteer = this.volunteerRepository.create({
       ...dto,
-      cvUrl: urlCv,
+      cvUrl,
       typeVolunteer: TYPE_VOLUNTEER.STAFF,
       datePostulation: new Date(),
     });
-    return this.volunteerRepository.save(volunteer);
+
+    const saved = await this.volunteerRepository.save(volunteer);
+    await this.sendConfirmationEmail(saved);
+    return saved;
   }
+
   async createVolunteerAdviser(
     dto: CreateVolunteerADdviserDto,
     file: Express.Multer.File,
     video: Express.Multer.File,
   ): Promise<Volunteer> {
-    console.log("schedule: "+dto.schedule);
     if (!video.mimetype.startsWith('video/')) {
-      throw new BadRequestException(
-        'El archivo de video debe ser un formato de video válido',
-      );
+      throw new BadRequestException('El archivo de video debe ser válido');
     }
+
     await this.validateData(dto.email, TYPE_VOLUNTEER.ADVISER, file);
-    const urlCv = await this.cloudinaryService.uploadFile(file);
-    const urlVideo = await this.cloudinaryService.uploadFile(video);
+    const [cvUrl, videoUrl] = await Promise.all([
+      this.cloudinaryService.uploadFile(file),
+      this.cloudinaryService.uploadFile(video),
+    ]);
+
     const volunteer = this.volunteerRepository.create({
       ...dto,
-      cvUrl: urlCv,
-      videoUrl: urlVideo,
+      cvUrl,
+      videoUrl,
       typeVolunteer: TYPE_VOLUNTEER.ADVISER,
       datePostulation: new Date(),
       schedules: [],
     });
-    const savedVolunteer = await this.volunteerRepository.save(volunteer);
-    const scheduleEntities = dto.schedule.map((s) => ({
+
+    const saved = await this.volunteerRepository.save(volunteer);
+    await this.sendConfirmationEmail(saved);
+
+    const schedules = dto.schedule.map((s) => ({
       ...s,
-      volunteer: savedVolunteer,
+      volunteer: saved,
     }));
 
     await this.volunteerRepository.manager
       .getRepository(Schedule)
-      .save(scheduleEntities);
-    return savedVolunteer;
+      .save(schedules);
+
+    return saved;
   }
 
   async findAll(type: TYPE_VOLUNTEER, page = 1, limit = 10) {
@@ -85,32 +102,9 @@ export class VolunteerService {
       order: { createdAt: 'DESC' },
     });
 
-    const data: VolunteerResponseDto[] = volunteers.map((volunteer) => {
-      return {
-        id: volunteer.id,
-        name: volunteer.name,
-        lastName: volunteer.lastName,
-        email: volunteer.email,
-        birthDate: volunteer.birthDate,
-        phoneNumber: volunteer.phoneNumber,
-        typeVolunteer: volunteer.typeVolunteer,
-        typeIdentification: volunteer.typeIdentification,
-        numIdentification: volunteer.numIdentification,
-        wasVoluntary: volunteer.wasVoluntary,
-        cvUrl: volunteer.cvUrl,
-        videoUrl: volunteer.videoUrl ?? undefined,
-        datePostulation: volunteer.datePostulation,
-        volunteerMotivation: volunteer.volunteerMotivation,
-        howDidYouFindUs: volunteer.howDidYouFindUs,
-        schedules: volunteer.schedules?.length ? volunteer.schedules : [],
-        advisoryCapacity: volunteer.advisoryCapacity ?? undefined,
-        idPostulationArea: volunteer.idPostulationArea,
-        schoolGrades: volunteer.schoolGrades,
-        callingPlan: volunteer.callingPlan,
-        quechuaLevel: volunteer.quechuaLevel,
-        programsUniversity: volunteer.programsUniversity,
-      };
-    });
+    const data = volunteers.map((v) =>
+      plainToInstance(VolunteerResponseDto, v),
+    );
 
     return {
       data,
@@ -120,36 +114,60 @@ export class VolunteerService {
     };
   }
 
-  //privates
-  async validateData(
-    email: string,
-    typeVolunteer: TYPE_VOLUNTEER,
-    file: Express.Multer.File,
-  ) {
-    if (!file)
-      throw new BadRequestException('Se necesita subir un archivo pdf');
-    if (file.mimetype !== 'application/pdf')
-      throw new BadRequestException('El archivo debe ser un PDF');
+  async approveVolunteer(id: number): Promise<{ message: string }> {
+    const volunteer = await this.volunteerRepository.findOne({ where: { id } });
 
-    const existingVolunteer = await this.volunteerRepository.findOne({
-      where: {
-        email: email,
-        typeVolunteer: typeVolunteer,
-      },
-    });
+    if (!volunteer) throw new NotFoundException('Voluntario no encontrado');
+    if (volunteer.isVoluntary)
+      throw new BadRequestException('El voluntario ya es un usuario');
 
-    if (existingVolunteer)
-      throw new BadRequestException(
-        'Ya existe un voluntario con este correo y tipo de voluntariado',
+    const roleId = volunteer.typeVolunteer === TYPE_VOLUNTEER.STAFF ? 1 : 2;
+
+    try {
+      await this.userRepository.manager.transaction(async (manager) => {
+        const newUser = manager.create(User, {
+          name: volunteer.name,
+          lastName: volunteer.lastName,
+          email: volunteer.email,
+          password: await bcrypt.hash(volunteer.numIdentification, 10),
+          rol: { id: roleId },
+          phoneNumber: volunteer.phoneNumber,
+          subArea: { id: volunteer.idPostulationArea },
+        });
+
+        await manager.save(newUser);
+
+        volunteer.isVoluntary = true;
+        if (volunteer.typeVolunteer === TYPE_VOLUNTEER.ADVISER) {
+          await manager.save(volunteer);
+        }
+
+        await this.mailService.sendTemplate(
+          volunteer.email,
+          'welcome',
+          { subject: 'Bienvenido a Yachay Wasi' },
+          {
+            name: volunteer.name,
+            role: volunteer.typeVolunteer,
+          },
+        );
+      });
+
+      return { message: 'Voluntario aprobado correctamente' };
+    } catch (error) {
+      throw new Error(
+        `Error al aprobar voluntario: ${
+          error instanceof Error ? error.message : 'desconocido'
+        }`,
       );
+    }
   }
 
-  //other
   async prepareAdviserDto(body: any): Promise<CreateVolunteerADdviserDto> {
-    let parsedSchedule;
+    let parsedSchedule: any;
     try {
       parsedSchedule = JSON.parse(body.schedule);
-    } catch (error) {
+    } catch {
       throw new BadRequestException('El formato de schedule no es válido.');
     }
 
@@ -159,71 +177,19 @@ export class VolunteerService {
       schedule: parsedSchedule,
     });
 
-    const validationErrors = await validate(dto, {
+    const errors = await validate(dto, {
       whitelist: true,
       forbidNonWhitelisted: true,
     });
 
-    if (validationErrors.length > 0) {
-      throw new BadRequestException(validationErrors);
-    }
-
+    if (errors.length > 0) throw new BadRequestException(errors);
     return dto;
   }
 
-  async approveVolunteer(id: number): Promise<{ message: string }> {
-    const volunteer = await this.volunteerRepository.findOne({
-      where: { id },
-    });
-
-    if (!volunteer) throw new NotFoundException('Voluntario no encontrado');
-    if (volunteer.isVoluntary)
-      throw new BadRequestException('El voluntario ya es un usuario');
-
-    const role = volunteer.typeVolunteer === TYPE_VOLUNTEER.STAFF ? 1 : 2;
-
-    try {
-      await this.userRepository.manager.transaction(
-        async (transactionalEntityManager) => {
-          const newUser = transactionalEntityManager.create(User, {
-            name: volunteer.name,
-            lastName: volunteer.lastName,
-            email: volunteer.email,
-            password: await bcrypt.hash(`${volunteer.numIdentification}`, 10),
-            rol: { id: role },
-            phoneNumber: volunteer.phoneNumber,
-            subArea: { id: volunteer.idPostulationArea },
-          });
-          void this.mailService.sendTemplate(
-            volunteer.email,
-            'welcome',
-            { subject: 'Bienvenido a Yachay Wasi' },
-            {
-              name: volunteer.name,
-              role: volunteer.typeVolunteer,
-            },
-          );
-          await transactionalEntityManager.save(newUser);
-
-          volunteer.isVoluntary = true;
-          await transactionalEntityManager.save(volunteer);
-        },
-      );
-
-      return { message: 'Voluntario aprobado correctamente' };
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Error al aprobar voluntario: ${error.message}`);
-      }
-      throw new Error('Error inesperado al aprobar voluntario');
-    }
-  }
-
-  //lisatdo de enumns
   async getVolunteerEnums() {
     const extractEnum = (e: any) =>
       Object.values(e).filter((v) => typeof v === 'string');
-  
+
     return {
       typeIdentification: extractEnum(TYPE_IDENTIFICATION),
       infoSource: extractEnum(InfoSource),
@@ -232,5 +198,42 @@ export class VolunteerService {
       programsUniversity: extractEnum(ProgramsUniversity),
       dayOfWeek: extractEnum(DAY),
     };
-}
+  }
+
+  //priv
+  private async validateData(
+    email: string,
+    type: TYPE_VOLUNTEER,
+    file: Express.Multer.File,
+  ) {
+    if (!file)
+      throw new BadRequestException('Se necesita subir un archivo PDF');
+    if (file.mimetype !== 'application/pdf')
+      throw new BadRequestException('El archivo debe ser un PDF');
+
+    const exists = await this.volunteerRepository.findOne({
+      where: { email, typeVolunteer: type },
+    });
+
+    if (exists) {
+      throw new BadRequestException(
+        'Ya existe un voluntario con este correo y tipo de voluntariado',
+      );
+    }
+  }
+
+  private async sendConfirmationEmail(volunteer: Volunteer) {
+    await this.mailService.sendTemplate(
+      volunteer.email,
+      'volunteer-registration',
+      { subject: 'Confirmación de Registro - Voluntariado Yachay Wasi' },
+      {
+        name: volunteer.name,
+        lastName: volunteer.lastName,
+        email: volunteer.email,
+        typeVolunteer: volunteer.typeVolunteer,
+        datePostulation: volunteer.datePostulation.toLocaleDateString(),
+      },
+    );
+  }
 }
