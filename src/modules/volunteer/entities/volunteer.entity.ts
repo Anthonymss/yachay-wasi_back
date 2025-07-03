@@ -54,6 +54,8 @@ export enum ProgramsUniversity {
   UNIVAS = 'UNIVAS - UDEP',
   UTEC = 'UTEC',
   UCV = 'UCV',
+  UTP = 'UTP',
+  USIL = 'USIL',
   NINGUNO = 'Ninguno',
 }
 export enum StatusVolunteer {
