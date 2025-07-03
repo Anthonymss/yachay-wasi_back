@@ -12,6 +12,7 @@ import {
   SchoolGrades,
   QuechuaLevel,
   ProgramsUniversity,
+  StatusVolunteer,
 } from 'src/modules/volunteer/entities/volunteer.entity';
 
 @Injectable()
@@ -89,18 +90,27 @@ export class VolunteerSeeder {
       volunteer.wasVoluntary = false;
 
       volunteer.cvUrl =
-        'https://res.cloudinary.com/dnupey6af/raw/upload/v1750921256/yw/documents/Formulario%20de%20Postulaci%C3%B3n.pdf';
+        'https://res.cloudinary.com/dnupey6af/raw/upload/v1751524148/yw/documents/CV_Valeria_Torres_Ramirez.pdf';
       volunteer.videoUrl =
         'https://res.cloudinary.com/dnupey6af/video/upload/v1750925681/yw/videos/pr1.mp4';
 
-      volunteer.datePostulation = new Date();
+      volunteer.datePostulation = faker.date.between({
+        from: '2025-01-01',
+        to: new Date(),
+      });
+      
       volunteer.volunteerMotivation = faker.lorem.paragraph();
       volunteer.typeVolunteer = type;
 
       volunteer.howDidYouFindUs = faker.helpers.arrayElement(
         Object.values(InfoSource),
       );
-      volunteer.idPostulationArea = faker.helpers.arrayElement([1, 2, 3, 4, 5]);
+      
+      volunteer.idPostulationArea = faker.helpers.arrayElement([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+
+      // Todos los voluntarios con status PENDING
+      volunteer.statusVolunteer = StatusVolunteer.PENDING;
+      volunteer.isVoluntary = false;
 
       if (type === TYPE_VOLUNTEER.ADVISER) {
         volunteer.advisoryCapacity = faker.number.int({ min: 1, max: 10 });
