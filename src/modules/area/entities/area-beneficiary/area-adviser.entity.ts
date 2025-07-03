@@ -1,4 +1,5 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, JoinTable, PrimaryGeneratedColumn } from 'typeorm';
+import { Beneficiary } from 'src/modules/beneficiary/entities/beneficiary.entity';
 @Entity('areas_asesories')
 export class AreaAdviser {
   @PrimaryGeneratedColumn()
@@ -10,5 +11,12 @@ export class AreaAdviser {
   @Column()
   description: string;
   //other relations
+  @ManyToMany(() => Beneficiary, (beneficiary) => beneficiary.areaAdvisers)
+  @JoinTable({
+    name: 'beneficiary_area_adviser',
+    joinColumn: { name: 'area_adviser_id' },
+    inverseJoinColumn: { name: 'beneficiary_id' },
+  })
+  beneficiaries: Beneficiary[];
 
 }

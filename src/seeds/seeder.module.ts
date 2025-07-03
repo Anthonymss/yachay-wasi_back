@@ -15,7 +15,8 @@ import { User } from 'src/modules/user/entities/user.entity';
 import { Volunteer } from 'src/modules/volunteer/entities/volunteer.entity';
 import { VolunteerSeeder } from './seed/volunteer.seeder';
 import { Schedule } from 'src/modules/volunteer/entities/schedule.entity';
-
+import { CommunicationPreference } from 'src/modules/beneficiary/entities/communication-preference.entity';
+import { ComunicationPreferenceSeeder } from './seed/comunication-preference.seeder';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -28,6 +29,7 @@ import { Schedule } from 'src/modules/volunteer/entities/schedule.entity';
       User,
       Volunteer,
       Schedule,
+      CommunicationPreference,
     ]),
   ],
   providers: [
@@ -36,6 +38,7 @@ import { Schedule } from 'src/modules/volunteer/entities/schedule.entity';
     AreaSeeder,
     AdminSeeder,
     VolunteerSeeder,
+    ComunicationPreferenceSeeder,
   ],
 })
 export class SeederModule {}

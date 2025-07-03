@@ -17,7 +17,7 @@ export class BeneficiaryLanguage {
   language: LANGUAGES;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
-  customCourseName?: string;
+  customLanguageName?: string;
   @ManyToOne(
     () => Beneficiary,
     (beneficiary) => beneficiary.beneficiaryLanguage,

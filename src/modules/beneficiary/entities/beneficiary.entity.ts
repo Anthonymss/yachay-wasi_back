@@ -9,6 +9,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { BeneficiaryLanguage } from './beneficiary-languaje.entity';
@@ -16,6 +17,7 @@ import { Schedule } from './schedule.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import { BeneficiaryPreferredCourses } from './beneficiary-preferred-courses.entity';
 import { CommunicationPreference } from './communication-preference.entity';
+import { AreaAdviser } from 'src/modules/area/entities/area-beneficiary/area-adviser.entity';
 export enum Sex {
   MALE = 'male',
   FEMALE = 'female',
@@ -72,7 +74,7 @@ export enum Course {
   ENGLISH = 'Inglés',
 }
 
-
+@Unique(['dni'])
 @Entity('beneficiaries')
 export class Beneficiary {
   @PrimaryGeneratedColumn()
@@ -119,9 +121,15 @@ export class Beneficiary {
   @OneToMany(() => BeneficiaryPreferredCourses, (beneficiaryPreferredCourses) => beneficiaryPreferredCourses.beneficiary)
   beneficiaryPreferredCourses: BeneficiaryPreferredCourses[];  
   //Sobre las asesorías al estudiante
-  @Column({ type: 'enum', enum: Area, nullable: true })
-  area: Area;  
-
+  //dto@Column({ type: 'enum', enum: Area, nullable: true })
+  //dto //area: Area;  
+  @ManyToMany(() => AreaAdviser, (areaAdviser) => areaAdviser.beneficiaries)
+  @JoinTable({
+    name: 'beneficiary_area_adviser',
+    joinColumn: { name: 'beneficiary_id' },
+    inverseJoinColumn: { name: 'area_adviser_id' },
+  })
+  areaAdvisers: AreaAdviser[];  
   @ManyToMany(() => CommunicationPreference, (communicationPreference) => communicationPreference.beneficiaries)
   @JoinTable({
     name: 'beneficiary_communication_preference',
