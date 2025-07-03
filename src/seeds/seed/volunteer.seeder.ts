@@ -108,14 +108,9 @@ export class VolunteerSeeder {
       
       volunteer.idPostulationArea = faker.helpers.arrayElement([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
 
-      const statusRandom = Math.random();
-      if (statusRandom < 0.6) {
-        volunteer.statusVolunteer = StatusVolunteer.PENDING;
-      } else if (statusRandom < 0.85) {
-        volunteer.statusVolunteer = StatusVolunteer.APPROVED;
-      } else {
-        volunteer.statusVolunteer = StatusVolunteer.REJECTED;
-      }
+      // Todos los voluntarios con status PENDING
+      volunteer.statusVolunteer = StatusVolunteer.PENDING;
+      volunteer.isVoluntary = false;
 
       if (type === TYPE_VOLUNTEER.ADVISER) {
         volunteer.advisoryCapacity = faker.number.int({ min: 1, max: 10 });
