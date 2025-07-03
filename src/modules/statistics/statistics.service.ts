@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Volunteer } from '../volunteer/entities/volunteer.entity';
-import { AreaStaff } from '../area/entities/area-volunteer/area-staff.entity';
-import { AreaAdviser } from '../area/entities/area-beneficiary/area-adviser.entity';
-import { StatisticsDto } from './statistics.dto';
+import { In, Repository } from 'typeorm';
+import { StatusVolunteer, TYPE_VOLUNTEER, Volunteer } from '../volunteer/entities/volunteer.entity';
 import { SubArea } from '../area/entities/area-volunteer/sub-area.entity';
+import { Beneficiary } from '../beneficiary/entities/beneficiary.entity';
+import { StatisticsDto } from './statistics.dto';
+
 @Injectable()
 export class StatisticsService {
   constructor(
@@ -13,55 +13,58 @@ export class StatisticsService {
     private readonly volunteerRepository: Repository<Volunteer>,
     @InjectRepository(SubArea)
     private readonly subAreaRepository: Repository<SubArea>,
-
-    @InjectRepository(AreaAdviser)
-    private readonly areaAdviserRepository: Repository<AreaAdviser>,
+    @InjectRepository(Beneficiary)
+    private readonly beneficiaryRepository: Repository<Beneficiary>,
   ) {}
+
   async getStatistics(): Promise<StatisticsDto> {
-    /*
-        const listVolunteers = await this.volunteerRepository.find();
-        const listVolunteersActive = listVolunteers.map((volunteer) => {
-            if(volunteer.isVoluntary){
-                return volunteer;
-            }
-        });
-        const totalVolunteersActive = listVolunteersActive.length;
-        console.log(totalVolunteersActive);
+    const allVolunteers = await this.volunteerRepository.find();
+    const beneficiaries = await this.beneficiaryRepository.find();
 
-        const volunteersByArea=listVolunteersActive.map((volunteer) => {
+    const approvedVolunteers = allVolunteers.filter(v => v.statusVolunteer === StatusVolunteer.APPROVED);
+    const rejectedVolunteers = allVolunteers.filter(v => v.statusVolunteer === StatusVolunteer.REJECTED);
+    const adviserVolunteers = approvedVolunteers.filter(v => v.typeVolunteer === TYPE_VOLUNTEER.ADVISER);
+    const staffVolunteers = approvedVolunteers.filter(v => v.typeVolunteer === TYPE_VOLUNTEER.STAFF);
 
+    const volunteersByArea = Object.values(
+      approvedVolunteers.reduce((acc, { idPostulationArea }) => {
+        acc[idPostulationArea] ??= { areaId: idPostulationArea, count: 0 };
+        acc[idPostulationArea].count++;
+        return acc;
+      }, {} as Record<number, { areaId: number; count: number }>)
+    );
 
-        });
-        console.log(volunteersByArea);
-        
-        const volunteersByArea2 = await this.volunteerRepository.createQueryBuilder('volunteer')
-            .select('volunteer.areaStaff', 'areaStaff')
-            .addSelect('COUNT(volunteer.id)', 'count')
-            .groupBy('volunteer.areaStaff')
-            .getRawMany();
+    const subAreas = await this.subAreaRepository.findBy({
+      id: In(volunteersByArea.map(g => g.areaId)),
+    });
 
-        const volunteersByUniversity = await this.volunteerRepository.createQueryBuilder('volunteer')
-            .select('volunteer.university', 'university')
-            .addSelect('COUNT(volunteer.id)', 'count')
-            .groupBy('volunteer.university')
-            .getRawMany();
-*/
-    const statistics: StatisticsDto = {
-      totalVolunteers: 100,
-      volunteersByArea: [
-        { area: 'Area 1', count: 100 },
-        { area: 'Area 2', count: 100 },
-        { area: 'Area 3', count: 100 },
-      ],
-      volunteersByUniversity: [
-        { university: 'Universidad 1', count: 100 },
-        { university: 'Universidad 2', count: 100 },
-        { university: 'Universidad 3', count: 100 },
-      ],
-      totalDonations: 10,
-      totalBeneficiaries: 100,
+    const subAreaMap = new Map(subAreas.map(sa => [sa.id, sa.name]));
+    const volunteersByAreaWithNames = volunteersByArea.map(({ areaId, count }) => ({
+      areaId,
+      areaName: subAreaMap.get(areaId) || `Área ${areaId}`,
+      count,
+    }));
+
+    const volunteersByUniversity = Object.values(
+      approvedVolunteers.reduce((acc, { programsUniversity }) => {
+        if (!programsUniversity) return acc;
+        acc[programsUniversity] ??= { university: programsUniversity, count: 0 };
+        acc[programsUniversity].count++;
+        return acc;
+      }, {} as Record<string, { university: string; count: number }>)
+    );
+
+    return {
+      totalVolunteers: allVolunteers.length,
+      totalVolunteersApproved: approvedVolunteers.length,
+      totalVolunteersRejected: rejectedVolunteers.length,
+      totalVolunteersAdviser: adviserVolunteers.length,
+      totalVolunteersStaff: staffVolunteers.length,
+      totalVolunteersPending: allVolunteers.length - approvedVolunteers.length - rejectedVolunteers.length,
+      volunteersByArea: volunteersByAreaWithNames,
+      volunteersByUniversity,
+      totalDonations: 10, 
+      totalBeneficiaries: beneficiaries.length,
     };
-
-    return statistics;
   }
 }
