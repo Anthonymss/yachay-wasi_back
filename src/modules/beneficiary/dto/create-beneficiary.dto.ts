@@ -62,6 +62,9 @@ export class CreateLanguageDto {
   export class CreateBeneficiaryDto {
     @IsString()
     @Length(1, 50)
+    code: string;
+    @IsString()
+    @Length(1, 50)
     name: string;
   
     @IsString()

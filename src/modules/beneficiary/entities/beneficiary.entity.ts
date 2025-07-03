@@ -80,6 +80,8 @@ export class Beneficiary {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({ type: 'varchar', length: 50, nullable: true })
+  code: string;
+  @Column({ type: 'varchar', length: 50, nullable: true })
   name: string;
   @Column({ type: 'varchar', length: 50, nullable: true, name: 'last_name' })
   lastName: string;
@@ -173,13 +175,13 @@ export class Beneficiary {
 
 
   //Consentimientos
-  @Column({ type: 'boolean', nullable: false, name: 'allpa_advisory_consent' })
+  @Column({ type: 'boolean', nullable: true, name: 'allpa_advisory_consent' })
   allpaAdvisoryConsent: boolean;
   
-  @Column({ type: 'boolean', nullable: false, name: 'allpa_image_consent' })
+  @Column({ type: 'boolean', nullable: true, name: 'allpa_image_consent' })
   allpaImageConsent: boolean;
   
-  @Column({ type: 'boolean', nullable: false, name: 'ruru_advisory_consent' })
+  @Column({ type: 'boolean', nullable: true, name: 'ruru_advisory_consent' })
   ruruAdvisoryConsent: boolean;
 
   @Column({ type: 'text', nullable: true, name: 'additional_notes' })

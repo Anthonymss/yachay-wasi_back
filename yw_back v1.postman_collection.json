@@ -1,0 +1,897 @@
+{
+	"info": {
+		"_postman_id": "9a83b3b9-3639-43f9-9083-7dfd8c12a7c3",
+		"name": "yw_back v1",
+		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n```\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Scripts\" tab**\n\nAdding tests to your requests can help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/fa30ea0a-373d-4545-a668-e7b283cca343/aW1hZ2UucG5n\" alt=\"\" height=\"1530\" width=\"2162\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n    \n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42874625"
+	},
+	"item": [
+		{
+			"name": "landing",
+			"item": [
+				{
+					"name": "Areas-List-Questions",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjI0LCJpZCI6MjQsIm5hbWUiOiJCYXJyZXR0IiwibGFzdE5hbWUiOiJMaXR0ZWwiLCJlbWFpbCI6ImtvZm9kZTEwNjZAY29hc2FoLmNvbSIsInJvbGUiOiJMaWRlcmVzIiwiaWF0IjoxNzUxMzA5MjY0LCJleHAiOjE3NTEzMTAxNjR9.T4N1nuSiKkvhTnH-MESnCuKP7DiH9Erla90eJcHkxC0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "//Faltan seeder de questions dara [500]"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/areas/questions/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"areas",
+								"questions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List-Subareas",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjI0LCJpZCI6MjQsIm5hbWUiOiJCYXJyZXR0IiwibGFzdE5hbWUiOiJMaXR0ZWwiLCJlbWFpbCI6ImtvZm9kZTEwNjZAY29hc2FoLmNvbSIsInJvbGUiOiJMaWRlcmVzIiwiaWF0IjoxNzUxMzA5MjY0LCJleHAiOjE3NTEzMTAxNjR9.T4N1nuSiKkvhTnH-MESnCuKP7DiH9Erla90eJcHkxC0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/areas/subareas/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"areas",
+								"subareas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List-Areas-All",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjI0LCJpZCI6MjQsIm5hbWUiOiJCYXJyZXR0IiwibGFzdE5hbWUiOiJMaXR0ZWwiLCJlbWFpbCI6ImtvZm9kZTEwNjZAY29hc2FoLmNvbSIsInJvbGUiOiJMaWRlcmVzIiwiaWF0IjoxNzUxMzA5MjY0LCJleHAiOjE3NTEzMTAxNjR9.T4N1nuSiKkvhTnH-MESnCuKP7DiH9Erla90eJcHkxC0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/areas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"areas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listado de enums necesarios para los forms",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjI0LCJpZCI6MjQsIm5hbWUiOiJCYXJyZXR0IiwibGFzdE5hbWUiOiJMaXR0ZWwiLCJlbWFpbCI6ImtvZm9kZTEwNjZAY29hc2FoLmNvbSIsInJvbGUiOiJMaWRlcmVzIiwiaWF0IjoxNzUxMzA5MjY0LCJleHAiOjE3NTEzMTAxNjR9.T4N1nuSiKkvhTnH-MESnCuKP7DiH9Erla90eJcHkxC0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "//en desarrollo =>data fake"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/volunteer/enums",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"volunteer",
+								"enums"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create-Volunteer (STAFF)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Anthony",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "Choque",
+									"type": "text"
+								},
+								{
+									"key": "birthDate",
+									"value": "2000-01-01",
+									"type": "text"
+								},
+								{
+									"key": "phoneNumber",
+									"value": "987654321",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "gavip22811@coasah.com",
+									"type": "text"
+								},
+								{
+									"key": "typeIdentification",
+									"value": "DNI",
+									"type": "text"
+								},
+								{
+									"key": "numIdentification",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "wasVoluntary",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "volunteerMotivation",
+									"value": "Quiero ayudar en el proyecto",
+									"type": "text"
+								},
+								{
+									"key": "howDidYouFindUs",
+									"value": "Facebook",
+									"type": "text"
+								},
+								{
+									"key": "idPostulationArea",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/Anthony_mss/Downloads/Semana 13 - s1 - CSTI (1).pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/volunteer/staff",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"volunteer",
+								"staff"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Volunteer Adviser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Carlos",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "Huamán",
+									"type": "text"
+								},
+								{
+									"key": "birthDate",
+									"value": "2000-01-01",
+									"type": "text"
+								},
+								{
+									"key": "phoneNumber",
+									"value": "987654321",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "jirato6335@decodewp.com",
+									"type": "text"
+								},
+								{
+									"key": "typeIdentification",
+									"value": "DNI",
+									"type": "text"
+								},
+								{
+									"key": "numIdentification",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "wasVoluntary",
+									"value": "false",
+									"type": "text"
+								},
+								{
+									"key": "volunteerMotivation",
+									"value": "Quiero ayudar a los estudiantes",
+									"type": "text"
+								},
+								{
+									"key": "howDidYouFindUs",
+									"value": "Facebook",
+									"type": "text"
+								},
+								{
+									"key": "idPostulationArea",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "advisoryCapacity",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "schoolGrades",
+									"value": "Secundaria (1°, 2° y 3° grado)",
+									"type": "text"
+								},
+								{
+									"key": "quechuaLevel",
+									"value": "Nivel intermedio",
+									"type": "text"
+								},
+								{
+									"key": "programsUniversity",
+									"value": "Becario Pronabec",
+									"type": "text"
+								},
+								{
+									"key": "schedule",
+									"value": "[\n  {\n    \"dayOfWeek\": \"MONDAY\",\n    \"period_time\": \"8-12\",\n    \"period_time2\": \"14-16\",\n    \"period_time3\": \"16-18\"\n  },\n  {\n    \"dayOfWeek\": \"WEDNESDAY\",\n    \"period_time\": \"9-11\",\n    \"period_time2\": \"\",\n    \"period_time3\": \"17-20\"\n  }\n]",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/Anthony_mss/Downloads/Semana 13 - s2 - CSTI (1).pdf"
+								},
+								{
+									"key": "video",
+									"type": "file",
+									"src": "/C:/Users/Anthony_mss/Downloads/pr2.mp4"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/volunteer/adviser",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"volunteer",
+								"adviser"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "intranet",
+			"item": [
+				{
+					"name": "Beneficiarios",
+					"item": [
+						{
+							"name": "Crear Beneficiario",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"code\":\"A001\",\r\n  \"name\": \"Luis\",\r\n  \"lastName\": \"Pérez\",\r\n  \"dni\": \"123145671\",\r\n  \"institution\": \"Colegio Nacional San Martín\",\r\n  \"modalityStudent\": \"Nuevo Estudiante\",\r\n  \"birthDate\": \"2012-08-15\",\r\n  \"sex\": \"male\",\r\n  \"parentesco\": \"Papa\",\r\n  \"nameRepresentative\": \"Carlos\",\r\n  \"lastNameRepresentative\": \"García\",\r\n  \"isAddGroupWspp\": true,\r\n  \"isAddEquipment\": false,\r\n  \"learningLevel\": \"Bien\",\r\n  \"hoursAsesoria\": 4,\r\n  \"coursePriorityReason\": \"Son cursos 'prioritarios' o básicos a reforzar\",\r\n  \"phoneNumberMain\": \"9876543221\",\r\n  \"cellphoneObservation\": \"Número con WhatsApp\",\r\n  \"isWhatsApp\": true,\r\n  \"callSignalIssue\": \"Señal baja debido a situaciones externas: lluvias, cortes de luz repentinos, etc.\",\r\n  \"fullNameContactEmergency\": \"María López\",\r\n  \"phoneNumberContactEmergency\": \"987111222\",\r\n  \"fullNameContactEmergency2\": \"Ana Flores\",\r\n  \"phoneNumberContactEmergency2\": \"987333444\",\r\n  \"allpaAdvisoryConsent\": true,\r\n  \"allpaImageConsent\": true,\r\n  \"ruruAdvisoryConsent\": true,\r\n  \"additionalNotes\": \"Sin observaciones adicionales.\",\r\n  \"firstWorkshopChoice\": \"Cuenta cuentos (sin internet)\",\r\n  \"secondWorkshopChoice\": \"Dibujo y Pintura (con internet)\",\r\n  \"thirdWorkshopChoice\": \"Música (con internet)\",\r\n  \"firstCourseChoice\": \"Matemática\",\r\n  \"secondCourseChoice\": \"Comunicación\",\r\n  \"userId\": 1,\r\n  \"beneficiaryLanguage\": [\r\n    {\r\n      \"language\": \"Español\"\r\n    },\r\n    {\r\n      \"language\": \"Otro\",\r\n      \"customLanguageName\": \"Asháninka\"\r\n    }\r\n  ],\r\n  \"beneficiaryPreferredCourses\": [\r\n    {\r\n      \"name\": \"Inglés\"\r\n    },\r\n    {\r\n      \"name\": \"Otros\",\r\n      \"customCourseName\": \"Educación financiera\"\r\n    }\r\n  ],\r\n  \"schedule\": [\r\n    {\r\n      \"dayOfWeek\": \"Monday\",\r\n      \"period_time\": \"08:00\",\r\n      \"period_time2\": \"09:00\",\r\n      \"period_time3\": \"10:00\"\r\n    },\r\n    {\r\n      \"dayOfWeek\": \"Wednesday\",\r\n      \"period_time\": \"14:00\",\r\n      \"period_time2\": \"15:00\",\r\n      \"period_time3\": \"16:00\"\r\n    }\r\n  ],\r\n  \"communicationPreferences\": [1, 2],\r\n  \"areaAdvisers\": [1]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/beneficiary",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"beneficiary"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Lista de Enums necesarios para llenar el form de Beneficiario",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/beneficiary/enums",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"beneficiary",
+										"enums"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Lista de Beneficiarios",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/beneficiary/page?page=1&limit=1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"beneficiary",
+										"page"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Beneficiario por ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/beneficiary/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"beneficiary",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Aprobar Voluntario (to user)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/volunteer/21/approve",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"volunteer",
+								"21",
+								"approve"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"somomap860@decodewp.com\",\r\n    \"password\":\"holamundo\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send-Reset-password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMwLCJpZCI6MzAsIm5hbWUiOiJBbnRob255IiwibGFzdE5hbWUiOiJDaG9xdWUiLCJlbWFpbCI6InNvbW9tYXA4NjBAZGVjb2Rld3AuY29tIiwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzUxNDcxMTIwLCJleHAiOjE3NTE0NzIwMjB9.ysu0TL1TyqbfZlWeJdbZaC-40nh7tb1pqrKuB6-O-Bk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"somomap860@decodewp.com\"\r\n}\r\n\r\n//deberia sacarse del accessToken, por ahora asi, \r\n//esto enviara al correo un enlace que redireecciona al form de front \r\n//con otro token de reset de 15 min en la url",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/user/send-reset-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"user",
+								"send-reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "profile-Usuario",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMwLCJpZCI6MzAsIm5hbWUiOiJBbnRob255IiwibGFzdE5hbWUiOiJDaG9xdWUiLCJlbWFpbCI6InNvbW9tYXA4NjBAZGVjb2Rld3AuY29tIiwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzUxNDcxMTIwLCJleHAiOjE3NTE0NzIwMjB9.ysu0TL1TyqbfZlWeJdbZaC-40nh7tb1pqrKuB6-O-Bk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "//Requiere token : accessToken\r\n//Auth =>  Bearer Token : tuToken"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/user/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"user",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh-Token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjI0LCJpZCI6MjQsIm5hbWUiOiJCYXJyZXR0IiwibGFzdE5hbWUiOiJMaXR0ZWwiLCJlbWFpbCI6ImtvZm9kZTEwNjZAY29hc2FoLmNvbSIsInJvbGUiOiJMaWRlcmVzIiwiaWF0IjoxNzUxMzA5MjY0LCJleHAiOjE3NTEzMTAxNjR9.T4N1nuSiKkvhTnH-MESnCuKP7DiH9Erla90eJcHkxC0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refreshToken\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjI0LCJpZCI6MjQsIm5hbWUiOiJCYXJyZXR0IiwibGFzdE5hbWUiOiJMaXR0ZWwiLCJlbWFpbCI6ImtvZm9kZTEwNjZAY29hc2FoLmNvbSIsInJvbGUiOiJMaWRlcmVzIiwiaWF0IjoxNzUxMzExNjY1LCJleHAiOjE3NTE5MTY0NjV9.isIYCHX5TUjhWVgz3dCYt7qn9OV2K7gg3KUm7w1DeHU\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/refresh",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Statistics",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjI0LCJpZCI6MjQsIm5hbWUiOiJCYXJyZXR0IiwibGFzdE5hbWUiOiJMaXR0ZWwiLCJlbWFpbCI6ImtvZm9kZTEwNjZAY29hc2FoLmNvbSIsInJvbGUiOiJMaWRlcmVzIiwiaWF0IjoxNzUxMzA5MjY0LCJleHAiOjE3NTEzMTAxNjR9.T4N1nuSiKkvhTnH-MESnCuKP7DiH9Erla90eJcHkxC0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "//en desarrollo =>data fake"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/statistics",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"statistics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listado de Voluntarios",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjI0LCJpZCI6MjQsIm5hbWUiOiJCYXJyZXR0IiwibGFzdE5hbWUiOiJMaXR0ZWwiLCJlbWFpbCI6ImtvZm9kZTEwNjZAY29hc2FoLmNvbSIsInJvbGUiOiJMaWRlcmVzIiwiaWF0IjoxNzUxMzA5MjY0LCJleHAiOjE3NTEzMTAxNjR9.T4N1nuSiKkvhTnH-MESnCuKP7DiH9Erla90eJcHkxC0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "/*\r\n  async findAll(\r\n    @Query('type') type: TYPE_VOLUNTEER,\r\n    @Query('page') page?: number,\r\n    @Query('limit') limit?: number,\r\n*/\r\n\r\nTYPE  ?type=\r\n//type=STAFF\r\n//type=ADVISER\r\n//SIN PARAMETROS trae todos\r\n\r\nPAGE & page=1\r\n//nuemro de pagina\r\n\r\nLIMIT & limit=10\r\n//cantidad de items\r\n\r\n"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/volunteer?type=ADVISER&page=2&limit=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"volunteer"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "ADVISER"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "profile-Volunteer",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjI0LCJpZCI6MjQsIm5hbWUiOiJCYXJyZXR0IiwibGFzdE5hbWUiOiJMaXR0ZWwiLCJlbWFpbCI6ImtvZm9kZTEwNjZAY29hc2FoLmNvbSIsInJvbGUiOiJMaWRlcmVzIiwiaWF0IjoxNzUxMzA5MjY0LCJleHAiOjE3NTEzMTAxNjR9.T4N1nuSiKkvhTnH-MESnCuKP7DiH9Erla90eJcHkxC0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "//Requiere token : accessToken\r\n//Auth =>  Bearer Token : tuToken"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/volunteer/profile-volunteer/10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"volunteer",
+								"profile-volunteer",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reject Voluntario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Anthony",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "Choque",
+									"type": "text"
+								},
+								{
+									"key": "birthDate",
+									"value": "2000-01-01",
+									"type": "text"
+								},
+								{
+									"key": "phoneNumber",
+									"value": "987654321",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "gavip22811@coasah.com",
+									"type": "text"
+								},
+								{
+									"key": "typeIdentification",
+									"value": "DNI",
+									"type": "text"
+								},
+								{
+									"key": "numIdentification",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "wasVoluntary",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "volunteerMotivation",
+									"value": "Quiero ayudar en el proyecto",
+									"type": "text"
+								},
+								{
+									"key": "howDidYouFindUs",
+									"value": "Facebook",
+									"type": "text"
+								},
+								{
+									"key": "idPostulationArea",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/Anthony_mss/Downloads/Semana 13 - s1 - CSTI (1).pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/volunteer/23/reject",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"volunteer",
+								"23",
+								"reject"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "1"
+		},
+		{
+			"key": "base_url",
+			"value": "https://postman-rest-api-learner.glitch.me/"
+		}
+	]
+}
