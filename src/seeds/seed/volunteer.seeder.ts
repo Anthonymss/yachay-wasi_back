@@ -90,7 +90,7 @@ export class VolunteerSeeder {
       volunteer.wasVoluntary = false;
 
       volunteer.cvUrl =
-        'https://res.cloudinary.com/dnupey6af/raw/upload/v1750921256/yw/documents/Formulario%20de%20Postulaci%C3%B3n.pdf';
+        'https://res.cloudinary.com/dnupey6af/raw/upload/v1751524148/yw/documents/CV_Valeria_Torres_Ramirez.pdf';
       volunteer.videoUrl =
         'https://res.cloudinary.com/dnupey6af/video/upload/v1750925681/yw/videos/pr1.mp4';
 
