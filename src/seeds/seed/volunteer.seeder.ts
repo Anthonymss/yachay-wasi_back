@@ -12,6 +12,7 @@ import {
   SchoolGrades,
   QuechuaLevel,
   ProgramsUniversity,
+  StatusVolunteer,
 } from 'src/modules/volunteer/entities/volunteer.entity';
 
 @Injectable()
@@ -93,14 +94,28 @@ export class VolunteerSeeder {
       volunteer.videoUrl =
         'https://res.cloudinary.com/dnupey6af/video/upload/v1750925681/yw/videos/pr1.mp4';
 
-      volunteer.datePostulation = new Date();
+      volunteer.datePostulation = faker.date.between({
+        from: '2025-01-01',
+        to: new Date(),
+      });
+      
       volunteer.volunteerMotivation = faker.lorem.paragraph();
       volunteer.typeVolunteer = type;
 
       volunteer.howDidYouFindUs = faker.helpers.arrayElement(
         Object.values(InfoSource),
       );
-      volunteer.idPostulationArea = faker.helpers.arrayElement([1, 2, 3, 4, 5]);
+      
+      volunteer.idPostulationArea = faker.helpers.arrayElement([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+
+      const statusRandom = Math.random();
+      if (statusRandom < 0.6) {
+        volunteer.statusVolunteer = StatusVolunteer.PENDING;
+      } else if (statusRandom < 0.85) {
+        volunteer.statusVolunteer = StatusVolunteer.APPROVED;
+      } else {
+        volunteer.statusVolunteer = StatusVolunteer.REJECTED;
+      }
 
       if (type === TYPE_VOLUNTEER.ADVISER) {
         volunteer.advisoryCapacity = faker.number.int({ min: 1, max: 10 });
