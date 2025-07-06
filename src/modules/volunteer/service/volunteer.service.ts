@@ -38,7 +38,7 @@ export class VolunteerService {
 
   async createVolunteerStaff(
     dto: CreateVolunteerStaffDto,
-    file: Express.Multer.File,
+    file?: Express.Multer.File,
   ): Promise<Volunteer> {
     if (!file) throw new BadRequestException('Debes subir el archivo PDF');
     await this.validateData(dto.email, TYPE_VOLUNTEER.STAFF, file);
@@ -254,5 +254,5 @@ export class VolunteerService {
         datePostulation: volunteer.datePostulation.toLocaleDateString(),
       },
     );
-  }
+  } 
 }
