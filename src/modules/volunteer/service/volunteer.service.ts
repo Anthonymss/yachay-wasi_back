@@ -16,7 +16,6 @@ import {
   Volunteer,
 } from '../entities/volunteer.entity';
 import { Repository } from 'typeorm';
-import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
 import { CreateVolunteerADdviserDto } from '../dto/create-volunteer-Adviser.dto';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
@@ -25,6 +24,7 @@ import { DAY, Schedule } from '../entities/schedule.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { MailService } from 'src/shared/mail/mail.service';
+import { S3Service } from 'src/shared/s3/S3.service';
 @Injectable()
 export class VolunteerService {
   constructor(
@@ -32,16 +32,17 @@ export class VolunteerService {
     private readonly volunteerRepository: Repository<Volunteer>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly cloudinaryService: CloudinaryService,
     private readonly mailService: MailService,
+    private readonly s3Service: S3Service,
   ) {}
 
   async createVolunteerStaff(
     dto: CreateVolunteerStaffDto,
     file: Express.Multer.File,
   ): Promise<Volunteer> {
+    if (!file) throw new BadRequestException('Debes subir el archivo PDF');
     await this.validateData(dto.email, TYPE_VOLUNTEER.STAFF, file);
-    const cvUrl = await this.cloudinaryService.uploadFile(file);
+    const cvUrl = await this.s3Service.uploadFile(file);
 
     const volunteer = this.volunteerRepository.create({
       ...dto,
@@ -57,19 +58,22 @@ export class VolunteerService {
 
   async createVolunteerAdviser(
     dto: CreateVolunteerADdviserDto,
-    file: Express.Multer.File,
-    video: Express.Multer.File,
+    file?: Express.Multer.File,
+    video?: Express.Multer.File,
   ): Promise<Volunteer> {
-    if (!video.mimetype.startsWith('video/')) {
-      throw new BadRequestException('El archivo de video debe ser válido');
-    }
-
+    if (!file && !video) throw new BadRequestException('Debes subir tanto el archivo PDF como el video');
+    if (!file) throw new BadRequestException('Debes subir el archivo PDF');
+    if (!video) throw new BadRequestException('Debes subir el archivo de video');
+    if (file.mimetype !== 'application/pdf') throw new BadRequestException('El archivo CV debe ser un PDF válido'); 
+    if (!video.mimetype.startsWith('video/')) throw new BadRequestException('El archivo de video debe ser válido');
+    
     await this.validateData(dto.email, TYPE_VOLUNTEER.ADVISER, file);
+  
     const [cvUrl, videoUrl] = await Promise.all([
-      this.cloudinaryService.uploadFile(file),
-      this.cloudinaryService.uploadFile(video),
+      this.s3Service.uploadFile(file),
+      this.s3Service.uploadFile(video),
     ]);
-
+  
     const volunteer = this.volunteerRepository.create({
       ...dto,
       cvUrl,
@@ -78,21 +82,21 @@ export class VolunteerService {
       datePostulation: new Date(),
       schedules: [],
     });
-
+  
     const saved = await this.volunteerRepository.save(volunteer);
     await this.sendConfirmationEmail(saved);
-
+  
     const schedules = dto.schedule.map((s) => ({
       ...s,
       volunteer: saved,
     }));
-
+  
     await this.volunteerRepository.manager
       .getRepository(Schedule)
       .save(schedules);
-
     return saved;
   }
+  
 
   async findAll(type: TYPE_VOLUNTEER, page = 1, limit = 10) {
     const [volunteers, total] = await this.volunteerRepository.findAndCount({

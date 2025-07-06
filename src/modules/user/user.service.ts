@@ -97,7 +97,7 @@ export class UserService {
       },
     );
 
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+    const resetUrl = `${process.env.INTRANET_URL}/reset-password?token=${token}`;
 
     await this.mailService.sendTemplate(
       user.email,
