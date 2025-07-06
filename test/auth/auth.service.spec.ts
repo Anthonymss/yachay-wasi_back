@@ -30,12 +30,20 @@ describe('AuthService', () => {
     };
 
     configService = {
-      get: jest.fn(),
+      get: jest.fn((key: string) => {
+        const configMap = {
+          JWT_ACCESS_SECRET: 'access-secret',
+          JWT_REFRESH_SECRET: 'refresh-secret',
+          JWT_ACCESS_TOKEN_EXPIRES_IN: '1h',
+          JWT_REFRESH_TOKEN_EXPIRES_IN: '7d',
+        };
+        return configMap[key];
+      }),
     };
 
     refreshTokenRepo = {
       create: jest.fn(),
-      save: jest.fn(),
+      save: jest.fn().mockResolvedValue(undefined),
       findOne: jest.fn(),
     };
 
@@ -64,7 +72,7 @@ describe('AuthService', () => {
       userService.findByEmail!.mockResolvedValue(null);
       userService.createAuth!.mockResolvedValue({});
       const result = await service.register({ email: 'test@test.com', password: '123' } as any);
-      expect(result).toBe('user created successfully');
+      expect(result).toBe('User created successfully');
       expect(userService.createAuth).toHaveBeenCalled();
     });
   });
@@ -83,6 +91,7 @@ describe('AuthService', () => {
       jest.spyOn(service as any, 'generateTokens').mockResolvedValue({
         accessToken: 'access',
         refreshToken: 'refresh',
+        tokenEntity: {},
       });
 
       const result = await service.login({ email: 'ok@test.com', password: '123' } as any);
@@ -126,6 +135,7 @@ describe('AuthService', () => {
       jest.spyOn(service as any, 'generateTokens').mockResolvedValue({
         accessToken: 'new-access',
         refreshToken: 'new-refresh',
+        tokenEntity: {},
       });
 
       const result = await service.refresh('valid-token');
