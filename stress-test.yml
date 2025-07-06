@@ -1,0 +1,77 @@
+config:
+  target: 'http://localhost:3000'
+  phases:
+    - duration: 60
+      arrivalRate: 50
+  defaults:
+    headers:
+      Content-Type: application/json
+
+scenarios:
+  - name: "Login"
+    weight: 1
+    flow:
+      - post:
+          url: '/api/auth/login'
+          json:
+            email: "admin@yachaywasi.com"
+            password: "admin123"
+  - name: "Listar voluntarios"
+    weight: 1
+    flow:
+      - get:
+          url: '/api/volunteer'
+  - name: Crear beneficiario
+    flow:
+      - post:
+          url: "/api/beneficiary"
+          json:
+            code: "A001"
+            name: "Luis"
+            lastName: "Pérez"
+            dni: "{{ $randomNumber(10000000, 99999999) }}"
+            institution: "Colegio Nacional San Martín"
+            modalityStudent: "Nuevo Estudiante"
+            birthDate: "2012-08-15"
+            sex: "male"
+            parentesco: "Papa"
+            nameRepresentative: "Carlos"
+            lastNameRepresentative: "García"
+            isAddGroupWspp: true
+            isAddEquipment: false
+            learningLevel: "Bien"
+            hoursAsesoria: 4
+            coursePriorityReason: "Son cursos 'prioritarios' o básicos a reforzar"
+            phoneNumberMain: "9876543221"
+            cellphoneObservation: "Número con WhatsApp"
+            isWhatsApp: true
+            callSignalIssue: "Señal baja debido a situaciones externas: lluvias, cortes de luz repentinos, etc."
+            fullNameContactEmergency: "María López"
+            phoneNumberContactEmergency: "987111222"
+            fullNameContactEmergency2: "Ana Flores"
+            phoneNumberContactEmergency2: "987333444"
+            allpaAdvisoryConsent: true
+            allpaImageConsent: true
+            ruruAdvisoryConsent: true
+            additionalNotes: "Sin observaciones adicionales."
+            firstWorkshopChoice: "Cuenta cuentos (sin internet)"
+            secondWorkshopChoice: "Dibujo y Pintura (con internet)"
+            thirdWorkshopChoice: "Música (con internet)"
+            firstCourseChoice: "Matemática"
+            secondCourseChoice: "Comunicación"
+            userId: 1
+            beneficiaryLanguage:
+              - language: "Español"
+            beneficiaryPreferredCourses:
+              - name: "Inglés"
+            schedule:
+              - dayOfWeek: "Monday"
+                period_time: "08:00"
+                period_time2: "09:00"
+                period_time3: "10:00"
+              - dayOfWeek: "Wednesday"
+                period_time: "14:00"
+                period_time2: "15:00"
+                period_time3: "16:00"
+            communicationPreferences: [1, 2]
+            areaAdvisers: [1]

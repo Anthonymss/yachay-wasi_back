@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
-import hbs from 'nodemailer-express-handlebars';
+import * as hbs from 'nodemailer-express-handlebars';
 import { join } from 'path';
 import { mailConfig } from './mail.config';
 
@@ -21,7 +21,6 @@ export class MailService {
       ? join(process.cwd(), 'dist', 'shared', 'mail', 'templates')
       : join(process.cwd(), 'src', 'shared', 'mail', 'templates');
 
-    // ✅ Configurar handlebars como plugin
     this.transporter.use(
       'compile',
       hbs({
