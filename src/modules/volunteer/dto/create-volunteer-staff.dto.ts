@@ -7,7 +7,7 @@ import {
   IsBoolean,
   IsDateString,
 } from 'class-validator';
-import { InfoSource, TYPE_IDENTIFICATION } from '../entities/volunteer.entity';
+import { InfoSource,   ProgramsUniversity,   TYPE_IDENTIFICATION } from '../entities/volunteer.entity';
 import { Transform } from 'class-transformer';
 export class CreateVolunteerStaffDto {
   @IsString()
@@ -38,6 +38,9 @@ export class CreateVolunteerStaffDto {
 
   @IsString()
   volunteerMotivation: string;
+  @IsEnum(ProgramsUniversity)
+  programsUniversity?: ProgramsUniversity;
+  
   @IsEnum(InfoSource, {
     message: `howDidYouFindUs debe ser uno de: ${Object.values(InfoSource).join(', ')}`,
   })

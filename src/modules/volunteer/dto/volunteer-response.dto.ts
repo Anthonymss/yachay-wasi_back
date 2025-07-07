@@ -31,4 +31,7 @@ export class VolunteerResponseDto {
   callingPlan?: boolean;
   quechuaLevel?: QuechuaLevel;
   programsUniversity?: ProgramsUniversity;
+  //new fields
+  experience?: boolean;
+  responses?: { questionId: number; reply: string }[];
 }

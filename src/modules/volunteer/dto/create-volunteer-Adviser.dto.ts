@@ -87,4 +87,7 @@ export class CreateVolunteerADdviserDto {
 
   @IsEnum(ProgramsUniversity)
   programsUniversity?: ProgramsUniversity;
+  @IsArray()
+  @IsOptional()
+  responses?: { questionId: number; reply: string }[];
 }

@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-
+import { SubArea } from './sub-area.entity';
 @Entity('areas_staff')
 export class AreaStaff {
   @PrimaryGeneratedColumn()
@@ -12,4 +12,9 @@ export class AreaStaff {
   isActive: boolean;
   @Column({ type: 'varchar', nullable: true })
   imageUrl: string;
+  @OneToMany(() => SubArea, (subArea) => subArea.areaStaff, {
+    cascade: true,
+    eager: false,
+  })
+  subAreas: SubArea[];
 }
