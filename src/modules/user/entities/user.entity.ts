@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 import { Rol } from './rol.entity';
 import { Beneficiary } from 'src/modules/beneficiary/entities/beneficiary.entity';
-import { SubAreas } from 'src/modules/area/entities/area-volunteer/sub-area.entity';
+import { SubArea } from 'src/modules/area/entities/area-volunteer/sub-area.entity';
 import { RefreshToken } from './refresh-token.entity';
 
 @Entity('users')
@@ -42,9 +42,9 @@ export class User {
   //relations1
   @OneToMany(() => Beneficiary, (beneficiary) => beneficiary.user)
   beneficiaries: Beneficiary[];
-  @ManyToOne(() => SubAreas, (subArea) => subArea.user)
+  @ManyToOne(() => SubArea, (subArea) => subArea.user)
   @JoinColumn({ name: 'sub_area_id' })
-  subArea: SubAreas;
+  subArea: SubArea;
   @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user, {
     cascade: true,
   })

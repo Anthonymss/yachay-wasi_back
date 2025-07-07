@@ -44,14 +44,14 @@ export class SubArea {
 
   @Column({ type: 'text', nullable: true })
   experience: string;
-  
+
   @ManyToOne(() => AreaStaff)
   @JoinColumn({ name: 'area_staff_id' })
   areaStaff: AreaStaff;
 
   //others
-  @OneToMany(() => QuestionVolunteer, (question) => question.SubArea)
-  question: QuestionVolunteer[];
+  @OneToMany(() => QuestionVolunteer, (questionVolunteer) => questionVolunteer.SubArea)
+  questionVolunteer: QuestionVolunteer[];
   @OneToMany(() => User, (user) => user.subArea)
   user: User[];
 }

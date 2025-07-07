@@ -32,7 +32,7 @@ export class QuestionVolunteer {
   type: QuestionType;
   @ManyToOne(() => SubArea, (subarea) => subarea.questionVolunteer)
   @JoinColumn({ name: 'sub_area_id' })
-  SubArea: SubAreas;
+  SubArea: SubArea;
 
 
   //other realtions
