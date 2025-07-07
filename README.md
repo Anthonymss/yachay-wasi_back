@@ -20,6 +20,20 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+
+## Test
+
+```bash
+# Test
+$ npm run test
+
+# Test watch
+$ npm run test:watch
+
+# Test coverage
+$ npm run test:cov
+```
+
 ## Migration
 ```bash
 # Generar migración
