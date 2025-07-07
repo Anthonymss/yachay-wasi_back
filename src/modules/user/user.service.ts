@@ -85,8 +85,6 @@ export class UserService {
   async sendResetPasswordEmail(body: { email: string }) {
     const { email } = body;
     const user = await this.userRepo.findOne({ where: { email } });
-    console.log(user);
-
     if (!user) throw new NotFoundException('Correo no registrado');
 
     const token = jwt.sign(
@@ -97,7 +95,7 @@ export class UserService {
       },
     );
 
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+    const resetUrl = `${process.env.INTRANET_URL}/reset-password?token=${token}`;
 
     await this.mailService.sendTemplate(
       user.email,

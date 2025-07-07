@@ -1,8 +1,6 @@
 import {
   Injectable,
   UnauthorizedException,
-  Inject,
-  forwardRef,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -34,15 +32,23 @@ export class AuthService {
       ...dto,
       password: hashed,
     });
-    return 'user created successfully';
+    return 'User created successfully';
   }
 
   async login(dto: LoginDto) {
     const user = await this.validateUser(dto.email, dto.password);
     if (!user) throw new UnauthorizedException('Invalid credentials');
-    const response = await this.generateTokens(user);
+
+    const { accessToken, refreshToken, tokenEntity } = await this.generateTokens(user);
+
+    // Guardado asincrónico del refreshToken
+    this.refreshTokenRepo.save(tokenEntity).catch((err) => {
+      console.error('Failed to save refresh token', err);
+    });
+
     return {
-      ...response,
+      accessToken,
+      refreshToken,
       user: {
         id: user.id,
         email: user.email,
@@ -65,17 +71,22 @@ export class AuthService {
       where: { user: { id: user.id }, isRevoked: false },
       order: { createdAt: 'DESC' },
     });
-    if (!latestToken) {
-      throw new UnauthorizedException('No valid refresh token found');
-    }
+    if (!latestToken) throw new UnauthorizedException('No valid refresh token found');
+
     const match = await bcrypt.compare(refreshToken, latestToken.token);
-    if (!match) {
-      throw new UnauthorizedException('Refresh token inválido');
-    }
+    if (!match) throw new UnauthorizedException('Invalid refresh token');
+
     latestToken.isRevoked = true;
     await this.refreshTokenRepo.save(latestToken);
 
-    return this.generateTokens(user);
+    const { accessToken, refreshToken: newToken, tokenEntity } = await this.generateTokens(user);
+
+    // Guardar el nuevo token asincrónicamente
+    this.refreshTokenRepo.save(tokenEntity).catch((err) => {
+      console.error('Failed to save refresh token', err);
+    });
+
+    return { accessToken, refreshToken: newToken };
   }
 
   private async generateTokens(user: User) {
@@ -100,7 +111,6 @@ export class AuthService {
 
     const expiry = this.jwtService.decode(refreshToken)['exp'];
     const expiresAt = new Date(expiry * 1000);
-
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
 
     const tokenEntity = this.refreshTokenRepo.create({
@@ -109,15 +119,10 @@ export class AuthService {
       expiresAt,
     });
 
-    await this.refreshTokenRepo.save(tokenEntity);
-
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken, tokenEntity };
   }
 
-  private async validateUser(
-    email: string,
-    pass: string,
-  ): Promise<User | null> {
+  private async validateUser(email: string, pass: string): Promise<User | null> {
     const user = await this.usersService.findByEmail(email, true);
     if (user && (await bcrypt.compare(pass, user.password))) {
       return user;

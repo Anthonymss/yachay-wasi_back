@@ -76,7 +76,6 @@ export class BeneficiaryService {
             `customLanguageName solo se permite si el idioma es 'Otro'.`,
           );
         }
-        console.log(lang);
         return this.languageRepository.create({
           language: lang.language,
           customLanguageName: lang.customLanguageName,

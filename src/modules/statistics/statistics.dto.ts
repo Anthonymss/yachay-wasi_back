@@ -1,6 +1,11 @@
 export class StatisticsDto {
   totalVolunteers: number;
-  volunteersByArea: { area: string; count: number }[];
+  totalVolunteersAdviser: number;
+  totalVolunteersStaff: number;
+  totalVolunteersApproved: number;
+  totalVolunteersRejected: number;
+  totalVolunteersPending: number;
+  volunteersByArea: { areaId: number; areaName: string; count: number }[];
   volunteersByUniversity: { university: string; count: number }[];
   totalDonations: number;
   totalBeneficiaries: number;
