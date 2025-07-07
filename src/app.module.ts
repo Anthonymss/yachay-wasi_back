@@ -1,3 +1,4 @@
+// app.module.ts
 import { Module } from '@nestjs/common';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
@@ -26,6 +27,7 @@ import { MailModule } from './shared/mail/mail.module';
     DonationModule,
     StatisticsModule,
     MailModule,
+
   ],
   controllers: [],
   providers: [],

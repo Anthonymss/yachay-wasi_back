@@ -25,6 +25,8 @@ import { DAY, Schedule } from '../entities/schedule.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { MailService } from 'src/shared/mail/mail.service';
+import { ResponseVolunteer } from '../entities/response-volunteer.entity';
+import { QuestionVolunteer } from 'src/modules/area/entities/area-volunteer/question-volunteer.entity';
 @Injectable()
 export class VolunteerService {
   constructor(
@@ -32,6 +34,10 @@ export class VolunteerService {
     private readonly volunteerRepository: Repository<Volunteer>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(ResponseVolunteer)
+    private readonly responseVolunteerRepository: Repository<ResponseVolunteer>,
+    @InjectRepository(QuestionVolunteer)
+    private readonly questionVolunteerRepository: Repository<QuestionVolunteer>,
     private readonly cloudinaryService: CloudinaryService,
     private readonly mailService: MailService,
   ) {}
@@ -90,6 +96,25 @@ export class VolunteerService {
     await this.volunteerRepository.manager
       .getRepository(Schedule)
       .save(schedules);
+
+    // Guardar respuestas en response_volunteers abierto a modificacion
+    if (dto.responses && dto.responses.length > 0) {
+      const responsesToSave: ResponseVolunteer[] = [];
+      for (const resp of dto.responses) {
+        const question = await this.questionVolunteerRepository.findOne({ where: { id: resp.questionId } });
+        if (question) {
+          const responseEntity = this.responseVolunteerRepository.create({
+            questionVolunteer: question,
+            volunteer: saved,
+            response: resp.reply,
+          });
+          responsesToSave.push(responseEntity);
+        }
+      }
+      if (responsesToSave.length > 0) {
+        await this.responseVolunteerRepository.save(responsesToSave);
+      }
+    }
 
     return saved;
   }

@@ -12,7 +12,7 @@ import { QuestionVolunteer } from './question-volunteer.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 
 @Entity('sub_areas')
-export class SubArea {
+export class SubAreas {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({ type: 'varchar', length: 100, nullable: false })
@@ -24,16 +24,36 @@ export class SubArea {
   @Column({ type: 'boolean', name: 'is_active', nullable: true, default: true })
   isActive: boolean;
 
+  // descripción de landing
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  volunteerTime: string;
+
+  @Column({ type: 'text', nullable: true })
+  functions: String; // guardaremos lista separada por saltos de línea
+
+  @Column({ type: 'text', nullable: true })
+  knowledgeAndStudies: string;
+
+  @Column({ type: 'text', nullable: true })
+  technologicalSkills: string;
+
+  @Column({ type: 'text', nullable: true })
+  additionalKnowledge: string;
+
+  @Column({ type: 'text', nullable: true })
+  communicationSkills: string;
+
+  @Column({ type: 'text', nullable: true })
+  experience: string;
+  // **************************************
+
   @ManyToOne(() => AreaStaff)
   @JoinColumn({ name: 'area_staff_id' })
   areaStaff: AreaStaff;
 
   //others
-  @OneToMany(
-    () => QuestionVolunteer,
-    (questionVolunteer) => questionVolunteer.SubArea,
-  )
-  questionVolunteer: QuestionVolunteer[];
+  @OneToMany(() => QuestionVolunteer, (question) => question.SubArea)
+  question: QuestionVolunteer[];
   @OneToMany(() => User, (user) => user.subArea)
   user: User[];
 }

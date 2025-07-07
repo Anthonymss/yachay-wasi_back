@@ -5,14 +5,14 @@ import { Volunteer } from '../volunteer/entities/volunteer.entity';
 import { AreaStaff } from '../area/entities/area-volunteer/area-staff.entity';
 import { AreaAdviser } from '../area/entities/area-beneficiary/area-adviser.entity';
 import { StatisticsDto } from './statistics.dto';
-import { SubArea } from '../area/entities/area-volunteer/sub-area.entity';
+import { SubAreas } from '../area/entities/area-volunteer/sub-area.entity';
 @Injectable()
 export class StatisticsService {
   constructor(
     @InjectRepository(Volunteer)
     private readonly volunteerRepository: Repository<Volunteer>,
-    @InjectRepository(SubArea)
-    private readonly subAreaRepository: Repository<SubArea>,
+    @InjectRepository(SubAreas)
+    private readonly subAreaRepository: Repository<SubAreas>,
 
     @InjectRepository(AreaAdviser)
     private readonly areaAdviserRepository: Repository<AreaAdviser>,

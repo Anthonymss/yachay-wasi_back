@@ -41,7 +41,7 @@ export class VolunteerController {
   @Post('staff')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file'))
-  async createVolunteer(
+  async createVolunteer (
     @UploadedFile() file: Express.Multer.File,
     @Body() dto: CreateVolunteerStaffDto,
   ) {

@@ -1,54 +1,134 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAreaDto } from './dto/create-area.dto';
 import { UpdateAreaDto } from './dto/update-area.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AreaStaff } from './entities/area-volunteer/area-staff.entity';
-import { Repository } from 'typeorm';
+import { Repository, Not } from 'typeorm';
 import { AreaAdviser } from './entities/area-beneficiary/area-adviser.entity';
-import { SubArea } from './entities/area-volunteer/sub-area.entity';
+import { SubAreas } from './entities/area-volunteer/sub-area.entity';
 import { QuestionVolunteer } from './entities/area-volunteer/question-volunteer.entity';
-
+// IMPLEMENTAMOS EL SERVICIO
 @Injectable()
 export class AreaService {
-  constructor(
-    @InjectRepository(AreaStaff)
-    private readonly areaStaffRepository: Repository<AreaStaff>,
-    @InjectRepository(AreaAdviser)
-    private readonly areaAdviserRepository: Repository<AreaAdviser>,
-    @InjectRepository(SubArea)
-    private readonly subAreaRepository: Repository<SubArea>,
-    @InjectRepository(QuestionVolunteer)
-    private readonly questionVolunteerRepository: Repository<QuestionVolunteer>,
-  ) {}
 
-  async findAll() {
-    const areaStaff = await this.areaStaffRepository.find();
-    const areaAdviser = await this.areaAdviserRepository.find();
-    return {
-      areaStaff: areaStaff,
-      areaAdviser: areaAdviser,
-    };
+  constructor
+    (
+      @InjectRepository(AreaStaff)
+      private readonly areaStaffRepository: Repository<AreaStaff>,
+      @InjectRepository(AreaAdviser)
+      private readonly areaAsesoryRepository: Repository<AreaAdviser>,
+      @InjectRepository(SubAreas)
+      private readonly subAreaRepository: Repository<SubAreas>,
+      @InjectRepository(QuestionVolunteer)
+      private readonly questionsVolunteerRepository: Repository<QuestionVolunteer>,
+
+    ) { }
+
+  // obtener áreas de staff
+  findAllStaff() {
+    return this.areaStaffRepository.find();//agregar area Asesory
   }
+
+  // obtener areas de asesorias
+  findAllAsesories() {
+    return this.areaAsesoryRepository.find();
+  }
+
+  /**
+   * Obtiene todas las áreas de STAFF de la BD, excluyendo el área
+   * 'ASESORIES'
+   */
+  findAllStaffAreas(): Promise<AreaStaff[]> {
+    return this.areaStaffRepository.find({
+      where: {
+        name: Not('ASESORIES'), // decimos a TypeORM, donde el nombre no sea ASESORIES
+      }
+    })
+  }
+
+  /**
+   * Obtenemos una lista combinada de áreas Staff (filtradas) y áreas de Asesoria
+   */
+
+  /**
+   * Obtiene todas las áreas de Staff y Asesoría.
+   * Puedes usar esta función para cargar todas las áreas generales.
+   */
+  async findAllAreas(): Promise<{ staffAreas: AreaStaff[], asesoryAreas: AreaAdviser[] }> {
+    const staffAreas = await this.areaStaffRepository.find();
+    const asesoryAreas = await this.areaAsesoryRepository.find();
+    return { staffAreas, asesoryAreas };
+  }
+
+  /**
+   * obtiene todas las areas de staff excepto asesories
+   */
+  async findAllAreasStaff(): Promise<{ staffAreas: AreaStaff[] }> {
+    const staffAreas = await this.findAllStaffAreas();
+    return { staffAreas };
+  }
+
+  /**
+   * Obtiene una sola área de Staff por ID, incluyendo sus subáreas.
+   * Esto es útil si quieres mostrar los detalles de un área específica con sus subáreas.
+   */
+  async findOne(id: number): Promise<AreaStaff> {
+    const area = await this.areaStaffRepository.findOne({
+      where: { id: id },
+      relations: ['subAreas'], // Asegúrate de que 'subAreas' sea el nombre de la relación en AreasStaff
+      // con esto se dice a typeORM, que cuando busque el área tambien traiga en la misma consulta todas las subareas asociadas
+      // el frontend recibida un objeto area que contiene un array de subareas dentro
+    });
+    if (!area) {
+      throw new NotFoundException(`Area Staff con ID ${id} no encontrada.`);
+    }
+    return area;
+  }
+
+  /**
+   * Obtiene todas las subáreas asociadas a una Área Staff específica.
+   * @param idArea El ID del Área Staff.
+   */
+  async findAllSubAreasByAreaStaffId(idArea: number): Promise<SubAreas[]> {
+    const subAreas = await this.subAreaRepository.find({
+      where: { areaStaff: { id: idArea } },
+      // relations: ['questionsVolunteers'], // Puedes incluir las preguntas de cada subárea aquí si las necesitas
+    });
+    return subAreas;
+  }
+  /**
+   * Obtiene todas las preguntas asociadas a una subárea específica.
+   * @param idSubArea El ID de la SubÁrea.
+   */
+  async findQuestionsBySubAreaId(idSubArea: number): Promise<QuestionVolunteer[]> {
+    const questions = await this.questionsVolunteerRepository.find({
+      where: { SubArea: { id: idSubArea } }, // Asume que 'subArea' es la relación en QuestionsVolunteers
+    });
+    if (!questions || questions.length === 0) {
+      // Opcional: Lanzar una excepción si no hay preguntas, o simplemente retornar un array vacío.
+      // throw new NotFoundException(`No se encontraron preguntas para la subárea con ID ${idSubArea}.`);
+    }
+    return questions;
+  }
+
   async findAllSubAreas(idArea: number) {
     return this.subAreaRepository.find({
       where: { areaStaff: { id: idArea } },
     });
   }
-  async getQuestionsByArea(areaId: number[]) {
-    const questions = await this.questionVolunteerRepository
+
+  create(createAreaDto: CreateAreaDto) {
+    return 'This action adds a new area';
+  }
+
+
+  /*async getQuestionsByArea(areaId: number[]) {
+    const questions = await this.questionRepository
       .createQueryBuilder('question')
       .leftJoinAndSelect('question.Subarea', 'subArea')
       .leftJoinAndSelect('subArea.areaStaff', 'areaStaff')
       .where('areaStaff.id IN (:...areaId)', { areaId })
       .getMany();
     return questions;
-  }
-  //no se usa aun
-  create(createAreaDto: CreateAreaDto) {
-    return 'This action adds a new area';
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} area`;
-  }
+  }*/
 }

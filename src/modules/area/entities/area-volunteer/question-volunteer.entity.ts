@@ -6,20 +6,39 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { SubArea } from './sub-area.entity';
+import { SubAreas } from './sub-area.entity';
 import { ResponseVolunteer } from 'src/modules/volunteer/entities/response-volunteer.entity';
+
+export enum QuestionType {
+  TEXT = 'TEXT',
+  TEXTAREA = 'TEXTAREA',
+  SELECT = 'SELECT',
+  RADIO = 'RADIO',
+  CHECKBOX = 'CHECKBOX',
+  FILE_UPLOAD = 'FILE_UPLOAD',
+  NUMBER = 'NUMBER'
+}
 
 @Entity('questions_volunteers')
 export class QuestionVolunteer {
   @PrimaryGeneratedColumn()
   id: number;
+
   @Column({ type: 'varchar', nullable: false, name: 'question_text' })
   questionText: string;
-  @Column()
-  type: string; //que tipos??
-  @ManyToOne(() => SubArea, (subarea) => subarea.questionVolunteer)
+
+  @Column({
+    type: 'enum',
+    enum: QuestionType,
+    default: QuestionType.TEXT
+  })
+  type: QuestionType;
+
+  @ManyToOne(() => SubAreas, (subarea) => subarea.question)
+
   @JoinColumn({ name: 'sub_area_id' })
-  SubArea: SubArea;
+  SubArea: SubAreas;
+
 
   //other realtions
   @OneToMany(

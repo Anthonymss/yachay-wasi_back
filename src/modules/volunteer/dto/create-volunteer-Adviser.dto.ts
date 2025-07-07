@@ -45,6 +45,10 @@ export class CreateVolunteerADdviserDto {
   @Transform(({ value }) => value === 'true' || value === true)
   wasVoluntary: boolean;
 
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
+  experience: boolean;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateScheduleDto)
@@ -88,4 +92,8 @@ export class CreateVolunteerADdviserDto {
 
   @IsEnum(ProgramsUniversity)
   programsUniversity?: ProgramsUniversity;
+
+  @IsArray()
+  @IsOptional()
+  responses?: { questionId: number; reply: string }[];
 }
