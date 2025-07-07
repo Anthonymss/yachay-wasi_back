@@ -1,6 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { SubAreas } from './sub-area.entity';
-
+import { SubArea } from './sub-area.entity';
 @Entity('areas_staff')
 export class AreaStaff {
   @PrimaryGeneratedColumn()
@@ -17,11 +16,9 @@ export class AreaStaff {
 
   @Column({ type: 'varchar', nullable: true })
   imageUrl: string;
-
-  //Le decimos al padre quienes son sus hijos
-  @OneToMany(() => SubAreas, (subArea) => subArea.areaStaff, {
-    cascade: true, // Opcional: si eliminas un Área, también se eliminan sus sub-áreas.
-    eager: false,  // Mantenlo en false para no cargar siempre las sub-áreas, solo cuando lo pides con 'relations'.
+  @OneToMany(() => SubArea, (subArea) => subArea.areaStaff, {
+    cascade: true,
+    eager: false,
   })
-  subAreas: SubAreas[];
+  subAreas: SubArea[];
 }

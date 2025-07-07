@@ -6,7 +6,7 @@ import { RolSeeder } from './seed/rol.seeder';
 import { SeederService } from './seeder.service';
 import { Rol } from 'src/modules/user/entities/rol.entity';
 import { AreaStaff } from 'src/modules/area/entities/area-volunteer/area-staff.entity';
-import { SubAreas } from 'src/modules/area/entities/area-volunteer/sub-area.entity';
+import { SubArea } from 'src/modules/area/entities/area-volunteer/sub-area.entity';
 import { databaseConfig } from 'src/database/database.config';
 import { AreaSeeder } from './seed/area.seeder';
 import { AreaAdviser } from 'src/modules/area/entities/area-beneficiary/area-adviser.entity';
@@ -17,8 +17,8 @@ import { VolunteerSeeder } from './seed/volunteer.seeder';
 import { Schedule } from 'src/modules/volunteer/entities/schedule.entity';
 import { CommunicationPreference } from 'src/modules/beneficiary/entities/communication-preference.entity';
 import { ComunicationPreferenceSeeder } from './seed/comunication-preference.seeder';
+import { ResponseVolunteer } from 'src/modules/volunteer/entities/response-volunteer.entity';
 import { QuestionVolunteer } from 'src/modules/area/entities/area-volunteer/question-volunteer.entity';
-
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -26,13 +26,14 @@ import { QuestionVolunteer } from 'src/modules/area/entities/area-volunteer/ques
     TypeOrmModule.forFeature([
       Rol,
       AreaStaff,
-      SubAreas,
+      SubArea,
       AreaAdviser,
       User,
       Volunteer,
       Schedule,
       CommunicationPreference,
-      QuestionVolunteer
+      ResponseVolunteer,
+      QuestionVolunteer,
     ]),
   ],
   providers: [

@@ -12,7 +12,7 @@ import { QuestionVolunteer } from './question-volunteer.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 
 @Entity('sub_areas')
-export class SubAreas {
+export class SubArea {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({ type: 'varchar', length: 100, nullable: false })
@@ -23,13 +23,12 @@ export class SubAreas {
   //availableSpots: number;  ?
   @Column({ type: 'boolean', name: 'is_active', nullable: true, default: true })
   isActive: boolean;
-
   // descripción de landing
   @Column({ type: 'varchar', length: 255, nullable: true })
   volunteerTime: string;
 
   @Column({ type: 'text', nullable: true })
-  functions: String; // guardaremos lista separada por saltos de línea
+  functions: string;
 
   @Column({ type: 'text', nullable: true })
   knowledgeAndStudies: string;
@@ -45,8 +44,7 @@ export class SubAreas {
 
   @Column({ type: 'text', nullable: true })
   experience: string;
-  // **************************************
-
+  
   @ManyToOne(() => AreaStaff)
   @JoinColumn({ name: 'area_staff_id' })
   areaStaff: AreaStaff;

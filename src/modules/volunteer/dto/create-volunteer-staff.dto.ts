@@ -7,7 +7,7 @@ import {
   IsBoolean,
   IsDateString,
 } from 'class-validator';
-import { InfoSource, TYPE_IDENTIFICATION, ProgramsUniversity, } from '../entities/volunteer.entity';
+import { InfoSource,   ProgramsUniversity,   TYPE_IDENTIFICATION } from '../entities/volunteer.entity';
 import { Transform } from 'class-transformer';
 export class CreateVolunteerStaffDto {
   @IsString()
@@ -38,7 +38,6 @@ export class CreateVolunteerStaffDto {
 
   @IsString()
   volunteerMotivation: string;
-
   @IsEnum(ProgramsUniversity)
   programsUniversity?: ProgramsUniversity;
   

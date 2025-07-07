@@ -174,6 +174,7 @@ export class Volunteer {
     type: 'boolean',
     nullable: true,
     name: 'calling_plan',
+    default: false,
   })
   callingPlan?: boolean;
   @Column({
@@ -210,7 +211,7 @@ export class Volunteer {
     name: 'status_volunteer',
   })
   statusVolunteer: StatusVolunteer;
-
+  
   // Relaciones
   @OneToMany(
     () => ResponseVolunteer,

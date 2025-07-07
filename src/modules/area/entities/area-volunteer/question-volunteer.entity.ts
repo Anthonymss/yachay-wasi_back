@@ -6,9 +6,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { SubAreas } from './sub-area.entity';
+import { SubArea } from './sub-area.entity';
 import { ResponseVolunteer } from 'src/modules/volunteer/entities/response-volunteer.entity';
-
 export enum QuestionType {
   TEXT = 'TEXT',
   TEXTAREA = 'TEXTAREA',
@@ -18,7 +17,6 @@ export enum QuestionType {
   FILE_UPLOAD = 'FILE_UPLOAD',
   NUMBER = 'NUMBER'
 }
-
 @Entity('questions_volunteers')
 export class QuestionVolunteer {
   @PrimaryGeneratedColumn()
@@ -26,16 +24,13 @@ export class QuestionVolunteer {
 
   @Column({ type: 'varchar', nullable: false, name: 'question_text' })
   questionText: string;
-
   @Column({
     type: 'enum',
     enum: QuestionType,
     default: QuestionType.TEXT
   })
   type: QuestionType;
-
-  @ManyToOne(() => SubAreas, (subarea) => subarea.question)
-
+  @ManyToOne(() => SubArea, (subarea) => subarea.questionVolunteer)
   @JoinColumn({ name: 'sub_area_id' })
   SubArea: SubAreas;
 

@@ -2,8 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AreaStaff } from 'src/modules/area/entities/area-volunteer/area-staff.entity';
-import { SubAreas } from 'src/modules/area/entities/area-volunteer/sub-area.entity';
-import { AreaAdviser } from 'src/modules/area/entities/area-beneficiary/area-adviser.entity';
+import { SubArea } from 'src/modules/area/entities/area-volunteer/sub-area.entity';
 import { QuestionVolunteer, QuestionType } from 'src/modules/area/entities/area-volunteer/question-volunteer.entity';
 
 @Injectable()
@@ -13,10 +12,8 @@ export class AreaSeeder {
   constructor(
     @InjectRepository(AreaStaff)
     private readonly areaStaffRepository: Repository<AreaStaff>,
-    @InjectRepository(SubAreas)
-    private readonly subAreaRepository: Repository<SubAreas>,
-    @InjectRepository(AreaAdviser)
-    private readonly areaAdviserRepository: Repository<AreaAdviser>,
+    @InjectRepository(SubArea)
+    private readonly subAreaRepository: Repository<SubArea>,
     @InjectRepository(QuestionVolunteer)
     private readonly questionsVolunteersRepository: Repository<QuestionVolunteer>,
 
@@ -211,8 +208,7 @@ export class AreaSeeder {
       { key: 'subarea63', name: 'Asesorías en Arte y Cultura', description: "Área dedicada a promover el desarrollo artístico y cultural", areaKey: 'area12' },
     ];
 
-    // <-- CAMBIO: Añadimos un mapa para las sub-áreas con clave
-    const subAreaMap: Record<string, SubAreas> = {};
+    const subAreaMap: Record<string, SubArea> = {};
 
     for (const subAreaData of subAreasData) {
       const { key, name, description, areaKey } = subAreaData;
@@ -237,7 +233,6 @@ export class AreaSeeder {
 
       const savedSubArea = await this.subAreaRepository.save(subArea);
 
-      // <-- CAMBIO: Si la sub-área tiene una clave, la guardamos en el mapa
       if (key) {
         subAreaMap[key] = savedSubArea;
       }
@@ -246,7 +241,6 @@ export class AreaSeeder {
 
 
 
-    // 4. Sembrar QuestionsVolunteers
     this.log.log('🌱 Sembrando Preguntas Específicas (QuestionsVolunteers)...');
 
     const questionsData = [
@@ -278,12 +272,10 @@ export class AreaSeeder {
         question = this.questionsVolunteersRepository.create({
           questionText: questionText,
           SubArea: parentSubArea,
-          // CORRECCIÓN 1: Hacemos un "cast" del string al tipo enum
           type: type as QuestionType,
         });
       } else {
         this.log.log(`Actualizando pregunta: "${questionText}"`);
-        // CORRECCIÓN 2: Hacemos el mismo "cast" aquí
         question.type = type as QuestionType;
       }
 
@@ -291,7 +283,6 @@ export class AreaSeeder {
     }
 
     this.log.log('✓ QuestionsVolunteers sembradas.');
-    this.log.log('✅ Siembra de datos finalizada con éxito.');
   }
 
 }
