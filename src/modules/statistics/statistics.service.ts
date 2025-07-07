@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { StatusVolunteer, TYPE_VOLUNTEER, Volunteer } from '../volunteer/entities/volunteer.entity';
-import { SubArea } from '../area/entities/area-volunteer/sub-area.entity';
+import { SubAreas } from '../area/entities/area-volunteer/sub-area.entity';
 import { Beneficiary } from '../beneficiary/entities/beneficiary.entity';
 import { StatisticsDto } from './statistics.dto';
 
@@ -11,8 +11,8 @@ export class StatisticsService {
   constructor(
     @InjectRepository(Volunteer)
     private readonly volunteerRepository: Repository<Volunteer>,
-    @InjectRepository(SubArea)
-    private readonly subAreaRepository: Repository<SubArea>,
+    @InjectRepository(SubAreas)
+    private readonly subAreaRepository: Repository<SubAreas>,
     @InjectRepository(Beneficiary)
     private readonly beneficiaryRepository: Repository<Beneficiary>,
   ) {}
