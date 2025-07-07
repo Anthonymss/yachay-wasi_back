@@ -23,8 +23,10 @@ export class StatisticsService {
 
     const approvedVolunteers = allVolunteers.filter(v => v.statusVolunteer === StatusVolunteer.APPROVED);
     const rejectedVolunteers = allVolunteers.filter(v => v.statusVolunteer === StatusVolunteer.REJECTED);
-    const adviserVolunteers = approvedVolunteers.filter(v => v.typeVolunteer === TYPE_VOLUNTEER.ADVISER);
-    const staffVolunteers = approvedVolunteers.filter(v => v.typeVolunteer === TYPE_VOLUNTEER.STAFF);
+    const adviserApprovedVolunteers = approvedVolunteers.filter(v => v.typeVolunteer === TYPE_VOLUNTEER.ADVISER);
+    const staffApprovedVolunteers = approvedVolunteers.filter(v => v.typeVolunteer === TYPE_VOLUNTEER.STAFF);
+    const adviserRejectedVolunteers = rejectedVolunteers.filter(v => v.typeVolunteer === TYPE_VOLUNTEER.ADVISER);
+    const staffRejectedVolunteers = rejectedVolunteers.filter(v => v.typeVolunteer === TYPE_VOLUNTEER.STAFF);
 
     const volunteersByArea = Object.values(
       approvedVolunteers.reduce((acc, { idPostulationArea }) => {
@@ -58,8 +60,12 @@ export class StatisticsService {
       totalVolunteers: allVolunteers.length,
       totalVolunteersApproved: approvedVolunteers.length,
       totalVolunteersRejected: rejectedVolunteers.length,
-      totalVolunteersAdviser: adviserVolunteers.length,
-      totalVolunteersStaff: staffVolunteers.length,
+      totalVolunteersAdviserApproved: adviserApprovedVolunteers.length,
+      totalVolunteersStaffApproved: staffApprovedVolunteers.length,
+      totalVolunteersAdviserRejected: adviserRejectedVolunteers.length,
+      totalVolunteersStaffRejected: staffRejectedVolunteers.length,
+      totalVolunteersAdviserPending: allVolunteers.length - adviserApprovedVolunteers.length - adviserRejectedVolunteers.length,
+      totalVolunteersStaffPending: allVolunteers.length - staffApprovedVolunteers.length - staffRejectedVolunteers.length,
       totalVolunteersPending: allVolunteers.length - approvedVolunteers.length - rejectedVolunteers.length,
       volunteersByArea: volunteersByAreaWithNames,
       volunteersByUniversity,

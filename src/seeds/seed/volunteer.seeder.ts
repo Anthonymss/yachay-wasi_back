@@ -91,25 +91,26 @@ export class VolunteerSeeder {
 
       volunteer.cvUrl =
         'https://res.cloudinary.com/dnupey6af/raw/upload/v1751524148/yw/documents/CV_Valeria_Torres_Ramirez.pdf';
-      volunteer.videoUrl =
-        'https://res.cloudinary.com/dnupey6af/video/upload/v1750925681/yw/videos/pr1.mp4';
+
 
       volunteer.datePostulation = faker.date.between({
         from: '2025-01-01',
         to: new Date(),
       });
-      
+      volunteer.programsUniversity = faker.helpers.arrayElement(
+        Object.values(ProgramsUniversity),
+      );
       volunteer.volunteerMotivation = faker.lorem.paragraph();
       volunteer.typeVolunteer = type;
-
+      volunteer.callingPlan = faker.datatype.boolean();
       volunteer.howDidYouFindUs = faker.helpers.arrayElement(
         Object.values(InfoSource),
       );
       
       volunteer.idPostulationArea = faker.helpers.arrayElement([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+      volunteer.statusVolunteer =  StatusVolunteer.PENDING;
+      //      volunteer.statusVolunteer = faker.helpers.arrayElement(Object.values(StatusVolunteer));
 
-      // Todos los voluntarios con status PENDING
-      volunteer.statusVolunteer = StatusVolunteer.PENDING;
       volunteer.isVoluntary = false;
 
       if (type === TYPE_VOLUNTEER.ADVISER) {
@@ -117,14 +118,11 @@ export class VolunteerSeeder {
         volunteer.schoolGrades = faker.helpers.arrayElement(
           Object.values(SchoolGrades),
         );
-        volunteer.callingPlan = faker.datatype.boolean();
         volunteer.quechuaLevel = faker.helpers.arrayElement(
           Object.values(QuechuaLevel),
         );
-        volunteer.programsUniversity = faker.helpers.arrayElement(
-          Object.values(ProgramsUniversity),
-        );
-
+        volunteer.videoUrl =
+        'https://res.cloudinary.com/dnupey6af/video/upload/v1750925681/yw/videos/pr1.mp4';
         volunteer.schedules = this.createSchedules(volunteer, 3);
       }
 
