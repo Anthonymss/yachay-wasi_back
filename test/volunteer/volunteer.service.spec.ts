@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { VolunteerService } from 'src/modules/volunteer/service/volunteer.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Volunteer } from 'src/modules/volunteer/entities/volunteer.entity';
+import { QuestionVolunteer } from 'src/modules/area/entities/area-volunteer/question-volunteer.entity';
+import { ResponseVolunteer } from 'src/modules/volunteer/entities/response-volunteer.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import { MailService } from 'src/shared/mail/mail.service';
 import { S3Service } from 'src/shared/s3/S3.service';
@@ -50,6 +52,8 @@ describe('VolunteerService', () => {
         VolunteerService,
         { provide: getRepositoryToken(Volunteer), useValue: volunteerRepo },
         { provide: getRepositoryToken(User), useValue: userRepo },
+        { provide: getRepositoryToken(ResponseVolunteer), useValue: volunteerRepo },
+        { provide: getRepositoryToken(QuestionVolunteer), useValue: volunteerRepo },
         { provide: MailService, useValue: mailService },
         { provide: S3Service, useValue: s3Service },
       ],
