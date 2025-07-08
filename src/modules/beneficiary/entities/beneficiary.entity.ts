@@ -73,6 +73,11 @@ export enum Course {
   COMMUNICATION = 'Comunicación',
   ENGLISH = 'Inglés',
 }
+export enum EnrollmentStatus {
+  PENDING = 'Pending',
+  ENROLLED = 'Enrolled',
+  NOT_ACCEPTED = 'Not Accepted',
+}
 
 @Unique(['dni','code'])
 @Entity('beneficiaries')
@@ -81,6 +86,8 @@ export class Beneficiary {
   id: number;
   @Column({ type: 'varchar', length: 50, nullable: false })
   code: string;
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  degree: string;
   @Column({ type: 'varchar', length: 50, nullable: true })
   name: string;
   @Column({ type: 'varchar', length: 50, nullable: true, name: 'last_name' })
@@ -205,6 +212,8 @@ export class Beneficiary {
   @Column({ type: 'enum', enum: Course, nullable: true })
   secondCourseChoice?: Course;
 
+  @Column({ type: 'enum', enum: EnrollmentStatus, nullable: true,default: EnrollmentStatus.PENDING })
+  enrollmentStatus?: EnrollmentStatus;
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })

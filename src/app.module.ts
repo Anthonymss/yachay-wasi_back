@@ -12,6 +12,7 @@ import { DonationModule } from './modules/donation/donation.module';
 import { StatisticsModule } from './modules/statistics/statistics.module';
 import { MailModule } from './shared/mail/mail.module';
 import { S3Module } from './shared/s3/s3.module';
+import { ExcelModule } from './shared/excel/excel.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -27,6 +28,7 @@ import { S3Module } from './shared/s3/s3.module';
     StatisticsModule,
     MailModule,
     S3Module,
+    ExcelModule,
   ],
   controllers: [],
   providers: [],

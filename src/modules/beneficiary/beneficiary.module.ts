@@ -9,9 +9,23 @@ import { CommunicationPreference } from './entities/communication-preference.ent
 import { Schedule } from './entities/schedule.entity';
 import { AreaAdviser } from 'src/modules/area/entities/area-beneficiary/area-adviser.entity';
 import { User } from 'src/modules/user/entities/user.entity';
+import { ExcelModule } from 'src/shared/excel/excel.module';
 @Module({
   controllers: [BeneficiaryController],
   providers: [BeneficiaryService],
-  imports: [TypeOrmModule.forFeature([Beneficiary,BeneficiaryLanguage,BeneficiaryPreferredCourses,CommunicationPreference ,Schedule,AreaAdviser,User])],
-})
+  imports: [
+    TypeOrmModule.forFeature([
+      Beneficiary,
+      BeneficiaryLanguage,
+      BeneficiaryPreferredCourses,
+      CommunicationPreference,
+      Schedule,
+      AreaAdviser,
+      User
+    ]),
+    ExcelModule
+  ],
+  exports: [BeneficiaryService]
+}
+)
 export class BeneficiaryModule {}

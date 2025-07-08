@@ -10,6 +10,7 @@ import {  CommunicationPreference } from '../entities/communication-preference.e
 import { DAY, Schedule } from '../entities/schedule.entity';
 import { AreaAdviser } from 'src/modules/area/entities/area-beneficiary/area-adviser.entity';
 import { User } from 'src/modules/user/entities/user.entity';
+import { ExcelService } from 'src/shared/excel/excel.service';
 @Injectable()
 export class BeneficiaryService {
   constructor(
@@ -33,6 +34,7 @@ export class BeneficiaryService {
 
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly excelService: ExcelService,
   ){}
 
   async create(dto: CreateBeneficiaryDto) {
@@ -203,11 +205,72 @@ export class BeneficiaryService {
       communicationPreferences: communicationPreferences,
     };  
   }
-
-
-
+  async uploadExcel(file: Express.Multer.File) {
+    if (!file) throw new BadRequestException('Archivo no proporcionado');
+  
+    const data = this.excelService.parseExcelBuffer(file.buffer);
+    if (!Array.isArray(data) || data.length === 0) {
+      throw new BadRequestException('El archivo está vacío o mal estructurado');
+    }
+  
+    const HEADER_MAP: Record<string, string> = {
+      'Código': 'code',
+      'Apellidos y Nombres del Alumno': 'fullNameRaw',
+      'DNI': 'dni',
+      'Apellidos y Nombres del Apoderado': 'guardianNameRaw',
+      'Celular': 'phone',
+      'Celular (Emergencia)': 'emergencyPhone',
+      'Institución': 'institution',
+      'Grado': 'degree',
+      'Idioma': 'language',
+    };
+  
+    this.validateExcelHeaders(data[0], HEADER_MAP);
+  
+    const mappedRows = data.map(row => this.mapExcelRow(row, HEADER_MAP));
+  
+    try {
+      await this.beneficiaryRepository.save(mappedRows);
+      return 'Beneficiarios guardados correctamente';
+    } catch (error) {
+      if (['ER_DUP_ENTRY', '23505'].includes(error.code)) {
+        throw new ConflictException('Ya existe un beneficiario con el mismo DNI');
+      }
+      throw new InternalServerErrorException('Error al guardar los beneficiarios');
+    }
+  }
+  
   //PRIVADOS
   private mapEnum(enumObj: any) {
     return Object.values(enumObj);
   }
+  //pa la carga de excel
+  private validateExcelHeaders(firstRow: any, headerMap: Record<string, string>) {
+    const missingHeaders = Object.keys(headerMap).filter(header => !(header in firstRow));
+    if (missingHeaders.length > 0) {
+      throw new BadRequestException(`Faltan las siguientes cabeceras en el Excel: ${missingHeaders.join(', ')}`);
+    }
+  }
+  private mapExcelRow(row: any, headerMap: Record<string, string>) {
+    const mapped: any = {};
+  
+    for (const excelKey in headerMap) {
+      const internalKey = headerMap[excelKey];
+      mapped[internalKey] = row[excelKey]?.toString().trim() ?? '';
+    }
+    if (mapped.fullNameRaw) {
+      const [lastName, name] = mapped.fullNameRaw.split(',').map(s => s.trim());
+      mapped.lastName = lastName ?? '';
+      mapped.name = name ?? '';
+    }
+    if (mapped.guardianNameRaw) {
+      const [lastNameRep, nameRep] = mapped.guardianNameRaw.split(',').map(s => s.trim());
+      mapped.lastNameRepresentative = lastNameRep ?? '';
+      mapped.nameRepresentative = nameRep ?? '';
+    }
+    delete mapped.fullNameRaw;
+    delete mapped.guardianNameRaw;
+    return mapped;
+  }
+  
 }

@@ -13,6 +13,7 @@ import {
   CallSignalIssue,
   WorkshopPreference,
   Sex,
+  EnrollmentStatus,
 } from 'src/modules/beneficiary/entities/beneficiary.entity';
 import { BeneficiaryLanguage, LANGUAGES } from 'src/modules/beneficiary/entities/beneficiary-languaje.entity';
 import { BeneficiaryPreferredCourses, PREFERED_COURSES } from 'src/modules/beneficiary/entities/beneficiary-preferred-courses.entity';
@@ -83,18 +84,18 @@ export class BeneficiarySeeder {
       "Geografía", "Biología", "Química", "Física", "Educación Física", "Arte",
       "Música", "Informática", "Inglés", "Francés", "Valores Éticos", "Tecnología"
     ];
-
+    
     for (let i = 0; i < count; i++) {
       const beneficiary = new Beneficiary();
       this.generateBasicInfo(beneficiary, i);
 
       beneficiary.beneficiaryPreferredCourses = this.createBeneficiaryPreferredCourses(beneficiary, 2, schoolSubjects);
-
+      beneficiary.degree = faker.helpers.arrayElement(Object.values(['1ro Primaria', '2do Primaria', '3ro Primaria', '4to Primaria', '5to Primaria', '6to Primaria', '1ro Secundaria', '2do Secundaria', '3ro Secundaria', '4to Secundaria', '5to Secundaria']));
       beneficiary.areaAdvisers = faker.helpers.arrayElements(areaAdvisers, faker.number.int({ min: 1, max: 3 }));
       beneficiary.communicationPreferences = faker.helpers.arrayElements(communicationPreferences, 2);
       beneficiary.hoursAsesoria = faker.number.int({ min: 1, max: 10 });
       beneficiary.coursePriorityReason = faker.helpers.arrayElement(Object.values(CoursePriorityReason));
-
+      beneficiary.enrollmentStatus = EnrollmentStatus.ENROLLED;
       beneficiary.phoneNumberMain = faker.string.numeric(9);
       beneficiary.cellphoneObservation = faker.lorem.sentence();
       beneficiary.isWhatsApp = faker.datatype.boolean();
