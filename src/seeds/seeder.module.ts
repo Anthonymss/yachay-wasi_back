@@ -19,6 +19,9 @@ import { CommunicationPreference } from 'src/modules/beneficiary/entities/commun
 import { ComunicationPreferenceSeeder } from './seed/comunication-preference.seeder';
 import { ResponseVolunteer } from 'src/modules/volunteer/entities/response-volunteer.entity';
 import { QuestionVolunteer } from 'src/modules/area/entities/area-volunteer/question-volunteer.entity';
+import { BeneficiarySeeder } from './seed/beneficiary.seeder';
+import { Beneficiary } from 'src/modules/beneficiary/entities/beneficiary.entity';
+import { BeneficiaryLanguage } from 'src/modules/beneficiary/entities/beneficiary-languaje.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -34,10 +37,13 @@ import { QuestionVolunteer } from 'src/modules/area/entities/area-volunteer/ques
       CommunicationPreference,
       ResponseVolunteer,
       QuestionVolunteer,
+      Beneficiary,
+      BeneficiaryLanguage,
     ]),
   ],
   providers: [
     SeederService,
+    BeneficiarySeeder,
     RolSeeder,
     AreaSeeder,
     AdminSeeder,

@@ -31,4 +31,7 @@ export class Schedule {
   period_time2: string;
   @Column()
   period_time3: string;
+  constructor(partial?: Partial<Schedule>) {
+    Object.assign(this, partial);
+  }
 }

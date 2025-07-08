@@ -74,12 +74,12 @@ export enum Course {
   ENGLISH = 'Inglés',
 }
 
-@Unique(['dni'])
+@Unique(['dni','code'])
 @Entity('beneficiaries')
 export class Beneficiary {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'varchar', length: 50, nullable: false })
   code: string;
   @Column({ type: 'varchar', length: 50, nullable: true })
   name: string;
@@ -161,8 +161,6 @@ export class Beneficiary {
   @Column({ type: 'varchar', length: 50, nullable: true, name: 'full_name_contact_emergency' })
   fullNameContactEmergency: string;
 
-
-  //horarios=> falta
 
   @Column({ type: 'varchar', length: 15, nullable: true, name: 'phone_number_contact_emergency' })
   phoneNumberContactEmergency: string;

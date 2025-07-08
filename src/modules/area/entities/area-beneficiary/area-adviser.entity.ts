@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToMany, JoinTable, PrimaryGeneratedColumn } from 'typeorm';
 import { Beneficiary } from 'src/modules/beneficiary/entities/beneficiary.entity';
-@Entity('areas_asesories')
+@Entity('areas_advisers')
 export class AreaAdviser {
   @PrimaryGeneratedColumn()
   id: number;

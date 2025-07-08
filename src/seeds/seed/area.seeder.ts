@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { AreaStaff } from 'src/modules/area/entities/area-volunteer/area-staff.entity';
 import { SubArea } from 'src/modules/area/entities/area-volunteer/sub-area.entity';
 import { QuestionVolunteer, QuestionType } from 'src/modules/area/entities/area-volunteer/question-volunteer.entity';
+import { AreaAdviser } from 'src/modules/area/entities/area-beneficiary/area-adviser.entity';
 
 @Injectable()
 export class AreaSeeder {
@@ -16,7 +17,8 @@ export class AreaSeeder {
     private readonly subAreaRepository: Repository<SubArea>,
     @InjectRepository(QuestionVolunteer)
     private readonly questionsVolunteersRepository: Repository<QuestionVolunteer>,
-
+    @InjectRepository(AreaAdviser)
+    private readonly areaAdviserRepository: Repository<AreaAdviser>,
   ) { }
 
   async seed() {
@@ -268,14 +270,14 @@ export class AreaSeeder {
       });
 
       if (!question) {
-        this.log.log(`Creando pregunta: "${questionText}"`);
+        //this.log.log(`Creando pregunta: "${questionText}"`);
         question = this.questionsVolunteersRepository.create({
           questionText: questionText,
           SubArea: parentSubArea,
           type: type as QuestionType,
         });
       } else {
-        this.log.log(`Actualizando pregunta: "${questionText}"`);
+        //this.log.log(`Actualizando pregunta: "${questionText}"`);
         question.type = type as QuestionType;
       }
 
@@ -283,6 +285,33 @@ export class AreaSeeder {
     }
 
     this.log.log('✓ QuestionsVolunteers sembradas.');
+    const areaAdvisersData = [
+      { name: 'Acompañamiento para el Bienestar Psicológico', description: "Área dedicada al apoyo emocional y psicológico de los beneficiarios"},
+      { name: 'Asesorías a Colegios Nacionales', description: "Área enfocada en brindar apoyo académico a estudiantes de colegios nacionales"},
+      { name: 'Asesorías en Arte y Cultura', description: "Área dedicada a promover el desarrollo artístico y cultural"},
+    ];
+
+    for (const { name, description } of areaAdvisersData) {
+      let areaAdviser = await this.areaAdviserRepository.findOne({ where: { name } });
+
+      if (!areaAdviser) {
+        this.log.log(`Creando área de asesoría: "${name}"`);
+        areaAdviser = this.areaAdviserRepository.create({
+          name,
+          description,
+          isActive: true,
+        });
+      } else {
+        this.log.log(`Actualizando área de asesoría: "${name}"`);
+        areaAdviser.description = description;
+      }
+
+      await this.areaAdviserRepository.save(areaAdviser);
+    }
+
+    this.log.log('✓ AreaAdviser sembradas.');
   }
+
+
 
 }

@@ -24,4 +24,7 @@ export class BeneficiaryLanguage {
   )
   @JoinColumn({ name: 'beneficiary_id' })
   beneficiary: Beneficiary;
+  constructor(partial?: Partial<BeneficiaryLanguage>) {
+    Object.assign(this, partial);
+  }
 }
