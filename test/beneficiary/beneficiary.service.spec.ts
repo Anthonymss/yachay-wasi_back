@@ -10,6 +10,7 @@ import { Schedule } from 'src/modules/beneficiary/entities/schedule.entity';
 import { AreaAdviser } from 'src/modules/area/entities/area-beneficiary/area-adviser.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { ExcelService } from 'src/shared/excel/excel.service';
 
 describe('BeneficiaryService', () => {
   let service: BeneficiaryService;
@@ -48,6 +49,8 @@ describe('BeneficiaryService', () => {
         { provide: getRepositoryToken(Schedule), useValue: {} },
         { provide: getRepositoryToken(AreaAdviser), useValue: {} },
         { provide: getRepositoryToken(User), useValue: userRepo },
+        { provide: ExcelService, useValue: { parseExcelBuffer: jest.fn() } },
+
       ],
     }).compile();
 

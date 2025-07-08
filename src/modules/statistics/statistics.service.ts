@@ -21,19 +21,49 @@ export class StatisticsService {
     const allVolunteers = await this.volunteerRepository.find();
     const beneficiaries = await this.beneficiaryRepository.find();
 
-    const approvedVolunteers = allVolunteers.filter(v => v.statusVolunteer === StatusVolunteer.APPROVED);
-    const rejectedVolunteers = allVolunteers.filter(v => v.statusVolunteer === StatusVolunteer.REJECTED);
-    const adviserApprovedVolunteers = approvedVolunteers.filter(v => v.typeVolunteer === TYPE_VOLUNTEER.ADVISER);
-    const staffApprovedVolunteers = approvedVolunteers.filter(v => v.typeVolunteer === TYPE_VOLUNTEER.STAFF);
-    const adviserRejectedVolunteers = rejectedVolunteers.filter(v => v.typeVolunteer === TYPE_VOLUNTEER.ADVISER);
-    const staffRejectedVolunteers = rejectedVolunteers.filter(v => v.typeVolunteer === TYPE_VOLUNTEER.STAFF);
+    const approvedVolunteers = allVolunteers.filter(
+      v => v.statusVolunteer === StatusVolunteer.APPROVED,
+    );
+    const rejectedVolunteers = allVolunteers.filter(
+      v => v.statusVolunteer === StatusVolunteer.REJECTED,
+    );
+
+    const adviserVolunteers = allVolunteers.filter(
+      v => v.typeVolunteer === TYPE_VOLUNTEER.ADVISER,
+    );
+    const staffVolunteers = allVolunteers.filter(
+      v => v.typeVolunteer === TYPE_VOLUNTEER.STAFF,
+    );
+
+    const adviserApprovedVolunteers = adviserVolunteers.filter(
+      v => v.statusVolunteer === StatusVolunteer.APPROVED,
+    );
+    const staffApprovedVolunteers = staffVolunteers.filter(
+      v => v.statusVolunteer === StatusVolunteer.APPROVED,
+    );
+
+    const adviserRejectedVolunteers = adviserVolunteers.filter(
+      v => v.statusVolunteer === StatusVolunteer.REJECTED,
+    );
+    const staffRejectedVolunteers = staffVolunteers.filter(
+      v => v.statusVolunteer === StatusVolunteer.REJECTED,
+    );
+
+    const adviserPendingVolunteers = adviserVolunteers.filter(
+      v => v.statusVolunteer !== StatusVolunteer.APPROVED &&
+           v.statusVolunteer !== StatusVolunteer.REJECTED,
+    );
+    const staffPendingVolunteers = staffVolunteers.filter(
+      v => v.statusVolunteer !== StatusVolunteer.APPROVED &&
+           v.statusVolunteer !== StatusVolunteer.REJECTED,
+    );
 
     const volunteersByArea = Object.values(
       approvedVolunteers.reduce((acc, { idPostulationArea }) => {
         acc[idPostulationArea] ??= { areaId: idPostulationArea, count: 0 };
         acc[idPostulationArea].count++;
         return acc;
-      }, {} as Record<number, { areaId: number; count: number }>)
+      }, {} as Record<number, { areaId: number; count: number }>),
     );
 
     const subAreas = await this.subAreaRepository.findBy({
@@ -53,23 +83,27 @@ export class StatisticsService {
         acc[programsUniversity] ??= { university: programsUniversity, count: 0 };
         acc[programsUniversity].count++;
         return acc;
-      }, {} as Record<string, { university: string; count: number }>)
+      }, {} as Record<string, { university: string; count: number }>),
     );
 
     return {
       totalVolunteers: allVolunteers.length,
       totalVolunteersApproved: approvedVolunteers.length,
       totalVolunteersRejected: rejectedVolunteers.length,
+      totalVolunteersPending:
+        allVolunteers.length - approvedVolunteers.length - rejectedVolunteers.length,
+
       totalVolunteersAdviserApproved: adviserApprovedVolunteers.length,
-      totalVolunteersStaffApproved: staffApprovedVolunteers.length,
       totalVolunteersAdviserRejected: adviserRejectedVolunteers.length,
+      totalVolunteersAdviserPending: adviserPendingVolunteers.length,
+
+      totalVolunteersStaffApproved: staffApprovedVolunteers.length,
       totalVolunteersStaffRejected: staffRejectedVolunteers.length,
-      totalVolunteersAdviserPending: allVolunteers.length - adviserApprovedVolunteers.length - adviserRejectedVolunteers.length,
-      totalVolunteersStaffPending: allVolunteers.length - staffApprovedVolunteers.length - staffRejectedVolunteers.length,
-      totalVolunteersPending: allVolunteers.length - approvedVolunteers.length - rejectedVolunteers.length,
+      totalVolunteersStaffPending: staffPendingVolunteers.length,
+
       volunteersByArea: volunteersByAreaWithNames,
       volunteersByUniversity,
-      totalDonations: 10, 
+      totalDonations: 10,
       totalBeneficiaries: beneficiaries.length,
     };
   }

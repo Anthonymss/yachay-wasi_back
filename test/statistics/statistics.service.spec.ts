@@ -6,7 +6,7 @@ import { SubArea } from 'src/modules/area/entities/area-volunteer/sub-area.entit
 import { Beneficiary } from 'src/modules/beneficiary/entities/beneficiary.entity';
 import { Repository } from 'typeorm';
 
-describe('StatisticsService (simplified)', () => {
+describe('StatisticsService (updated)', () => {
   let service: StatisticsService;
   let volunteerRepo: jest.Mocked<Repository<Volunteer>>;
   let subAreaRepo: jest.Mocked<Repository<SubArea>>;
@@ -29,31 +29,38 @@ describe('StatisticsService (simplified)', () => {
     service = module.get<StatisticsService>(StatisticsService);
   });
 
-  it('should compute basic stats correctly', async () => {
+  it('should compute new statistics structure correctly', async () => {
     const volunteers: Partial<Volunteer>[] = [
-        {
-          id: 1,
-          statusVolunteer: StatusVolunteer.APPROVED,
-          typeVolunteer: TYPE_VOLUNTEER.ADVISER,
-          idPostulationArea: 1,
-          programsUniversity: ProgramsUniversity.UCV,
-        },
-        {
-          id: 2,
-          statusVolunteer: StatusVolunteer.APPROVED,
-          typeVolunteer: TYPE_VOLUNTEER.STAFF,
-          idPostulationArea: 2,
-          programsUniversity: ProgramsUniversity.UCV,
-        },
-        {
-          id: 3,
-          statusVolunteer: StatusVolunteer.REJECTED,
-          typeVolunteer: TYPE_VOLUNTEER.ADVISER,
-          idPostulationArea: 1,
-          programsUniversity: ProgramsUniversity.UCV,
-        },
-      ];
-      
+      {
+        id: 1,
+        statusVolunteer: StatusVolunteer.APPROVED,
+        typeVolunteer: TYPE_VOLUNTEER.ADVISER,
+        idPostulationArea: 1,
+        programsUniversity: ProgramsUniversity.UTP,
+      },
+      {
+        id: 2,
+        statusVolunteer: StatusVolunteer.REJECTED,
+        typeVolunteer: TYPE_VOLUNTEER.ADVISER,
+        idPostulationArea: 1,
+        programsUniversity: ProgramsUniversity.UTP,
+      },
+      {
+        id: 3,
+        statusVolunteer: StatusVolunteer.APPROVED,
+        typeVolunteer: TYPE_VOLUNTEER.STAFF,
+        idPostulationArea: 2,
+        programsUniversity: ProgramsUniversity.UTP,
+      },
+      {
+        id: 4,
+        statusVolunteer: StatusVolunteer.PENDING,
+        typeVolunteer: TYPE_VOLUNTEER.STAFF,
+        idPostulationArea: 2,
+        programsUniversity: ProgramsUniversity.UTP,
+      },
+    ];
+
     const subAreas: Partial<SubArea>[] = [
       { id: 1, name: 'Área 1' },
       { id: 2, name: 'Área 2' },
@@ -62,6 +69,7 @@ describe('StatisticsService (simplified)', () => {
     const beneficiaries: Partial<Beneficiary>[] = [
       { id: 1 },
       { id: 2 },
+      { id: 3 },
     ];
 
     volunteerRepo.find.mockResolvedValue(volunteers as Volunteer[]);
@@ -70,13 +78,20 @@ describe('StatisticsService (simplified)', () => {
 
     const stats = await service.getStatistics();
 
-    expect(stats.totalVolunteers).toBe(3);
+    expect(stats.totalVolunteers).toBe(4);
     expect(stats.totalVolunteersApproved).toBe(2);
     expect(stats.totalVolunteersRejected).toBe(1);
-    expect(stats.totalVolunteersAdviser).toBe(1);
-    expect(stats.totalVolunteersStaff).toBe(1);
-    expect(stats.totalVolunteersPending).toBe(0);
-    expect(stats.totalBeneficiaries).toBe(2);
+    expect(stats.totalVolunteersPending).toBe(1);
+
+    expect(stats.totalVolunteersAdviserApproved).toBe(1);
+    expect(stats.totalVolunteersAdviserRejected).toBe(1);
+    expect(stats.totalVolunteersAdviserPending).toBe(0);
+
+    expect(stats.totalVolunteersStaffApproved).toBe(1);
+    expect(stats.totalVolunteersStaffRejected).toBe(0);
+    expect(stats.totalVolunteersStaffPending).toBe(1);
+
+    expect(stats.totalBeneficiaries).toBe(3);
     expect(stats.totalDonations).toBe(10);
 
     expect(stats.volunteersByArea).toEqual(
@@ -88,7 +103,7 @@ describe('StatisticsService (simplified)', () => {
 
     expect(stats.volunteersByUniversity).toEqual(
       expect.arrayContaining([
-        { university: 'UCV', count: 2 },
+        { university: ProgramsUniversity.UTP, count: 2 },
       ])
     );
   });
