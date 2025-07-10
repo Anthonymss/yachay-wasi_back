@@ -3,22 +3,21 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   UseGuards,
   Put,
   Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-@UseGuards(JwtAuthGuard)
-//@ApiBearerAuth() //candadito
+import { RolesGuard } from 'src/shared/guards/roles.guard';
+import { Roles } from 'src/shared/decorators/roles.decorator';
+import { ROLE } from 'src/shared/enum/role.enum';
+@ApiBearerAuth() //candadito
+@UseGuards(RolesGuard,JwtAuthGuard)
+@Roles(ROLE.ADMIN,ROLE.STAFF)
 @ApiTags('Users')
 @Controller('user')
 export class UserController {
@@ -34,8 +33,8 @@ export class UserController {
   }
 
   @Post('send-reset-password')
-  async sendResetPasswordEmail(@Body() body: { email: string }) {
-    return this.userService.sendResetPasswordEmail(body);
+  async sendResetPasswordEmail(@Req() req) {
+    return this.userService.sendResetPasswordEmail(req.user.email);
   }
   @Post('reset-password')
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {

@@ -32,13 +32,8 @@ import { VolunteerResponseDto } from '../dto/volunteer-response.dto';
 import { RolesGuard } from '../../../shared/guards/roles.guard';
 import { Roles } from '../../../shared/decorators/roles.decorator';
 import { ROLE } from '../../../shared/enum/role.enum';
-import { CreateVolunteerAdviserDto } from '../dto/create-volunteer-Adviser.dto';
-import { UpdateVolunteerAdviserDto, UpdateVolunteerStaffDto } from '../dto/update-volunteer.dto';
-import { plainToInstance } from 'class-transformer';
-import { validate } from 'class-validator';
-@UseGuards(RolesGuard)
-@Roles(ROLE.ADMIN)
-//@UseGuards(JwtAuthGuard)// verificador de token
+import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
+
 @ApiBearerAuth() //candado
 @ApiTags('Volunteer')
 @Controller('volunteer')
@@ -74,12 +69,15 @@ export class VolunteerController {
       files.video?.[0],
     );
   }
+  
   @Get('enums')
   @ApiResponse({ status: 200, description: 'Listado de enums del formulario' })
   getVolunteerEnums() {
     return this.volunteerService.getVolunteerEnums();
   }
-
+  
+  @UseGuards(RolesGuard, JwtAuthGuard)
+  @Roles(ROLE.ADMIN)
   @Get()
   @ApiQuery({ name: 'type', enum: TYPE_VOLUNTEER, required: false })
   @ApiQuery({ name: 'page', required: false })
@@ -97,7 +95,8 @@ export class VolunteerController {
   ) {
     return this.volunteerService.findAll(type, page, limit);
   }
-
+  @UseGuards(RolesGuard, JwtAuthGuard)
+  @Roles(ROLE.ADMIN)
   @Post(':id/approve')
   @ApiResponse({
     status: 200,
@@ -106,6 +105,8 @@ export class VolunteerController {
   async approveVolunteer(@Param('id') id: number) {
     return this.volunteerService.approveVolunteer(id);
   }
+  @UseGuards(RolesGuard, JwtAuthGuard)
+  @Roles(ROLE.ADMIN)
   @Post(':id/reject')
   @ApiResponse({
     status: 200,
@@ -114,7 +115,8 @@ export class VolunteerController {
   async rejectVolunteer(@Param('id') id: number) {
     return this.volunteerService.rejectVolunteer(id);
   }
-
+  @UseGuards(RolesGuard, JwtAuthGuard)
+  @Roles(ROLE.ADMIN)
   @Get('profile-volunteer/:id')
   @ApiResponse({
     status: 200,
@@ -126,6 +128,8 @@ export class VolunteerController {
   }
   
   //update
+  @UseGuards(RolesGuard, JwtAuthGuard)
+  @Roles(ROLE.ADMIN)
   @Put('staff/:id')
   @UseInterceptors(FileInterceptor('file'))
   async updateStaff(
@@ -135,7 +139,8 @@ export class VolunteerController {
   ) {
     return this.volunteerService.updateVolunteerStaffWithRaw(id, body, file);
   }
-  
+  @UseGuards(RolesGuard, JwtAuthGuard)
+  @Roles(ROLE.ADMIN)
   @Put('adviser/:id')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'file', maxCount: 1 },
@@ -153,11 +158,13 @@ export class VolunteerController {
     const video = files?.video?.[0];
     return this.volunteerService.updateVolunteerAdviserWithRaw(id, body, file, video);
   }
+  @UseGuards(RolesGuard, JwtAuthGuard)
+  @Roles(ROLE.ADMIN)
   @Delete('delete/:id')
   async deleteVolunteer(@Param('id', ParseIntPipe) id: number) {
     return this.volunteerService.softDeleteVolunteer(id);
   }
-    
+      
   
 
 }

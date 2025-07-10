@@ -81,7 +81,7 @@ import { DAY } from '../entities/schedule.entity';
     
             await manager.save(volunteer);
     
-            await this.mailService.sendTemplate(
+            this.mailService.sendTemplate(
               volunteer.email,
               'welcome',
               { subject: 'Bienvenido a Yachay Wasi' },
@@ -111,7 +111,7 @@ import { DAY } from '../entities/schedule.entity';
         volunteer.isVoluntary = false;
         await this.volunteerRepository.save(volunteer);
     
-        await this.mailService.sendTemplate(
+        this.mailService.sendTemplate(
           volunteer.email,
           'reject-volunteer',
           { subject: 'Solicitud de Voluntariado - Yachay Wasi' },
@@ -170,7 +170,7 @@ import { DAY } from '../entities/schedule.entity';
       }
     
       public async sendConfirmationEmail(volunteer: Volunteer) {
-        await this.mailService.sendTemplate(
+        this.mailService.sendTemplate(
           volunteer.email,
           'volunteer-registration',
           { subject: 'Confirmación de Registro - Voluntariado Yachay Wasi' },

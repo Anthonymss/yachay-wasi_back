@@ -6,12 +6,12 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { Roles } from 'src/shared/decorators/roles.decorator';
 import { ROLE } from 'src/shared/enum/role.enum';
 import { StatisticsService } from './statistics.service';
-
+import { RolesGuard } from 'src/shared/guards/roles.guard';
 @Controller('statistics')
-//@ApiTags('Statistics')
-//@UseGuards(JwtAuthGuard)
-//@ApiBearerAuth()
-//@Roles(ROLE.ADMIN)
+@ApiTags('Statistics')
+@ApiBearerAuth()
+@UseGuards(RolesGuard,JwtAuthGuard)
+@Roles(ROLE.ADMIN)
 export class StatisticsController {
   constructor(private readonly statisticsService: StatisticsService) {}
 

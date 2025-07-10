@@ -3,9 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
   UseGuards,
   Query,
   UseInterceptors,
@@ -13,19 +11,20 @@ import {
 } from '@nestjs/common';
 import { BeneficiaryService } from '../service/beneficiary.service';
 import { CreateBeneficiaryDto } from '../dto/create-beneficiary.dto';
-import { UpdateBeneficiaryDto } from '../dto/update-beneficiary.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { ExcelService } from 'src/shared/excel/excel.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-//@UseGuards(JwtAuthGuard)
-//@ApiBearerAuth() //candadito
+import { RolesGuard } from 'src/shared/guards/roles.guard';
+import { Roles } from 'src/shared/decorators/roles.decorator';
+import { ROLE } from 'src/shared/enum/role.enum';
+@ApiBearerAuth() //candadito
+@UseGuards(RolesGuard,JwtAuthGuard)
+@Roles(ROLE.ADMIN,ROLE.STAFF)
 @ApiTags('Beneficiary')
 @Controller('beneficiary')
 export class BeneficiaryController {
   constructor(
     private readonly beneficiaryService: BeneficiaryService,
-    private readonly excelService: ExcelService
   ) {}
 
   @Post()

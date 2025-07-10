@@ -6,6 +6,9 @@ import { JwtRefreshGuard } from '../guards/jwt-refresh.guard';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RefreshTokenDto } from '../dto/refresh-token.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { RolesGuard } from 'src/shared/guards/roles.guard';
+import { Roles } from '../decorators/roles.decorator';
+import { ROLE } from 'src/shared/enum/role.enum';
 @ApiTags('Auth')
 @Controller('auth')
 //@UseGuards(JwtAuthGuard)
@@ -13,6 +16,8 @@ import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   //restringir accesso => ADMIN, guard de roles
+  @UseGuards(RolesGuard,JwtAuthGuard)
+  @Roles(ROLE.ADMIN)
   @Post('register')
   register(@Body() dto: RegisterDto) {
     return this.authService.register(dto);
