@@ -18,7 +18,7 @@ import {
 } from '../entities/volunteer.entity';
 import { Transform, Type } from 'class-transformer';
 import { CreateScheduleDto } from './create-schedule.dto';
-export class CreateVolunteerADdviserDto {
+export class CreateVolunteerAdviserDto {
   @IsString()
   name: string;
 

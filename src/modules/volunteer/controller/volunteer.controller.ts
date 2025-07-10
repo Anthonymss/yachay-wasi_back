@@ -9,6 +9,10 @@ import {
   Query,
   UseGuards,
   Param,
+  Put,
+  ParseIntPipe,
+  BadRequestException,
+  Delete,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -28,7 +32,10 @@ import { VolunteerResponseDto } from '../dto/volunteer-response.dto';
 import { RolesGuard } from '../../../shared/guards/roles.guard';
 import { Roles } from '../../../shared/decorators/roles.decorator';
 import { ROLE } from '../../../shared/enum/role.enum';
-import { CreateVolunteerADdviserDto } from '../dto/create-volunteer-Adviser.dto';
+import { CreateVolunteerAdviserDto } from '../dto/create-volunteer-Adviser.dto';
+import { UpdateVolunteerAdviserDto, UpdateVolunteerStaffDto } from '../dto/update-volunteer.dto';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
 @UseGuards(RolesGuard)
 @Roles(ROLE.ADMIN)
 //@UseGuards(JwtAuthGuard)// verificador de token
@@ -116,5 +123,41 @@ export class VolunteerController {
   })
   async getProfileVolunteer(@Param('id') id: number): Promise<VolunteerResponseDto> {
     return this.volunteerService.getProfileVolunteer(id);
-  } 
+  }
+  
+  //update
+  @Put('staff/:id')
+  @UseInterceptors(FileInterceptor('file'))
+  async updateStaff(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: any,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    return this.volunteerService.updateVolunteerStaffWithRaw(id, body, file);
+  }
+  
+  @Put('adviser/:id')
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'file', maxCount: 1 },
+    { name: 'video', maxCount: 1 },
+  ]))
+  async updateAdviser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: any,
+    @UploadedFiles() files: {
+      file?: Express.Multer.File[];
+      video?: Express.Multer.File[];
+    },
+  ) {
+    const file = files?.file?.[0];
+    const video = files?.video?.[0];
+    return this.volunteerService.updateVolunteerAdviserWithRaw(id, body, file, video);
+  }
+  @Delete('delete/:id')
+  async deleteVolunteer(@Param('id', ParseIntPipe) id: number) {
+    return this.volunteerService.softDeleteVolunteer(id);
+  }
+    
+  
+
 }

@@ -10,15 +10,18 @@ import { MailModule } from 'src/shared/mail/mail.module';
 import { S3Module } from 'src/shared/s3/s3.module';
 import { ResponseVolunteer } from './entities/response-volunteer.entity';
 import { QuestionVolunteer } from 'src/modules/area/entities/area-volunteer/question-volunteer.entity';
-
+import { Schedule } from './entities/schedule.entity';
+import { VolunteerSharedService } from './service/volunteer-shared.service';
+import { VolunteerStaffService } from './service/volunteer-staff.service';
+import { VolunteerAdviserService } from './service/volunteer-adviser.service';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Volunteer, User,ResponseVolunteer, QuestionVolunteer]),
+    TypeOrmModule.forFeature([Volunteer, User, ResponseVolunteer, QuestionVolunteer, Schedule]),
     MailModule,
     S3Module,
   ],
   controllers: [VolunteerController],
-  providers: [VolunteerService],
+  providers: [VolunteerService,VolunteerSharedService,VolunteerStaffService,VolunteerAdviserService ],
   exports: [VolunteerService],
 })
 export class VolunteerModule {}

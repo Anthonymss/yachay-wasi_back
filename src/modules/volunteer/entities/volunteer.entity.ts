@@ -220,7 +220,9 @@ export class Volunteer {
   responseVolunteer: ResponseVolunteer[];
 
   @OneToMany(() => Schedule, (schedule) => schedule.volunteer, {
-    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+    cascade: ['soft-remove'],
     eager: true,
   })
   schedules: Schedule[];

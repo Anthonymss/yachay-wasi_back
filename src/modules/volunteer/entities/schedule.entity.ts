@@ -4,6 +4,7 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { Volunteer } from './volunteer.entity';
 export enum DAY {
@@ -31,4 +32,6 @@ export class Schedule {
   period_time2: string;
   @Column()
   period_time3: string;
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
