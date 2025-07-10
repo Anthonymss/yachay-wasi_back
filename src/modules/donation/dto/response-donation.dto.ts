@@ -1,31 +1,14 @@
-import { IsString, IsNumber, IsEnum, IsOptional, IsBoolean, IsUrl } from 'class-validator';
 import { PaymentMethod } from '../interfaces/payment.strategy';
 
 export class CreateDonationDto {
-  @IsOptional()
-  @IsString()
   name?: string;
-
-  @IsOptional()
-  @IsString()
   email?: string;
-
-  @IsNumber()
   amount: number;
-
-  @IsString()
   currency: string;
-
-  @IsString()
   donationType: string;
-
-  @IsOptional()
-  @IsString()
   message?: string;
-
-  @IsBoolean()
   is_anonymous: boolean;
-
-  @IsEnum(PaymentMethod)
   paymentMethod: PaymentMethod;
+  return_url: string;
+  cancel_url: string;
 }
