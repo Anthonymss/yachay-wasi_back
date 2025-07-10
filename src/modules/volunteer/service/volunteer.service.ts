@@ -193,10 +193,18 @@ export class VolunteerService {
     if (!volunteer) throw new NotFoundException('Voluntario no encontrado');
     if(volunteer.statusVolunteer===StatusVolunteer.REJECTED)
       throw new BadRequestException('El voluntario ya fue rechazado');
+  
     volunteer.statusVolunteer = StatusVolunteer.REJECTED;
     volunteer.isVoluntary = false;
     await this.volunteerRepository.save(volunteer);
-    //se enviara correo??
+
+    await this.mailService.sendTemplate(
+      volunteer.email,
+      'reject-volunteer',
+      { subject: 'Solicitud de Voluntariado - Yachay Wasi' },
+      { name: volunteer.name },
+    );
+
     return { message: 'Voluntario rechazado correctamente' };
   }
   async prepareAdviserDto(body: any): Promise<CreateVolunteerADdviserDto> {

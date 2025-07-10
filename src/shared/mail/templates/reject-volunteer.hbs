@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Solicitud no aprobada - Yachay Wasi</title>
+    <style>
+      body {
+        background-color: #f2f8fc;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 40px 0;
+      }
+
+      .container {
+        width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+      }
+
+      .header {
+        background-color: #c7004c;
+        color: white;
+        padding: 24px 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 26px;
+        letter-spacing: 0.5px;
+      }
+
+      .content {
+        padding: 30px;
+        color: #333333;
+        font-size: 16px;
+        line-height: 1.7;
+      }
+
+      .content p {
+        margin: 16px 0;
+      }
+
+      .highlight {
+        color: #ff6f00;
+        font-weight: bold;
+      }
+
+      .footer {
+        background-color: #eef2f6;
+        color: #666666;
+        text-align: center;
+        padding: 18px;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Yachay Wasi</h1>
+      </div>
+      <div class="content">
+        <p>Estimado/a <span class="highlight">{{name}}</span>,</p>
+
+        <p>Lamentamos informarte que tu solicitud para formar parte del voluntariado en <strong>Yachay Wasi</strong> no ha sido aprobada en esta ocasión.</p>
+
+        <p>
+          Agradecemos profundamente tu interés en contribuir con nuestra misión de transformar vidas a través de la educación y el amor. Valoramos cada postulación que recibimos y reconocemos el tiempo y la disposición que dedicaste al proceso.
+        </p>
+
+        <p>
+          Aunque esta vez no fue posible, esperamos que sigas conectado con nuestra causa y que podamos contar contigo en futuras oportunidades.
+        </p>
+
+        <p>Con aprecio,</p>
+        <p><strong>El equipo de Yachay Wasi</strong></p>
+      </div>
+      <div class="footer">
+        © {{year}} Yachay Wasi — Transformando vidas con educación y amor.
+      </div>
+    </div>
+  </body>
+</html>

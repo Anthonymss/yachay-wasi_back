@@ -1,70 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Registro de Voluntariado - Yachay Wasi</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .header {
-            background-color: #007bff;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px 8px 0 0;
-        }
-        .content {
-            padding: 30px;
-            background-color: #f9f9f9;
-            border-radius: 0 0 8px 8px;
-        }
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            margin-top: 20px;
-        }
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-            color: #666;
-            font-size: 12px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Registro de Voluntariado - Yachay Wasi</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9fafc;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    .email-wrapper {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .header {
+      background-color: #033ED8;
+      color: #ffffff;
+      padding: 24px 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .content {
+      padding: 30px;
+      font-size: 16px;
+      line-height: 1.6;
+      background-color: #ffffff;
+    }
+
+    .content h2 {
+      color: #FF3828;
+      font-size: 20px;
+      margin-top: 0;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin: 16px 0;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 22px;
+      background-color: #FDB82D;
+      color: #000;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .footer {
+      background-color: #f2f4f8;
+      color: #666666;
+      text-align: center;
+      font-size: 13px;
+      padding: 18px 20px;
+    }
+  </style>
 </head>
 <body>
+  <div class="email-wrapper">
     <div class="header">
-        <h1>¡Gracias por tu interés en Yachay Wasi!</h1>
+      <h1>¡Gracias por tu interés en Yachay Wasi!</h1>
     </div>
     <div class="content">
-        <h2>Registro Exitoso</h2>
-        <p>Estimado/a {{name}} {{lastName}},</p>
-        
-        <p>Te confirmamos que hemos recibido tu solicitud de voluntariado. Tus datos han sido registrados exitosamente.</p>
-        
-        <p>Información registrada:</p>
-        <ul>
-            <li><strong>Tipo de Voluntariado:</strong> {{typeVolunteer}}</li>
-            <li><strong>Correo Electrónico:</strong> {{email}}</li>
-            <li><strong>Fecha de Postulación:</strong> {{datePostulation}}</li>
-        </ul>
-        
-        <p>Nuestro equipo revisará tu solicitud y te contactará a la brevedad posible para los siguientes pasos.</p>
-        
-        <p>Si tienes alguna consulta o necesitas más información, no dudes en contactarnos:</p>
-        <a href="mailto:contacto@yachaywasi.org" class="button">Contactar con Yachay Wasi</a>
+      <h2>Registro Exitoso</h2>
+      <p>Estimado/a <strong>{{name}} {{lastName}}</strong>,</p>
+
+      <p>
+        Te confirmamos que hemos recibido tu solicitud de voluntariado. Tus datos han sido registrados correctamente.
+      </p>
+
+      <p><strong>Información registrada:</strong></p>
+      <ul>
+        <li><strong>Tipo de Voluntariado:</strong> {{typeVolunteer}}</li>
+        <li><strong>Correo Electrónico:</strong> {{email}}</li>
+        <li><strong>Fecha de Postulación:</strong> {{datePostulation}}</li>
+      </ul>
+
+      <p>
+        Nuestro equipo revisará tu solicitud y se pondrá en contacto contigo próximamente para los siguientes pasos.
+      </p>
+
+      <p>Si tienes dudas o deseas más información, escríbenos a:</p>
+      <a href="mailto:contacto@yachaywasi.org" class="button">contacto@yachaywasi.org</a>
+
+      <p style="margin-top: 24px;">Con gratitud,<br><strong>El equipo de Yachay Wasi</strong></p>
     </div>
     <div class="footer">
-        <p>Yachay Wasi - Organización sin fines de lucro</p>
-        <p>Este es un correo automático, por favor no responder.</p>
+      <p>Yachay Wasi - Organización sin fines de lucro</p>
+      <p>Este es un mensaje automático. Por favor, no respondas a este correo.</p>
     </div>
+  </div>
 </body>
 </html>

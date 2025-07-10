@@ -3,54 +3,108 @@
 <head>
   <meta charset="UTF-8" />
   <title>Bienvenido a Yachay Wasi</title>
+  <style>
+    body {
+      background-color: #fef9f5;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #212121;
+    }
+
+    .email-wrapper {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .header {
+      background-color: #FF3828;
+      color: #ffffff;
+      padding: 24px 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    .content {
+      padding: 30px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .content p {
+      margin: 16px 0;
+    }
+
+    .content strong {
+      color: #033ED8;
+    }
+
+    .button-container {
+      margin: 30px 0;
+      text-align: center;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #FDB82D;
+      color: #212121;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 15px;
+      border: 1px solid #e6a800;
+    }
+
+    .footer {
+      background-color: #f3f4f7;
+      color: #757575;
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+    }
+  </style>
 </head>
-<body style="margin: 0; padding: 0; background-color: #fff8e1; font-family: 'Segoe UI', Roboto, Arial, sans-serif; color: #212121;">
-  <table width="100%" cellspacing="0" cellpadding="0" style="padding: 40px 0;">
-    <tr>
-      <td align="center">
-        <table width="600" style="background: #ffffff; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-          
-          <tr>
-            <td style="background-color: #f44336; padding: 25px 0; text-align: center;">
-              <h1 style="margin: 0; color: #ffffff; font-size: 26px;">¡Bienvenido a Yachay Wasi!</h1>
-            </td>
-          </tr>
+<body>
+  <div class="email-wrapper">
+    <div class="header">
+      <h1>¡Bienvenido a Yachay Wasi!</h1>
+    </div>
+    <div class="content">
+      <p>Hola <strong>{{name}}</strong>,</p>
 
-          <tr>
-            <td style="padding: 30px;">
-              <p style="font-size: 18px;">Hola <strong>{{name}}</strong>,</p>
-              <p style="font-size: 16px; line-height: 1.6;">
-                Te damos la más cordial bienvenida a nuestra comunidad. Has sido <strong>seleccionado como voluntario</strong> para participar como <strong>{{role}}</strong> en Yachay Wasi.
-              </p>
-              <p style="font-size: 16px; line-height: 1.6;">
-                En breve, recibirás más información sobre tus funciones, cronograma y recursos necesarios para iniciar esta hermosa labor.
-              </p>
+      <p>
+        Nos complace darte la más cordial bienvenida a nuestra comunidad. Has sido <strong>seleccionado como voluntario</strong> para desempeñar el rol de <strong>{{role}}</strong> en Yachay Wasi.
+      </p>
 
-              <div style="margin: 30px 30px; text-align: center;">
-                <a href="{{dashboardUrl}}" style="display: inline-block; padding: 12px 24px; background-color: #ffeb3b; color: #212121; font-weight: bold; text-decoration: none; border-radius: 5px; font-size: 15px; border: 1px solid #fdd835;">
-                  Ir a mi Panel
-                </a>
-              </div>
+      <p>
+        En breve recibirás detalles sobre tus funciones, el cronograma de actividades y los recursos que te acompañarán en esta maravillosa experiencia.
+      </p>
 
-              <p style="font-size: 14px; color: #616161;">
-                Si tienes dudas o sugerencias, no dudes en contactarnos. Estamos aquí para acompañarte en cada paso.
-              </p>
+      <div class="button-container">
+        <a href="{{dashboardUrl}}" class="button">Ir a mi Panel</a>
+      </div>
 
-              <p style="font-size: 14px;">
-                Con aprecio,<br />
-                <strong>Equipo Yachay Wasi</strong>
-              </p>
-            </td>
-          </tr>
+      <p style="font-size: 14px; color: #555;">
+        Si tienes dudas o sugerencias, no dudes en escribirnos. Estamos aquí para apoyarte en cada paso.
+      </p>
 
-          <tr>
-            <td style="background-color: #eeeeee; padding: 20px; text-align: center; font-size: 12px; color: #757575;">
-              © {{year}} Yachay Wasi — Transformando vidas con educación y amor.
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
+      <p style="font-size: 14px;">
+        Con gratitud,<br />
+        <strong>Equipo Yachay Wasi</strong>
+      </p>
+    </div>
+    <div class="footer">
+      © {{year}} Yachay Wasi — Transformando vidas con educación y amor.
+    </div>
+  </div>
 </body>
 </html>
