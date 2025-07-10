@@ -18,7 +18,7 @@ import { User } from 'src/modules/user/entities/user.entity';
 import { BeneficiaryPreferredCourses } from './beneficiary-preferred-courses.entity';
 import { CommunicationPreference } from './communication-preference.entity';
 import { AreaAdviser } from 'src/modules/area/entities/area-beneficiary/area-adviser.entity';
-export enum Sex {
+export enum Gender {
   MALE = 'male',
   FEMALE = 'female',
 }
@@ -102,8 +102,8 @@ export class Beneficiary {
   @Column({ type: 'varchar', length: 100, nullable: true, name: 'birth_date' })
   birthDate: string;
 
-  @Column({ type: 'enum', enum: Sex, nullable: true })
-  sex: Sex; 
+  @Column({ type: 'enum', enum: Gender, nullable: true })
+  gender: Gender; 
   @Column({ type: 'enum', enum: Parentesco, nullable: true })
   parentesco: Parentesco;
 

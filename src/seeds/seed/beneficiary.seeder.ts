@@ -12,7 +12,7 @@ import {
   CoursePriorityReason,
   CallSignalIssue,
   WorkshopPreference,
-  Sex,
+  Gender,
   EnrollmentStatus,
 } from 'src/modules/beneficiary/entities/beneficiary.entity';
 import { BeneficiaryLanguage, LANGUAGES } from 'src/modules/beneficiary/entities/beneficiary-languaje.entity';
@@ -129,7 +129,7 @@ export class BeneficiarySeeder {
     beneficiary.institution = faker.company.name();
     beneficiary.modalityStudent = faker.helpers.arrayElement(Object.values(ModalityStudent));
     beneficiary.birthDate = faker.date.past().toISOString().split('T')[0];
-    beneficiary.sex = faker.helpers.arrayElement(Object.values(Sex));
+    beneficiary.gender = faker.helpers.arrayElement(Object.values(Gender));
     beneficiary.parentesco = faker.helpers.arrayElement(Object.values(Parentesco));
     beneficiary.nameRepresentative = faker.person.firstName();
     beneficiary.lastNameRepresentative = faker.person.lastName();

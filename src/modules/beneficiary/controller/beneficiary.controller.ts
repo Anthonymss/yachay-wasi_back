@@ -8,9 +8,12 @@ import {
   Query,
   UseInterceptors,
   UploadedFile,
+  Delete,
+  Patch,
 } from '@nestjs/common';
 import { BeneficiaryService } from '../service/beneficiary.service';
 import { CreateBeneficiaryDto } from '../dto/create-beneficiary.dto';
+import { UpdateBeneficiaryDto } from '../dto/update-beneficiary.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -42,7 +45,7 @@ export class BeneficiaryController {
   ) {
     return this.beneficiaryService.findAll(page, limit);
   }
-  @Get(':id')
+  @Get('find-one/:id')
   findOne(@Param('id') id: string) {
     return this.beneficiaryService.findOne(+id);
   }
@@ -50,5 +53,17 @@ export class BeneficiaryController {
   @UseInterceptors(FileInterceptor('file'))
   async uploadExcel(@UploadedFile() file: Express.Multer.File) {
     return this.beneficiaryService.uploadExcel(file);
+  }
+  @Delete('soft-delete/:id')
+  async softDelete(@Param('id') id: string) {
+    return this.beneficiaryService.softDelete(+id);
+  }
+  @Patch('restore/:id')
+  async restore(@Param('id') id: string) {
+    return this.beneficiaryService.restore(+id);
+  }
+  @Patch('update/:id')
+  async update(@Param('id') id: string, @Body() updateBeneficiaryDto: UpdateBeneficiaryDto) {
+    return this.beneficiaryService.update(+id, updateBeneficiaryDto);
   }
 }

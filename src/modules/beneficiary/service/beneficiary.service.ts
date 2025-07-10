@@ -2,7 +2,7 @@ import { BadRequestException, ConflictException, Injectable, NotFoundException, 
 import { CreateBeneficiaryDto } from '../dto/create-beneficiary.dto';
 import { UpdateBeneficiaryDto } from '../dto/update-beneficiary.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Beneficiary, CallSignalIssue, Course, CoursePriorityReason, LearningLevel, ModalityStudent, Parentesco, Sex, WorkshopPreference } from '../entities/beneficiary.entity';
+import { Beneficiary, CallSignalIssue, Course, CoursePriorityReason, LearningLevel, ModalityStudent, Parentesco, Gender, WorkshopPreference } from '../entities/beneficiary.entity';
 import { In, Repository } from 'typeorm';
 import { BeneficiaryLanguage, LANGUAGES } from '../entities/beneficiary-languaje.entity';
 import { BeneficiaryPreferredCourses, PREFERED_COURSES } from '../entities/beneficiary-preferred-courses.entity';
@@ -191,7 +191,7 @@ export class BeneficiaryService {
     ]);
     return {
       modalityStudent: this.mapEnum(ModalityStudent),
-      sex: this.mapEnum(Sex),
+      sex: this.mapEnum(Gender),
       parentesco: this.mapEnum(Parentesco),
       learningLevel: this.mapEnum(LearningLevel),
       coursePriorityReason: this.mapEnum(CoursePriorityReason),
@@ -272,5 +272,98 @@ export class BeneficiaryService {
     delete mapped.guardianNameRaw;
     return mapped;
   }
+  async update(id: number, dto: UpdateBeneficiaryDto) {
+    const beneficiary = await this.beneficiaryRepository.findOne({
+      where: { id },
+      relations: ['beneficiaryLanguage', 'beneficiaryPreferredCourses', 'schedules', 'communicationPreferences', 'areaAdvisers', 'user'],
+    });
+    
   
+    if (!beneficiary) {
+      throw new NotFoundException(`Beneficiario con ID ${id} no encontrado`);
+    }
+  
+    const {
+      beneficiaryLanguage,
+      beneficiaryPreferredCourses,
+      schedule,
+      communicationPreferences,
+      areaAdvisers,
+      userId,
+      ...rest
+    } = dto;
+  
+    Object.assign(beneficiary, rest);
+  
+    if (userId) {
+      const user = await this.userRepository.findOne({ where: { id: userId } });
+      if (!user) throw new NotFoundException('Usuario no encontrado');
+      beneficiary.user = user;
+    }
+  
+    await this.languageRepository.delete({ beneficiary: { id } });
+    if (beneficiaryLanguage?.length) {
+      const langs = beneficiaryLanguage.map((lang) =>
+        this.languageRepository.create({
+          language: lang.language,
+          customLanguageName: lang.customLanguageName,
+          beneficiary,
+        }),
+      );
+      await this.languageRepository.save(langs);
+    }
+  
+    await this.preferredCourseRepository.delete({ beneficiary: { id } });
+    if (beneficiaryPreferredCourses?.length) {
+      const courses = beneficiaryPreferredCourses.map((course) =>
+        this.preferredCourseRepository.create({
+          name: course.name,
+          customCourseName: course.customCourseName,
+          beneficiary,
+        }),
+      );
+      await this.preferredCourseRepository.save(courses);
+    }
+  
+    await this.scheduleRepository.delete({ beneficiary: { id } });
+    if (schedule?.length) {
+      const schedules = schedule.map((s) => ({
+        ...s,
+        beneficiary,
+      }));
+      await this.scheduleRepository.save(schedules);
+    }
+  
+    if (communicationPreferences) {
+      const prefs = await this.communicationPreferenceRepository.find({
+        where: { id: In(communicationPreferences) },
+      });
+      beneficiary.communicationPreferences = prefs;
+    }
+  
+    if (areaAdvisers) {
+      const areas = await this.areaAdviserRepository.find({
+        where: { id: In(areaAdvisers), isActive: true },
+      });
+      beneficiary.areaAdvisers = areas;
+    }
+  
+    await this.beneficiaryRepository.save(beneficiary);
+  
+    return { message: 'Beneficiario actualizado correctamente' };
+  }
+  async softDelete(id: number) {
+    const result = await this.beneficiaryRepository.softDelete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Beneficiario con ID ${id} no encontrado`);
+    }
+    return { message: 'Beneficiario eliminado correctamente' };
+  }
+  async restore(id: number) {
+    const result = await this.beneficiaryRepository.restore(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Beneficiario con ID ${id} no encontrado`);
+    }
+    return { message: 'Beneficiario restaurado correctamente' };
+  }
 }

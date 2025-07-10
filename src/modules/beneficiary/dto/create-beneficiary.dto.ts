@@ -1,5 +1,5 @@
 import { ModalityStudent } from "src/modules/beneficiary/entities/beneficiary.entity";
-import { Sex } from "src/modules/beneficiary/entities/beneficiary.entity";
+import { Gender } from "src/modules/beneficiary/entities/beneficiary.entity";
 import { Parentesco } from "src/modules/beneficiary/entities/beneficiary.entity";
 import { LearningLevel } from "src/modules/beneficiary/entities/beneficiary.entity";
 import { CoursePriorityReason } from "src/modules/beneficiary/entities/beneficiary.entity";
@@ -89,8 +89,8 @@ export class CreateLanguageDto {
     birthDate?: string;
   
     @IsOptional()
-    @IsEnum(Sex)
-    sex?: Sex;
+    @IsEnum(Gender)
+    gender?: Gender;
   
     @IsOptional()
     @IsEnum(Parentesco)
