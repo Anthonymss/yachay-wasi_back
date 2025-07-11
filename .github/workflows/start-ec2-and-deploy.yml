@@ -1,40 +1,59 @@
-name: Start EC2 and Deploy App
+name: Deploy to EC2 and Start Docker
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Start EC2 instance
-        uses: aws-actions/aws-cli-action@v1
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-          inline: |
-            aws ec2 start-instances --instance-ids ${{ secrets.EC2_INSTANCE_ID }}
+          aws-region: us-east-2
 
-      - name: Wait for EC2 instance to be running
-        uses: jakejarvis/wait-for-ec2@v1
-        with:
-          instance-id: ${{ secrets.EC2_INSTANCE_ID }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          region: ${{ secrets.AWS_REGION }}
-          port: 22
-          timeout: 300
+      - name: Start EC2 Instance
+        run: |
+          INSTANCE_ID=$(aws ec2 describe-instances \
+            --filters "Name=ip-address,Values=${{ secrets.EC2_HOST }}" \
+            --query "Reservations[0].Instances[0].InstanceId" \
+            --output text)
+          
+          echo "Instance ID: $INSTANCE_ID"
 
-      - name: Deploy via SSH and restart only app service
+          aws ec2 start-instances --instance-ids $INSTANCE_ID
+          aws ec2 wait instance-running --instance-ids $INSTANCE_ID
+
+      - name: Wait for EC2 SSH to be ready
+        run: |
+          echo "Esperando a que EC2 esté accesible por SSH..."
+          for i in {1..30}; do
+            if nc -z -w 3 ${{ secrets.EC2_HOST }} 22; then
+              echo "EC2 está lista."
+              exit 0
+            fi
+            echo "Esperando SSH..."
+            sleep 10
+          done
+          echo "Tiempo de espera agotado. EC2 no respondió."
+          exit 1
+
+      - name: Deploy app using SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /home/ec2-user/yachay-wasi_back
+            cd ~/yachay-wasi_back
             git pull origin main
-            sudo docker compose build app
-            sudo docker compose up -d app
+            docker compose up -d --build --remove-orphans
