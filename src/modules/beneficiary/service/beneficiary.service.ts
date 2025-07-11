@@ -207,8 +207,7 @@ export class BeneficiaryService {
   }
   async uploadExcel(file: Express.Multer.File) {
     if (!file) throw new BadRequestException('Archivo no proporcionado');
-  
-    const data = this.excelService.parseExcelBuffer(file.buffer);
+    const data = await this.excelService.parseExcelBuffer(file.buffer);
     if (!Array.isArray(data) || data.length === 0) {
       throw new BadRequestException('El archivo está vacío o mal estructurado');
     }
