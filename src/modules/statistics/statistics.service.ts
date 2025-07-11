@@ -5,6 +5,7 @@ import { StatusVolunteer, TYPE_VOLUNTEER, Volunteer } from '../volunteer/entitie
 import { SubArea } from '../area/entities/area-volunteer/sub-area.entity';
 import { Beneficiary } from '../beneficiary/entities/beneficiary.entity';
 import { StatisticsDto } from './statistics.dto';
+import { Donation } from '../donation/entities/donation.entity';
 
 @Injectable()
 export class StatisticsService {
@@ -15,6 +16,8 @@ export class StatisticsService {
     private readonly subAreaRepository: Repository<SubArea>,
     @InjectRepository(Beneficiary)
     private readonly beneficiaryRepository: Repository<Beneficiary>,
+    @InjectRepository(Donation)
+    private readonly donationRepository: Repository<Donation>,
   ) {}
 
   async getStatistics(): Promise<StatisticsDto> {
@@ -86,6 +89,9 @@ export class StatisticsService {
       }, {} as Record<string, { university: string; count: number }>),
     );
 
+    const donations = await this.donationRepository.find();
+    const totalDonations = donations.reduce((acc, donation) => acc + donation.amount, 0);
+
     return {
       totalVolunteers: allVolunteers.length,
       totalVolunteersApproved: approvedVolunteers.length,
@@ -103,7 +109,7 @@ export class StatisticsService {
 
       volunteersByArea: volunteersByAreaWithNames,
       volunteersByUniversity,
-      totalDonations: 10,
+      totalDonations,
       totalBeneficiaries: beneficiaries.length,
     };
   }
