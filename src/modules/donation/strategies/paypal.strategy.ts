@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as paypal from '@paypal/checkout-server-sdk';
 import {
@@ -65,27 +65,35 @@ export class PaypalStrategy implements PaymentStrategy {
       const req = new paypal.orders.OrdersCaptureRequest(orderId);
       req.requestBody({});
       const res = await this.client.execute(req);
-      const cap = res.result.purchase_units[0].payments.captures[0];
+      const cap = res.result?.purchase_units?.[0]?.payments?.captures?.[0];
+  
+      if (!cap) throw new Error('No se pudo obtener la captura de la orden');
 
+  
       return {
         success: cap.status === 'COMPLETED',
         receiptUrl: `https://www.paypal.com/receipt/${cap.id}`,
         status: cap.status.toLowerCase() as DonationStatus,
       };
-    } catch (error) {
-      if (error.statusCode === 422 && error.name === 'UNPROCESSABLE_ENTITY') {
+    } catch (error: any) {
+      const bodyText = error._originalError?.text || '';
+      if (
+        error.statusCode === 422 &&
+        bodyText.includes('ORDER_ALREADY_CAPTURED')
+      ) {
         const orderReq = new paypal.orders.OrdersGetRequest(orderId);
         const orderRes = await this.client.execute(orderReq);
-        const order = orderRes.result;
-        const cap = order.purchase_units[0].payments.captures[0];
-
+        const cap = orderRes.result?.purchase_units?.[0]?.payments?.captures?.[0];
+  
+        if (!cap) throw new Error('La orden ya fue capturada pero no se pudo obtener información de la captura');
+  
         return {
           success: cap.status === 'COMPLETED',
           receiptUrl: `https://www.paypal.com/receipt/${cap.id}`,
           status: cap.status.toLowerCase() as DonationStatus,
         };
       }
-      throw error;
+      throw BadRequestException;
     }
   }
 }

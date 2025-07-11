@@ -34,7 +34,7 @@ export class Donation {
   @Column({ type: 'boolean', name: 'is_anonymous', default: false })
   isAnonymous: boolean;
   @Column({ nullable: true })
-  paypalOrderId?: string;
+  orderId?: string;
   @CreateDateColumn()
   createdAt: Date;
   @UpdateDateColumn()

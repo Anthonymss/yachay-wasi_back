@@ -22,7 +22,7 @@ export class DonationController {
   captureDonation(
     @Param('orderId') orderId: string,
     @Query('method') method: PaymentMethod,
-  ) {
+  ) { 
     return this.service.capture(orderId, method);
 }
 
