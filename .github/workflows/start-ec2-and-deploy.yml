@@ -1,4 +1,4 @@
-name: Deploy to EC2 and Start Docker
+name: Deploy to EC2 (start + docker compose)
 
 on:
   workflow_dispatch:
@@ -21,33 +21,33 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
-      - name: Start EC2 Instance
+      - name: Start EC2 instance
         run: |
           INSTANCE_ID=$(aws ec2 describe-instances \
             --filters "Name=ip-address,Values=${{ secrets.EC2_HOST }}" \
             --query "Reservations[0].Instances[0].InstanceId" \
             --output text)
-          
-          echo "Instance ID: $INSTANCE_ID"
+
+          echo "Found EC2 Instance: $INSTANCE_ID"
 
           aws ec2 start-instances --instance-ids $INSTANCE_ID
-          aws ec2 wait instance-running --instance-ids $INSTANCE_ID
+          aws ec2 wait instance-status-ok --instance-ids $INSTANCE_ID
 
-      - name: Wait for EC2 SSH to be ready
+      - name: Wait for EC2 SSH to become available
         run: |
-          echo "Esperando a que EC2 esté accesible por SSH..."
+          echo "Waiting for SSH to be available..."
           for i in {1..30}; do
             if nc -z -w 3 ${{ secrets.EC2_HOST }} 22; then
-              echo "EC2 está lista."
+              echo "SSH is available!"
               exit 0
             fi
-            echo "Esperando SSH..."
+            echo "Retrying in 10s..."
             sleep 10
           done
-          echo "Tiempo de espera agotado. EC2 no respondió."
+          echo "SSH not available after 5 minutes."
           exit 1
 
-      - name: Deploy app using SSH
+      - name: Deploy app via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
