@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { join } from 'path';
 import { mailConfig } from './mail.config';
@@ -55,7 +55,7 @@ export class MailService {
       this.logger.log(`Correo enviado a ${to} con ID: ${info.messageId}`);
     } catch (err) {
       this.logger.error(`Error al enviar correo a ${to}:`, err);
-      throw err;
+      throw new BadRequestException('Error al enviar correo');
     }
   }
 }
