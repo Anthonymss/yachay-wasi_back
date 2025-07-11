@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gracias por tu donación</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9fafc;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid #043ED9;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #043ED9, #2c7be5);
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    .content {
+      padding: 30px 25px;
+      background-color: #f4f8ff;
+    }
+
+    .content p {
+      margin-bottom: 16px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .highlight {
+      background-color: #ff38281a;
+      padding: 12px 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+      font-size: 20px;
+      font-weight: bold;
+      color: #FF3828;
+      text-align: center;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin: 16px 0;
+      font-size: 15px;
+    }
+
+    ul li {
+      margin-bottom: 6px;
+    }
+
+    .footer {
+      padding: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #666;
+      background-color: #fdf5e7;
+      border-top: 1px solid #f0e6d4;
+    }
+
+    .footer p {
+      margin: 4px 0;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        border-radius: 0;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>¡Gracias por tu donación!</h1>
+    </div>
+
+    <div class="content">
+      <p>Hola {{ nombre }},</p>
+
+      <p>
+        Queremos expresarte nuestra más sincera gratitud por tu generosa contribución de:
+      </p>
+
+      <div class="highlight">
+        {{ cantidad }} {{ moneda }}
+      </div>
+
+      <p>Gracias a tu ayuda, podemos seguir brindando oportunidades educativas y esperanza a comunidades andinas.</p>
+
+      <p><strong>Detalles de tu donación:</strong></p>
+      <ul>
+        <li><strong>Número de orden:</strong> {{ orderId }}</li>
+        <li><strong>Método de pago:</strong> {{ metodoPago }}</li>
+        <li><strong>Mensaje:</strong> "{{ mensaje }}"</li>
+      </ul>
+
+      <p>Si necesitas asistencia o tienes alguna consulta, por favor contáctanos.</p>
+    </div>
+
+    <div class="footer">
+      <p><strong>Yachay Wasi</strong> — Organización sin fines de lucro</p>
+      <p>Este es un correo generado automáticamente, por favor no responder.</p>
+    </div>
+  </div>
+</body>
+</html>

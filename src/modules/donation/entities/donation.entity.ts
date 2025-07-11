@@ -1,8 +1,10 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('donations')
@@ -25,10 +27,19 @@ export class Donation {
   date: Date;
   @Column({ type: 'varchar', length: 500, nullable: true })
   message: string;
-  @Column()
+  @Column({ type: 'enum', enum: ['PENDING', 'COMPLETED', 'FAILED', 'CANCELLED'], default: 'PENDING' })
   status: string;
-  @Column()
-  receiptUrl: string;
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  receiptUrl?: string;
   @Column({ type: 'boolean', name: 'is_anonymous', default: false })
   isAnonymous: boolean;
+  @Column({ nullable: true })
+  orderId?: string;
+  @CreateDateColumn()
+  createdAt: Date;
+  @UpdateDateColumn()
+  updatedAt: Date;
+  @DeleteDateColumn()
+  deletedAt: Date;
+
 }
