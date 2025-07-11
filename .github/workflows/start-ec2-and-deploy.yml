@@ -1,0 +1,40 @@
+name: Start EC2 and Deploy App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Start EC2 instance
+        uses: aws-actions/aws-cli-action@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          inline: |
+            aws ec2 start-instances --instance-ids ${{ secrets.EC2_INSTANCE_ID }}
+
+      - name: Wait for EC2 instance to be running
+        uses: jakejarvis/wait-for-ec2@v1
+        with:
+          instance-id: ${{ secrets.EC2_INSTANCE_ID }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: ${{ secrets.AWS_REGION }}
+          port: 22
+          timeout: 300
+
+      - name: Deploy via SSH and restart only app service
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ec2-user/yachay-wasi_back
+            git pull origin main
+            sudo docker compose build app
+            sudo docker compose up -d app
