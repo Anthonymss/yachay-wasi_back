@@ -1,3 +1,4 @@
+// create-volunteer-Adviser.dto.ts
 import {
   IsString,
   IsNotEmpty,
@@ -51,6 +52,7 @@ export class CreateVolunteerAdviserDto {
 
   @IsArray()
   @ValidateNested({ each: true })
+  
   @Type(() => CreateScheduleDto)
   @Transform(({ value }) => {
     if (typeof value === 'string') {
@@ -92,6 +94,7 @@ export class CreateVolunteerAdviserDto {
   @IsEnum(ProgramsUniversity)
   programsUniversity?: ProgramsUniversity;
   @IsArray()
+
   @IsOptional()
   responses?: { questionId: number; reply: string }[];
 }

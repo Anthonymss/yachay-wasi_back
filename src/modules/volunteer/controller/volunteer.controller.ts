@@ -1,3 +1,4 @@
+// volunteer.controller.ts
 import {
   Controller,
   Post,
@@ -38,28 +39,31 @@ import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 @ApiTags('Volunteer')
 @Controller('volunteer')
 export class VolunteerController {
-  constructor(private readonly volunteerService: VolunteerService) {}
+  constructor(private readonly volunteerService: VolunteerService) { }
 
   @Post('staff')
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('file'))
-  async createVolunteer (
+  @UseInterceptors(
+    FileInterceptor('file'))
+  async createVolunteer(
     @UploadedFile() file: Express.Multer.File,
     @Body() dto: CreateVolunteerStaffDto,
   ) {
     return this.volunteerService.createVolunteerStaff(dto, file);
   }
 
-  @Post('adviser')
+
   @UseInterceptors(
-    FileFieldsInterceptor([
+    FileFieldsInterceptor([ // intercepta los archivos
       { name: 'file', maxCount: 1 },
       { name: 'video', maxCount: 1 },
+      { name: 'responseFiles', maxCount: 10 }, // <-- agrega este
     ]),
   )
+  @Post('adviser')
   async createVolunteerAdviser(
     @UploadedFiles()
-    files: { file: Express.Multer.File[]; video: Express.Multer.File[] },
+    files: { file: Express.Multer.File[]; video: Express.Multer.File[],responseFiles?: Express.Multer.File[], },
     @Body() body: any,
   ) {
     const dto = await this.volunteerService.prepareAdviserDto(body);
@@ -69,13 +73,13 @@ export class VolunteerController {
       files.video?.[0],
     );
   }
-  
+
   @Get('enums')
   @ApiResponse({ status: 200, description: 'Listado de enums del formulario' })
   getVolunteerEnums() {
     return this.volunteerService.getVolunteerEnums();
   }
-  
+
   @UseGuards(RolesGuard, JwtAuthGuard)
   @Roles(ROLE.ADMIN)
   @Get()
@@ -126,7 +130,7 @@ export class VolunteerController {
   async getProfileVolunteer(@Param('id') id: number): Promise<VolunteerResponseDto> {
     return this.volunteerService.getProfileVolunteer(id);
   }
-  
+
   //update
   @UseGuards(RolesGuard, JwtAuthGuard)
   @Roles(ROLE.ADMIN)
@@ -164,7 +168,5 @@ export class VolunteerController {
   async deleteVolunteer(@Param('id', ParseIntPipe) id: number) {
     return this.volunteerService.softDeleteVolunteer(id);
   }
-      
-  
 
 }

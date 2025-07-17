@@ -16,6 +16,7 @@ import {
   
   @Injectable()
   export class VolunteerAdviserService {
+
     constructor(
       @InjectRepository(Volunteer)
       private readonly volunteerRepository: Repository<Volunteer>,
@@ -26,6 +27,7 @@ import {
       private readonly s3Service: S3Service,
       private readonly sharedService: VolunteerSharedService,
     ) {}
+    
     async createVolunteerAdviser(
       dto: CreateVolunteerAdviserDto,
       file?: Express.Multer.File,
@@ -83,6 +85,7 @@ import {
         }
       return saved;
     }
+
     async updateVolunteerAdviser(
       id: number,
       dto: UpdateVolunteerAdviserDto,
