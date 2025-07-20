@@ -17,7 +17,7 @@ import {
 } from '../entities/volunteer.entity';
 import { S3Service } from 'src/shared/s3/S3.service';
 import { MailService } from 'src/shared/mail/mail.service';
-import { plainToInstance } from 'class-transformer';
+import { plainToInstance, Transform } from 'class-transformer';
 import { validate } from 'class-validator';
 import { UpdateVolunteerAdviserDto, UpdateVolunteerStaffDto } from '../dto/update-volunteer.dto';
 import { VolunteerResponseDto } from '../dto/volunteer-response.dto';
@@ -235,19 +235,45 @@ export class VolunteerSharedService {
       throw new BadRequestException('El formato de schedule no es válido.');
     }
 
+    // parsea responses si viene como string
+    let parsedResponses: any = undefined;
+    if (body.responses) {
+      try {
+        parsedResponses = typeof body.responses === 'string'
+          ? JSON.parse(body.responses)
+          : body.responses;
+      } catch {
+        throw new BadRequestException('El formato de responses no es válido.');
+      }
+    }
     // crea una instancia de CreateVolunteerAdviserDto
     const dto = plainToInstance(CreateVolunteerAdviserDto, {
       ...body,
       wasVoluntary: body.wasVoluntary === 'true',
+      experience: body.experience === 'true',
       schedule: parsedSchedule,
+      responses: parsedResponses,
     }); // utiliza plain to instance para transformar el objeto plano body en una instancia de CreateVolunteerAdviserDto 
 
+    // validaciones con opciones específicas
     const errors = await validate(dto, {
       whitelist: true,
       forbidNonWhitelisted: true,
+      validationError: { target: false,
+      }, // no incluir el objeto target en errores
     });
 
-    if (errors.length > 0) throw new BadRequestException(errors);
+    if (errors.length > 0) {
+      console.log('Errores de validación:', JSON.stringify(errors, null, 2));
+      throw new BadRequestException({
+        message: 'Errores de validación',
+        errors: errors.map(error=> ({
+          property: error.property,
+          constraints: error.constraints,
+          value: error.value,
+        })),
+      });
+    }
     return dto;
   }
 

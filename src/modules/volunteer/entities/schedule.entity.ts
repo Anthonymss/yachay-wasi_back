@@ -20,8 +20,10 @@ export enum DAY {
 export class Schedule {
   @PrimaryGeneratedColumn()
   id: number;
+
   @Column({ type: 'enum', enum: DAY, name: 'day_of_week' })
   dayOfWeek: DAY;
+  
   @ManyToOne(() => Volunteer, (volunteer) => volunteer.schedules)
   @JoinColumn({ name: 'volunteer_id' })
   volunteer: Volunteer;

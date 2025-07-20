@@ -10,17 +10,23 @@ import { Volunteer } from './volunteer.entity';
 
 @Entity('response_volunteers')
 export class ResponseVolunteer {
+
   @PrimaryGeneratedColumn()
   id: number;
+
+  // relacion muchos a uno con QuestionVolunteer
   @ManyToOne(
     () => QuestionVolunteer,
     (questionVolunteer) => questionVolunteer.responseVolunteer,
   )
   @JoinColumn({ name: 'question_id' })
   questionVolunteer: QuestionVolunteer;
+
+  // relacion muchos a uno con Volunteer
   @ManyToOne(() => Volunteer, (volunteer) => volunteer.responseVolunteer)
   @JoinColumn({ name: 'volunteer_id' })
   volunteer: Volunteer;
+
   @Column({ type: 'varchar', length: 500, nullable: true })
   response: string;
 }

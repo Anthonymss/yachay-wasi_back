@@ -1,3 +1,4 @@
+// volunteer-staff.service.ts
 import {
     BadRequestException,
     Injectable,
@@ -33,57 +34,68 @@ import {
       file?: Express.Multer.File,
       video?: Express.Multer.File,
     ): Promise<Volunteer> {
+      // validación de archivos
       if (!file && !video) throw new BadRequestException('Debes subir tanto el archivo PDF como el video');
       if (!file) throw new BadRequestException('Debes subir el archivo PDF');
       if (!video) throw new BadRequestException('Debes subir el archivo de video');
       if (file.mimetype !== 'application/pdf') throw new BadRequestException('El archivo CV debe ser un PDF válido'); 
       if (!video.mimetype.startsWith('video/')) throw new BadRequestException('El archivo de video debe ser válido');
       
+      // valida datos
       await this.sharedService.validateData(dto.email, TYPE_VOLUNTEER.ADVISER, file);
-    
+      // sube archivos a S3
       const [cvUrl, videoUrl] = await Promise.all([
         this.s3Service.uploadFile(file),
         this.s3Service.uploadFile(video),
       ]);
     
+      // crea voluntario
       const volunteer = this.volunteerRepository.create({
-        ...dto,
+        ...dto, // operador spread permite mantener datos existentes del DTO mientras se agregan campos adicionales
         cvUrl,
         videoUrl,
         typeVolunteer: TYPE_VOLUNTEER.ADVISER,
         datePostulation: new Date(),
-        schedules: [],
+        //schedules: [],
       });
     
+      // guarda voluntario
       const saved = await this.volunteerRepository.save(volunteer);
-      await this.sharedService.sendConfirmationEmail(saved);
     
-      const schedules = dto.schedule.map((s) => ({
+      // guarda los horarios
+      const schedules = dto.schedule.map((s) => ({ // mapea horarios del dto
         ...s,
-        volunteer: saved,
+        volunteer: saved, // asocia el voluntario guardado
       }));
     
       await this.volunteerRepository.manager
         .getRepository(Schedule)
-        .save(schedules);
-        if (dto.responses && dto.responses.length > 0) {
+        .save(schedules); // guarda los horarios en la base de datos
+
+        // guarda las respuestas si existen
+        if (dto.responses && dto.responses.length > 0) { // verifica si hay respuestas
           const responsesToSave: ResponseVolunteer[] = [];
           for (const resp of dto.responses) {
-            const question = await this.questionVolunteerRepository.findOne({ where: { id: resp.questionId } });
+            const question = await this.questionVolunteerRepository.findOne({ where: { id: resp.questionId } }); // BUSCA PREGUNTA EN LA BD
             if (question) {
+              // crea entidades de respuesta asociando pregunta y voluntario
               const responseEntity = this.responseVolunteerRepository.create({
                 questionVolunteer: question,
                 volunteer: saved,
-                response: resp.reply,
+                response: resp.response,
               });
               responsesToSave.push(responseEntity);
             }
           }
           if (responsesToSave.length > 0) {
-            await this.responseVolunteerRepository.save(responsesToSave);
+            await this.responseVolunteerRepository.save(responsesToSave); // GUARDA LA RSP en la BD
           }
         }
-      return saved;
+
+        // envia email de confirmación
+        await this.sharedService.sendConfirmationEmail(saved);
+
+      return saved; // retorna el voluntario guardado con todos sus datos
     }
 
     async updateVolunteerAdviser(
@@ -140,7 +152,7 @@ import {
               this.responseVolunteerRepository.create({
                 questionVolunteer: question,
                 volunteer,
-                response: resp.reply,
+                response: resp.response,
               }),
             );
           }

@@ -14,5 +14,5 @@ export class QuestionResponseDto {
   questionId: number;
 
   @IsString()
-  reply: string;
+  response: string;
 }
