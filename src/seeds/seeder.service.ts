@@ -22,7 +22,7 @@ export class SeederService {
     await this.areaSeeder.seed();
     await this.adminSeeder.seed();
 
-    await this.volunteerSeeder.seedDynamic(0, 0);
+    await this.volunteerSeeder.seedDynamic(50, 50);
     await this.comunicationPreferenceSeeder.seed();
     await this.beneficiarySeeder.seedDynamic(0);
   }
