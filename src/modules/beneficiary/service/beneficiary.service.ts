@@ -173,13 +173,13 @@ export class BeneficiaryService {
   async findOne(id: number) {
     const beneficiary = await this.beneficiaryRepository.findOne({
       where: { id },
-      relations: ['areaAdvisers', 'communicationPreferences'],
+      relations: ['areaAdvisers', 'communicationPreferences','schedules','beneficiaryLanguage','beneficiaryPreferredCourses'],
     });
   
     if (!beneficiary) {
       throw new NotFoundException(`Beneficiario con ID ${id} no encontrado`);
     }
-    const { user, deletedAt, updatedAt, ...rest } = beneficiary;
+    const { user, deletedAt, ...rest } = beneficiary;
 
     return rest;
   }
