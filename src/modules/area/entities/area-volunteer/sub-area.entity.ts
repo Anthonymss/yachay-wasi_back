@@ -45,7 +45,7 @@ export class SubArea {
   @Column({ type: 'text', nullable: true })
   experience: string;
 
-  @ManyToOne(() => AreaStaff)
+  @ManyToOne(() => AreaStaff, (areaStaff) => areaStaff.subAreas) // <-- ESTO ES CLAVE
   @JoinColumn({ name: 'area_staff_id' })
   areaStaff: AreaStaff;
 

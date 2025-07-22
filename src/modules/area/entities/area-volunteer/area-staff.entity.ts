@@ -16,6 +16,7 @@ export class AreaStaff {
 
   @Column({ type: 'varchar', nullable: true })
   imageUrl: string;
+  
   @OneToMany(() => SubArea, (subArea) => subArea.areaStaff, {
     cascade: true,
     eager: false,

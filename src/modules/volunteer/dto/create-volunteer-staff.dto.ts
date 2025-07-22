@@ -38,6 +38,7 @@ export class CreateVolunteerStaffDto {
 
   @IsString()
   volunteerMotivation: string;
+  
   @IsEnum(ProgramsUniversity)
   programsUniversity?: ProgramsUniversity;
   

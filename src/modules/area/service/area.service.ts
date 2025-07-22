@@ -71,6 +71,22 @@ export class AreaService {
     await this.initializeCache();
   }
 
+
+  //devuelve todas las areas staff y asesrias desde sus respectivos repositorios
+  async findAllAreas(): Promise<{ staffAreas: AreaStaff[]; asesoryAreas: AreaAdviser[] }> {
+    const staffAreas = await this.areaStaffRepository.find();
+    const asesoryAreas = await this.areaAsesoryRepository.find();
+    return { staffAreas, asesoryAreas };
+  }
+
+  // devuelve todas las areas staff excluyendo la del nombre 'ASESORIES'
+  async findAllAreasStaff(): Promise<{ staffAreas: AreaStaff[] }> {
+    const staffAreas = await this.findAllStaffAreas();
+    return { staffAreas };
+  }
+
+  // devuelve todas las subareas de un área específica
+  // utiliza caché para mejorar el rendimiento
   async findAllSubAreas(idArea: number): Promise<SubArea[]> {
     const cachedSubAreas = this.subAreasCache.get(idArea);
     if (cachedSubAreas) {
@@ -86,42 +102,7 @@ export class AreaService {
     return subAreas;
   }
 
-  findAllStaffAreas(): Promise<AreaStaff[]> {
-    return this.areaStaffRepository.find({
-      where: { name: Not('ASESORIES') },
-    });
-  }
-
-  async findAllAreas(): Promise<{ staffAreas: AreaStaff[]; asesoryAreas: AreaAdviser[] }> {
-    const staffAreas = await this.areaStaffRepository.find();
-    const asesoryAreas = await this.areaAsesoryRepository.find();
-    return { staffAreas, asesoryAreas };
-  }
-
-  async findAllAreasStaff(): Promise<{ staffAreas: AreaStaff[] }> {
-    const staffAreas = await this.findAllStaffAreas();
-    return { staffAreas };
-  }
-
-  async findOne(id: number): Promise<AreaStaff> {
-    const cachedArea = this.areaStaffCache.get(id);
-    if (cachedArea) {
-      return cachedArea;
-    }
-
-    const area = await this.areaStaffRepository.findOne({
-      where: { id },
-      relations: ['subAreas'],
-    });
-
-    if (!area) {
-      throw new NotFoundException(`Area Staff con ID ${id} no encontrada.`);
-    }
-
-    this.areaStaffCache.set(id, area);
-    return area;
-  }
-
+  // devuelve todas las subareas asociadas a un área staff específica
   async findAllSubAreasByAreaStaffId(idArea: number): Promise<SubArea[]> {
     return this.subAreaRepository.find({
       where: { areaStaff: { id: idArea } },
@@ -129,6 +110,7 @@ export class AreaService {
     });
   }
 
+  // devuelve todas las preguntas asociadas a un subárea especifica
   async findQuestionsBySubAreaId(idSubArea: number): Promise<QuestionVolunteer[]> {
     const cachedQuestions = this.questionsCache.get(idSubArea);
     if (cachedQuestions) {
@@ -147,4 +129,24 @@ export class AreaService {
     this.questionsCache.set(idSubArea, questions);
     return questions;
   }
+
+  // busca un área staff por ID (con sus subáreas) 
+  async findOne(id: number): Promise<AreaStaff> {
+    const area = await this.areaStaffRepository.findOne({
+      where: { id },
+      relations: ['subAreas'],
+    });
+    if (!area) {
+      throw new NotFoundException(`Area Staff con ID ${id} no encontrada.`);
+    }
+    return area;
+  }
+
+  // exluye asesorias
+  findAllStaffAreas(): Promise<AreaStaff[]> {
+    return this.areaStaffRepository.find({
+      where: { name: Not('ASESORIES') },
+    });
+  }
+ 
 }

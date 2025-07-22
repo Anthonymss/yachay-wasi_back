@@ -19,14 +19,16 @@ import {
       private readonly s3Service: S3Service,
       private readonly sharedService: VolunteerSharedService,
     ) {}
+
     async createVolunteerStaff(
         dto: CreateVolunteerStaffDto,
         file?: Express.Multer.File,
       ): Promise<Volunteer> {
         if (!file) throw new BadRequestException('Debes subir el archivo PDF');
         await this.sharedService.validateData(dto.email, TYPE_VOLUNTEER.STAFF, file);
-        const cvUrl = await this.s3Service.uploadFile(file);
+        const cvUrl = await this.s3Service.uploadFile(file); // obtiene la URL del CV subido a S3
     
+        // crea nueva entidad volunteer con los datos del dto, URL del CV, tipo staff y fecha de postulación
         const volunteer = this.volunteerRepository.create({
           ...dto,
           cvUrl,
@@ -34,10 +36,14 @@ import {
           datePostulation: new Date(),
         });
     
+        // guarda el voluntario en la base de datos
         const saved = await this.volunteerRepository.save(volunteer);
+        // envía un correo de confirmación (opcional)
         await this.sharedService.sendConfirmationEmail(saved);
         return saved;
       }
+
+
       async updateVolunteerStaff(
         id: number,
         dto: UpdateVolunteerStaffDto,
@@ -55,6 +61,8 @@ import {
         Object.assign(volunteer, dto);
         return this.volunteerRepository.save(volunteer);
       }
+
+
       async updateVolunteerStaffWithRaw(
         id: number,
         body: any,

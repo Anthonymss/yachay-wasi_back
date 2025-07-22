@@ -1,3 +1,4 @@
+// create-volunteer-Adviser.dto.ts
 import {
   IsString,
   IsNotEmpty,
@@ -18,7 +19,10 @@ import {
 } from '../entities/volunteer.entity';
 import { Transform, Type } from 'class-transformer';
 import { CreateScheduleDto } from './create-schedule.dto';
+import { QuestionResponseDto } from './create-response.dto';
+
 export class CreateVolunteerAdviserDto {
+  // datos personales básico
   @IsString()
   name: string;
 
@@ -41,6 +45,7 @@ export class CreateVolunteerAdviserDto {
   @IsString()
   numIdentification: string;
 
+  // datos de experiencia
   @IsBoolean()
   @Transform(({ value }) => value === 'true' || value === true)
   wasVoluntary: boolean;
@@ -49,10 +54,12 @@ export class CreateVolunteerAdviserDto {
   @Transform(({ value }) => value === 'true' || value === true)
   experience: boolean;
 
+  // horarios
+  // valida que sea un array, transforma JSON a objeto, valida cada elemento usando CreateScheduleDto
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateScheduleDto)
-  @Transform(({ value }) => {
+  /*@Transform(({ value }) => {
     if (typeof value === 'string') {
       try {
         return JSON.parse(value);
@@ -61,15 +68,18 @@ export class CreateVolunteerAdviserDto {
       }
     }
     return value;
-  })
+  })*/
   schedule: CreateScheduleDto[];
 
+  // motivacion
   @IsString()
   volunteerMotivation: string;
+
   @IsEnum(InfoSource, {
     message: `howDidYouFindUs debe ser uno de: ${Object.values(InfoSource).join(', ')}`,
   })
   howDidYouFindUs: InfoSource;
+
   @IsNotEmpty()
   @Transform(({ value }) => (value !== undefined ? Number(value) : undefined))
   idPostulationArea: number;
@@ -91,7 +101,21 @@ export class CreateVolunteerAdviserDto {
 
   @IsEnum(ProgramsUniversity)
   programsUniversity?: ProgramsUniversity;
+
+  // respuestas a preguntas
   @IsArray()
   @IsOptional()
-  responses?: { questionId: number; reply: string }[];
+  @ValidateNested({ each: true })
+  @Type(() => QuestionResponseDto)
+  /*@Transform(({ value }) => {
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch {
+        return [];
+      }
+    }
+    return value;
+  })*/
+  responses?: QuestionResponseDto[];
 }

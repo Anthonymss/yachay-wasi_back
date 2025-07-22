@@ -149,6 +149,7 @@ export class Volunteer {
     name: 'type_volunteer',
   })
   typeVolunteer: TYPE_VOLUNTEER;
+  
   @Column({
     type: 'enum',
     enum: InfoSource,
@@ -177,6 +178,7 @@ export class Volunteer {
     default: false,
   })
   callingPlan?: boolean;
+
   @Column({
     type: 'enum',
     enum: QuechuaLevel,
@@ -184,6 +186,7 @@ export class Volunteer {
     name: 'quechua_level',
   })
   quechuaLevel?: QuechuaLevel;
+
   @Column({
     type: 'enum',
     enum: ProgramsUniversity,
@@ -191,6 +194,7 @@ export class Volunteer {
     name: 'programs_university',
   })
   programsUniversity: ProgramsUniversity;
+
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
 
@@ -199,7 +203,7 @@ export class Volunteer {
 
   @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
   deletedAt: Date;
-  //
+  
   @Column({ name: 'id_postulation_area' })
   idPostulationArea: number;
 

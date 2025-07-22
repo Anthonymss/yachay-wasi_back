@@ -24,6 +24,6 @@ export class SeederService {
 
     await this.volunteerSeeder.seedDynamic(50, 50);
     await this.comunicationPreferenceSeeder.seed();
-    await this.beneficiarySeeder.seedDynamic(50);
+    await this.beneficiarySeeder.seedDynamic(0);
   }
 }
